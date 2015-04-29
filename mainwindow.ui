@@ -52,11 +52,6 @@
       <property name="selectionMode">
        <enum>QAbstractItemView::SingleSelection</enum>
       </property>
-      <item>
-       <property name="text">
-        <string>Default</string>
-       </property>
-      </item>
      </widget>
      <widget class="QPushButton" name="btn_start">
       <property name="geometry">
@@ -188,7 +183,7 @@
        <string/>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="btn_iwad_path">
       <property name="geometry">
        <rect>
         <x>330</x>
@@ -224,7 +219,7 @@
        <string>Путь до PWAD:</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="btn_pwad_path">
       <property name="geometry">
        <rect>
         <x>330</x>

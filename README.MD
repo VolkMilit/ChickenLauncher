@@ -1,6 +1,7 @@
 #Chicken Launcher. A crossplatrom doom launcher.
 
 Damn small and powerful!
+![Oh, I know how to call chicken](/images/chicken.png)
 
 ####REQUIROMENTS
 QT >= 4.8

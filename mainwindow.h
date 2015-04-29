@@ -7,8 +7,9 @@
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QProcess>
-#include <QPixmap>
 #include <QSystemTrayIcon>
+#include <QFileDialog>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void newProfile(QString item);
+
 private slots:
     void getWadList();
     void trayIcon();
@@ -30,12 +34,18 @@ private slots:
     void on_btn_about_clicked();
     void on_le_iwad_textChanged();
     void on_le_pwad_textChanged();
-
     void on_btn_start_clicked();
+    void on_btn_iwad_path_clicked();
+    void on_btn_pwad_path_clicked();
+    void writeSettings(QString file);
+    void readSettings(QString file);
+    void loadProfiles();
+    void on_btn_new_clicked();
 
 private:
     Ui::MainWindow *ui;
     QListWidgetItem* item;
+    QFileDialog fileDialog;
 };
 
 #endif // MAINWINDOW_H

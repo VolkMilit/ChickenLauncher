@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "dialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     getWadList();
     trayIcon();
+    readSettings("default.ini");
+    loadProfiles();
 }
 
 MainWindow::~MainWindow()
@@ -96,13 +99,64 @@ void MainWindow::on_btn_start_clicked()
 {
     QString pwad = ""; //DON'T DELETE: magic
     foreach(QListWidgetItem *item,  ui->lw_pwad->selectedItems())
-    {
         pwad += item->text() + " ";
-    }
 
     QProcess *process1 = new QProcess();
     process1->start("doom -IWAD " + ui->lw_iwad->currentItem()->text() + " -file " + pwad);
     mainWindowShowHide();
     if (process1->waitForFinished())
         mainWindowShowHide();
+}
+
+void MainWindow::on_btn_iwad_path_clicked()
+{
+    QString fileName = fileDialog.getExistingDirectory(this, tr("Open iwad folder"), QDir::currentPath());
+    ui->le_iwad->setText(fileName);
+    writeSettings("default.ini");
+}
+
+void MainWindow::on_btn_pwad_path_clicked()
+{
+    QString fileName = fileDialog.getExistingDirectory(this, tr("Open pwad folder"), QDir::currentPath());
+    ui->le_pwad->setText(fileName);
+    writeSettings("default.ini");
+}
+
+void MainWindow::writeSettings(QString file)
+{
+    QSettings settings(file, QSettings::IniFormat);
+
+    settings.beginGroup("WAD");
+    settings.setValue("iwad", ui->le_iwad->text());
+    settings.setValue("pwad", ui->le_pwad->text());
+    settings.endGroup();
+}
+
+void MainWindow::readSettings(QString file)
+{
+    QSettings settings(file, QSettings::IniFormat);
+
+    settings.beginGroup("WAD");
+    ui->le_iwad->setText(settings.value("iwad").toString());
+    ui->le_pwad->setText(settings.value("pwad").toString());
+    settings.endGroup();
+}
+
+void MainWindow::loadProfiles()
+{
+    QDir dir(QDir::currentPath());
+    QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
+    for (int i = 0; i < ini_files.size(); i++)
+        ui->lw_profile->addItem(ini_files.at(i));
+}
+
+void MainWindow::on_btn_new_clicked()
+{
+    dialog *d = new dialog;
+    d->exec();
+}
+
+void MainWindow::newProfile(QString item)
+{
+    ui->lw_profile->addItem(item);
 }
