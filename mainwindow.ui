@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="Profile_tab">
      <attribute name="title">
@@ -82,7 +82,7 @@
        <string>Новый</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_save">
+     <widget class="QPushButton" name="btn_load">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -92,7 +92,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Сохранить</string>
+       <string>Загрузить</string>
       </property>
      </widget>
     </widget>
@@ -348,7 +348,7 @@
        <string>Дополнительные параметры порта:</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_3">
+     <widget class="QLineEdit" name="le_param">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -358,7 +358,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_4">
+     <widget class="QLineEdit" name="le_exe">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -381,7 +381,7 @@
        <string>Путь до исполняемого файла порта:</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="btn_exe">
       <property name="geometry">
        <rect>
         <x>330</x>
@@ -410,6 +410,77 @@
       </property>
       <property name="text">
        <string>?</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cob_skill">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>10</y>
+        <width>171</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>I'm too young to die.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Hey, not too rough.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Hurt me plenty.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Ultra -- Violence.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Nightmare!</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLineEdit" name="le_map">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>10</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>54</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Map:</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="cb_skill">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>10</y>
+        <width>51</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Skill:</string>
       </property>
      </widget>
     </widget>

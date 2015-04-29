@@ -10,6 +10,7 @@
 #include <QSystemTrayIcon>
 #include <QFileDialog>
 #include <QSettings>
+#include <QInputDialog>
 
 namespace Ui {
 class MainWindow;
@@ -22,9 +23,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-public slots:
-    void newProfile(QString item);
 
 private slots:
     void getWadList();
@@ -41,6 +39,9 @@ private slots:
     void readSettings(QString file);
     void loadProfiles();
     void on_btn_new_clicked();
+    void on_btn_load_clicked();
+
+    void on_btn_exe_clicked();
 
 private:
     Ui::MainWindow *ui;
