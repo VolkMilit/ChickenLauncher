@@ -32,6 +32,8 @@ void MainWindow::trayIcon()
     trayMenu->addAction(actionShowHide);
     trayMenu->addAction(actionExit);
 
+                                /*I'm not sure, but it's working...*/
+    connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(mainWindowShowHide()));
     connect(actionExit, SIGNAL(triggered()), this, SLOT(exitApp()));
     connect(actionShowHide, SIGNAL(triggered()), this, SLOT(mainWindowShowHide()));
 
@@ -77,7 +79,8 @@ void MainWindow::on_btn_about_clicked()
 {
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setText("SCOOTALOO! SCOOT-SCOOTALOO!");
-    msgBox->setInformativeText("Chicken Launcher writen to be simple and powerfull. Cross-platform and funny. Meme belong to Apple Bloom.");
+    msgBox->setInformativeText("Chicken Launcher writen to be simple and powerfull.\
+                               Cross-platform and funny. Meme belong to Apple Bloom.");
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->setIconPixmap(QPixmap(":/chicken.png"));
     msgBox->exec();
@@ -96,50 +99,60 @@ void MainWindow::on_le_pwad_textChanged()
 
 void MainWindow::on_btn_start_clicked()
 {
-    QString pwad = ""; //DON'T DELETE: magic
-    foreach(QListWidgetItem *item,  ui->lw_pwad->selectedItems())
-        pwad += item->text() + " ";
+    if (!ui->cb_load_last_wads->isChecked())
+    {
+        pwad = "";
+        foreach(QListWidgetItem *item,  ui->lw_pwad->selectedItems())
+            pwad += item->text() + " ";
 
-    /*FIX ME!*/
+        iwad = "";
+        if (ui->lw_iwad->currentItem() != nullptr)
+            iwad = ui->lw_iwad->currentItem()->text();
+
+        writeSettings("default.ini");
+    }
+
     QString skill = "";
     if (ui->cb_skill->isChecked())
-        switch(ui->cob_skill->currentIndex())
-        {
-            case 1:
-            skill = "1";
-            break;
+        skill = QString::number(ui->cob_skill->currentIndex());
 
-            case 2:
-            skill = "2";
-            break;
+    QString exe = "";
+    if (!ui->le_exe->text().isEmpty())
+        exe = ui->le_exe->text();
+    else if (ui->lw_port->currentItem() != nullptr)
+        exe = ui->lw_port->currentItem()->text().toLower();
+    else
+        exe = "gzdoom";
 
-            case 3:
-            skill = "3";
-            break;
-
-            case 4:
-            skill = "4";
-            break;
-
-            case 5:
-            skill = "5";
-            break;
-        }
-
-    QString exe = "doom";
     if (!ui->le_exe->text().isEmpty())
         exe = ui->le_exe->text();
 
+    QString nomusic = "";
+    if (ui->cb_nomusic->isChecked())
+        nomusic = " -nomusic ";
+
+    QString nosound = "";
+    if (ui->cb_nosound->isChecked())
+        nosound = " -nosound ";
+
+    QString nosfx = "";
+    if (ui->cb_nosfx->isChecked())
+        nosfx = " -nosfx ";
+
     QString map = "";
     if (!ui->le_map->text().isEmpty())
-        map = ui->le_map->text();
+        map = " -warp " + ui->le_map->text();
 
-    QProcess *process1 = new QProcess();
-    process1->start(exe + " -IWAD " + ui->lw_iwad->currentItem()->text() + " -file " + pwad + "-skill " + skill\
-                    + " -warp " + map + " " + ui->le_param->text());
+    QString demo = "";
+    QDateTime dt;
+    if (ui->cb_recorddemo->isChecked())
+        demo = " -record " + dt.currentDateTime().toString("yyyy-MM-dd_H:mm:s") + ".lmp";
+
+    QProcess *process1 = new QProcess(this);
+    process1->start(exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
+                    + map + " " + ui->le_param->text() + nomusic + nosound + nosfx + demo);
     mainWindowShowHide();
-    if (process1->waitForFinished())
-        mainWindowShowHide();
+    if (process1->waitForFinished()) mainWindowShowHide();
 }
 
 void MainWindow::on_btn_iwad_path_clicked()
@@ -163,6 +176,8 @@ void MainWindow::writeSettings(QString file)
     settings.beginGroup("WAD");
     settings.setValue("iwad", ui->le_iwad->text());
     settings.setValue("pwad", ui->le_pwad->text());
+    settings.setValue("last_iwad", iwad);
+    settings.setValue("last_pwads", pwad);
     settings.endGroup();
 
     settings.beginGroup("Port");
@@ -170,6 +185,10 @@ void MainWindow::writeSettings(QString file)
     settings.setValue("port_exe", ui->le_exe->text());
     settings.setValue("additional_port_param", ui->le_param->text());
     settings.endGroup();
+
+    /*settings.beginGroup("Profile");
+    settings.setValue("custom_profile", ui->lw_profile->currentItem()->text());
+    settings.endGroup();*/
 }
 
 void MainWindow::readSettings(QString file)
@@ -179,6 +198,8 @@ void MainWindow::readSettings(QString file)
     settings.beginGroup("WAD");
     ui->le_iwad->setText(settings.value("iwad").toString());
     ui->le_pwad->setText(settings.value("pwad").toString());
+    iwad = settings.value("last_iwad").toString();
+    pwad = settings.value("last_pwads").toString();
     settings.endGroup();
 
     settings.beginGroup("Port");
@@ -186,6 +207,10 @@ void MainWindow::readSettings(QString file)
     ui->le_exe->setText(settings.value("port_exe").toString());
     ui->le_param->setText(settings.value("additional_port_param").toString());
     settings.endGroup();
+
+    /*settings.beginGroup("Profile");
+    readSettings(settings.value("custom_profile").toString());
+    settings.endGroup();*/
 }
 
 void MainWindow::loadProfiles()
@@ -215,13 +240,8 @@ void MainWindow::on_btn_new_clicked()
 void MainWindow::on_btn_load_clicked()
 {
     //segfault... FUCK!
-    if (ui->lw_profile->currentItem() != nullptr) {
+    if (ui->lw_profile->currentItem() != nullptr)
         readSettings(ui->lw_iwad->currentItem()->text());
-    }
-
-    /*signal(SIGSEGV, 13);
-    QMessageBox::information(this, "FUCK IT!", "FUCKING QT SEGFAULT AGAIN! ALL HAIL DIGIA! Code is: 13");*/
-
 }
 
 void MainWindow::on_btn_exe_clicked()
@@ -231,4 +251,23 @@ void MainWindow::on_btn_exe_clicked()
                         "Any file *.* (*)");
     ui->le_exe->setText(fileName);
     writeSettings("default.ini");
+}
+
+void MainWindow::on_lw_profile_clicked()
+{
+    QMessageBox::information(this, "", "Profiles NOT WORKING YET! Loading custom profile CAUSING SEGFAULT!");
+}
+
+void MainWindow::on_cb_load_last_wads_clicked()
+{
+    if (ui->cb_load_last_wads->isChecked())
+    {
+        ui->lw_iwad->setEnabled(false);
+        ui->lw_pwad->setEnabled(false);
+    }
+    else
+    {
+        ui->lw_iwad->setEnabled(true);
+        ui->lw_pwad->setEnabled(true);
+    }
 }

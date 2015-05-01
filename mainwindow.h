@@ -11,6 +11,8 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QInputDialog>
+#include <QProgressDialog>
+#include <QDateTime>
 
 namespace Ui {
 class MainWindow;
@@ -43,10 +45,17 @@ private slots:
 
     void on_btn_exe_clicked();
 
+    void on_lw_profile_clicked();
+
+    void on_cb_load_last_wads_clicked();
+
 private:
     Ui::MainWindow *ui;
     QListWidgetItem* item;
     QFileDialog fileDialog;
+
+    QString pwad;
+    QString iwad;
 };
 
 #endif // MAINWINDOW_H
