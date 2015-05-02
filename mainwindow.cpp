@@ -141,16 +141,43 @@ void MainWindow::on_btn_start_clicked()
 
     QString map = "";
     if (!ui->le_map->text().isEmpty())
-        map = " -warp " + ui->le_map->text();
+    {
+        if (ui->le_map->text().at(0) == QChar('E', false) && ui->le_map->text().at(2) == QChar('M', false))
+            map = " -warp " + ui->le_map->text().mid(1,1) + " " + ui->le_map->text().mid(3,3);
+        else
+            map = " -warp " + ui->le_map->text();
+    }
 
     QString demo = "";
     QDateTime dt;
     if (ui->cb_recorddemo->isChecked())
         demo = " -record " + dt.currentDateTime().toString("yyyy-MM-dd_H:mm:s") + ".lmp";
 
+    QString oldsprites = "";
+    if (ui->cb_oldsprites->isChecked())
+        oldsprites = " -oldsprites ";
+
+    QString noautoload = "";
+    if (ui->cb_noautoload->isChecked())
+        noautoload = " -noautoload ";
+
+    QString nostartup = "";
+    if (ui->cb_nostartup->isChecked())
+        nostartup = " -nostartup ";
+
     QProcess *process1 = new QProcess(this);
-    process1->start(exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
-                    + map + " " + ui->le_param->text() + nomusic + nosound + nosfx + demo);
+
+    if (!ui->le_loadgame->text().isEmpty())
+        process1->start(exe + " -loadgame " + ui->le_loadgame->text());
+    else if (!ui->le_playdemo->text().isEmpty())
+        process1->start(exe + " -playdemo " + ui->le_playdemo->text());
+    else if (!ui->le_playdemo_2->text().isEmpty())
+        process1->start(exe + " -timedemo " + ui->le_playdemo_2->text());
+    else
+        process1->start(exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
+                    + map + " " + ui->le_param->text() + nomusic + nosound + nosfx + demo\
+                    + oldsprites + noautoload + nostartup);
+
     mainWindowShowHide();
     if (process1->waitForFinished()) mainWindowShowHide();
 }
