@@ -13,6 +13,7 @@
 #include <QInputDialog>
 #include <QProgressDialog>
 #include <QDateTime>
+#include <QStringListModel>
 
 namespace Ui {
 class MainWindow;
@@ -27,27 +28,41 @@ public:
     ~MainWindow();
 
 private slots:
+    //functions
     void getWadList();
     void trayIcon();
     void exitApp();
     void mainWindowShowHide();
+    void writeSettings(QString file);
+    void readSettings(QString file);
+    void getProfiles();
+    void parametrParser();
+    void startApp(); //todo other doom ports
+
+    //signals
     void on_btn_about_clicked();
     void on_le_iwad_textChanged();
     void on_le_pwad_textChanged();
     void on_btn_start_clicked();
     void on_btn_iwad_path_clicked();
     void on_btn_pwad_path_clicked();
-    void writeSettings(QString file);
-    void readSettings(QString file);
-    void loadProfiles();
     void on_btn_new_clicked();
     void on_btn_load_clicked();
-
     void on_btn_exe_clicked();
-
-    void on_lw_profile_clicked();
-
     void on_cb_load_last_wads_clicked();
+    void on_btn_pick_demo_file_clicked();
+    void on_btn_pick_demo_file_2_clicked();
+    void on_btn_loadgame_clicked();
+    void on_btn_help_clicked();
+    void on_btn_delete_clicked();
+    void on_gb_join_toggled();
+    void on_cb_recorddemo_clicked();
+    void on_le_playdemo_textChanged();
+    void on_le_playdemo_2_textChanged();
+    void on_btn_clear_loadgame_clicked();
+    void on_btn_clear_playdemo_clicked();
+    void on_btn_clear_playdemo2_clicked();
+    void on_le_loadgame_textChanged();
 
 private:
     Ui::MainWindow *ui;
@@ -56,6 +71,16 @@ private:
 
     QString pwad;
     QString iwad;
+    QString map;
+    QString skill;
+    QString exe;
+    QString nomusic;
+    QString nosound;
+    QString nosfx;
+    QString demo;
+    QString oldsprites;
+    QString noautoload;
+    QString nostartup;
 };
 
 #endif // MAINWINDOW_H
