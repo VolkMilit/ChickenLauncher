@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Profile_tab">
      <attribute name="title">
@@ -116,7 +116,7 @@
         <x>10</x>
         <y>200</y>
         <width>371</width>
-        <height>161</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="selectionMode">
@@ -153,9 +153,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>370</y>
+        <y>360</y>
         <width>121</width>
-        <height>19</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="toolTip">
@@ -163,6 +163,19 @@
       </property>
       <property name="text">
        <string>Load last wads</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_clear_selected_pwad">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>360</y>
+        <width>141</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Clear selected PWAD</string>
       </property>
      </widget>
     </widget>
@@ -251,7 +264,7 @@
         <x>10</x>
         <y>70</y>
         <width>381</width>
-        <height>171</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="title">
@@ -263,7 +276,7 @@
          <x>0</x>
          <y>21</y>
          <width>381</width>
-         <height>141</height>
+         <height>121</height>
         </rect>
        </property>
        <item>
@@ -327,7 +340,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>250</y>
+        <y>280</y>
         <width>231</width>
         <height>16</height>
        </rect>
@@ -336,12 +349,12 @@
        <string>Advanced port parametrs:</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="le_param">
+     <widget class="QLineEdit" name="le_adv_port_param">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>270</y>
-        <width>341</width>
+        <y>300</y>
+        <width>311</width>
         <height>21</height>
        </rect>
       </property>
@@ -350,7 +363,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>320</y>
+        <y>350</y>
         <width>341</width>
         <height>21</height>
        </rect>
@@ -360,7 +373,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>300</y>
+        <y>330</y>
         <width>241</width>
         <height>21</height>
        </rect>
@@ -373,7 +386,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>320</y>
+        <y>350</y>
         <width>21</width>
         <height>20</height>
        </rect>
@@ -386,7 +399,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>270</y>
+        <y>300</y>
         <width>21</width>
         <height>20</height>
        </rect>
@@ -396,6 +409,55 @@
       </property>
       <property name="text">
        <string>?</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_clear_advancedparam">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>300</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="le_adv_cmd_param">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>311</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>231</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Advanced cmd parametrs:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_clear_advancedparam_2">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>250</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
       </property>
      </widget>
     </widget>
@@ -465,6 +527,32 @@
          <width>71</width>
          <height>21</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_clear_ip">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>30</y>
+         <width>21</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_clear_port">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>60</y>
+         <width>21</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;</string>
        </property>
       </widget>
      </widget>
@@ -906,7 +994,7 @@
      <string>Play Doom</string>
     </property>
     <property name="text">
-     <string>SCOOTALOO!!!</string>
+     <string>PLAY DOOM!</string>
     </property>
     <property name="icon">
      <iconset resource="icon.qrc">

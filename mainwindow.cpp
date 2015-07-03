@@ -104,7 +104,8 @@ void MainWindow::writeSettings(QString file)
     settings.beginGroup("Port");
     //settings.setValue("port_name", NULL); //todo
     settings.setValue("port_exe", ui->le_exe->text());
-    settings.setValue("additional_port_param", ui->le_param->text());
+    settings.setValue("additional_port_param", ui->le_adv_port_param->text());
+    settings.setValue("additional_cmd_param", ui->le_adv_cmd_param->text());
     settings.endGroup();
 
     /*settings.beginGroup("Profile");
@@ -138,7 +139,8 @@ void MainWindow::readSettings(QString file)
     settings.beginGroup("Port");
     //settings.setValue("port_name", NULL); //todo
     ui->le_exe->setText(settings.value("port_exe").toString());
-    ui->le_param->setText(settings.value("additional_port_param").toString());
+    ui->le_adv_port_param->setText(settings.value("additional_port_param").toString());
+    ui->le_adv_cmd_param->setText(settings.value("additional_cmd_param").toString());
     settings.endGroup();
 
     /*settings.beginGroup("Profile");
@@ -225,24 +227,47 @@ void MainWindow::parametrParser()
 
 void MainWindow::startApp()
 {
-    QProcess *process1 = new QProcess(this);
-
-    if (!ui->le_loadgame->text().isEmpty())
-        process1->start(exe + " -loadgame " + ui->le_loadgame->text());
-    else if (!ui->le_playdemo->text().isEmpty())
-        process1->start(exe + " -playdemo " + ui->le_playdemo->text());
-    else if (!ui->le_playdemo_2->text().isEmpty())
-        process1->start(exe + " -timedemo " + ui->le_playdemo_2->text());
-    else if (ui->gb_join->isChecked())
-        process1->start(exe + " -join " + ui->le_ip->text() + ":" + ui->le_port->text());
+    if (ui->lw_iwad->currentItem() == nullptr)
+    {
+        ui->tabWidget->setCurrentIndex(1);
+        QMessageBox::information(this, "", "Choose at least one IWAD.");
+    }
     else
-        process1->start(exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
-                    + map + " " + ui->le_param->text() + nomusic + nosound + nosfx + demo\
-                    + oldsprites + noautoload + nostartup);
+    {
+        QProcess *process1 = new QProcess(this);
 
-    mainWindowShowHide();
-    if (process1->waitForFinished())
+        if (!ui->le_loadgame->text().isEmpty())
+            process1->start(exe + " -loadgame " + ui->le_loadgame->text());
+        else if (!ui->le_playdemo->text().isEmpty())
+            process1->start(exe + " -playdemo " + ui->le_playdemo->text());
+        else if (!ui->le_playdemo_2->text().isEmpty())
+            process1->start(exe + " -timedemo " + ui->le_playdemo_2->text());
+        else if (ui->gb_join->isChecked())
+            process1->start(exe + " -join " + ui->le_ip->text() + ":" + ui->le_port->text());
+        else
+            //if exist more nice way... but, I'm not know about it
+            #ifdef _WIN32
+            process1->start(ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
+                    + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
+                    + oldsprites + noautoload + nostartup);
+            #elif __linux
+            process1->start("x-terminal-emulator -e " + ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " +
+                    pwad + "-skill " + skill + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
+                    + oldsprites + noautoload + nostartup);
+            #elif __APPLE__ //in MacOSX still exist link on x-terminal-emulator? Don't it?
+            process1->start("x-terminal-emulator -e " + ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " +
+                    pwad + "-skill " + skill + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
+                    + oldsprites + noautoload + nostartup);
+            #endif
+
         mainWindowShowHide();
+
+        if (process1->exitStatus() < 0)
+            QMessageBox::critical(this, "", "Process wont start :(");
+
+        if (process1->waitForFinished())
+            mainWindowShowHide();
+    }
 }
 
 /**********************************Signals***************************************************/
@@ -316,8 +341,8 @@ void MainWindow::on_btn_new_clicked()
 void MainWindow::on_btn_about_clicked()
 {
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText("SCOOTALOO! SCOOT-SCOOTALOO!");
-    msgBox->setInformativeText("Chicken Launcher writen to be simple and powerfull.\
+    msgBox->setText("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.1</font></b></font>");
+    msgBox->setInformativeText("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
  Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
 Licensed under the Apache License, Version 2.0 (the \"License\"). \
 You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 or see LICENSE file.");
@@ -367,6 +392,10 @@ void MainWindow::on_btn_delete_clicked()
 {
     QListWidgetItem *it = ui->lw_profile->item(ui->lw_profile->currentRow());
     delete it;
+
+    //this delete NOT current item, but last item :/
+    //QFile f(ui->lw_profile->currentItem()->text());
+    //f.remove();
 }
 
 void MainWindow::on_gb_join_toggled()
@@ -463,16 +492,19 @@ void MainWindow::on_le_playdemo_2_textChanged()
 void MainWindow::on_btn_clear_loadgame_clicked()
 {
     ui->le_loadgame->clear();
+    ui->le_loadgame->setFocus();
 }
 
 void MainWindow::on_btn_clear_playdemo_clicked()
 {
     ui->le_playdemo->clear();
+    ui->le_playdemo->setFocus();
 }
 
 void MainWindow::on_btn_clear_playdemo2_clicked()
 {
     ui->le_playdemo_2->clear();
+    ui->le_playdemo_2->setFocus();
 }
 
 void MainWindow::on_le_loadgame_textChanged()
@@ -491,4 +523,27 @@ void MainWindow::on_le_loadgame_textChanged()
         ui->gb_game->setEnabled(true);
         ui->gb_demos->setEnabled(true);
     }
+}
+
+void MainWindow::on_btn_clear_advancedparam_clicked()
+{
+    ui->le_adv_port_param->clear();
+    ui->le_adv_port_param->setFocus();
+}
+
+void MainWindow::on_btn_clear_ip_clicked()
+{
+    ui->le_ip->clear();
+    ui->le_ip->setFocus();
+}
+
+void MainWindow::on_btn_clear_port_clicked()
+{
+    ui->le_port->clear();
+    ui->le_port->setFocus();
+}
+
+void MainWindow::on_btn_clear_selected_pwad_clicked()
+{
+    ui->lw_pwad->reset();
 }

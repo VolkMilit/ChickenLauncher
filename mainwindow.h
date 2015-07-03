@@ -63,6 +63,12 @@ private slots:
     void on_btn_clear_playdemo_clicked();
     void on_btn_clear_playdemo2_clicked();
     void on_le_loadgame_textChanged();
+    void on_btn_clear_advancedparam_clicked();
+    void on_btn_clear_ip_clicked();
+    void on_btn_clear_port_clicked();
+
+
+    void on_btn_clear_selected_pwad_clicked();
 
 private:
     Ui::MainWindow *ui;
