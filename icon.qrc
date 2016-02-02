@@ -1,6 +1,0 @@
- <!DOCTYPE RCC><RCC version="1.0">
- <qresource>
-     <file>images/chicken.png</file>
-     <file alias="chicken.png">images/chicken.png</file>
- </qresource>
- </RCC>
