@@ -13,12 +13,12 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++11 -O3
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += ./scr/main.cpp\
+        ./scr/mainwindow.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += ./scr/mainwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += ./scr/mainwindow.ui
 
 RESOURCES += \
-    icon.qrc
+    ./scr/icon.qrc
