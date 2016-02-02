@@ -1,7 +1,7 @@
 #Chicken Launcher. A crossplatrom doom launcher.
 
 Damn small and powerful!																																																											
-![Oh, I know how to call chicken](/images/chicken.png)
+![Oh, I know how to call chicken](/scr/images/chicken.png)
 
 ####NEW IN 1.1
 - Load last wad now as button
@@ -16,9 +16,9 @@ See bug tracker
 QT >= 4.8
 
 ####INSTALLATION
-$ make && make clean
-$ cp {ChickenLauncher, default.ini} ${doom_dir}
-$ rm {ChickenLauncher}
+$ make && make clean																																																												
+$ cp {ChickenLauncher, default.ini} ${doom_dir}																																																		
+$ rm {ChickenLauncher}																																																												
 
 ####LICENSE
 Licensed under Apache License Ver 2.0. See LICENSE file in root directory.
