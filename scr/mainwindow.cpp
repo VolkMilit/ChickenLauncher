@@ -6,20 +6,43 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    getWadList();
-    trayIcon();
-    readSettings("default.ini");
-    getProfiles();
-    ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
-    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
+    VbaseConfig = new baseConfig(ui);
+    VlistFill = new listFill(ui);
+    Vgzdoom = new gzdoom(ui);
+
+    windowInit();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete VbaseConfig;
+    delete VlistFill;
+    delete Vgzdoom;
 }
 
-/**********************************Functions***************************************************/
+
+/*
+ ___             _   _
+| __|  _ _ _  __| |_(_)___ _ _  ___
+| _| || | ' \/ _|  _| / _ \ ' \(_-<
+|_| \_,_|_||_\__|\__|_\___/_||_/__/
+
+*/
+
+void MainWindow::windowInit()
+{
+    VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
+    VlistFill->getWadList();
+    VlistFill->getProfiles();
+
+    trayIcon();
+
+    //shortcurts
+    ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
+    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
+}
+
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason)
@@ -34,13 +57,19 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::trayIcon()
 {
+    //    _____ _____  ____  __ _____
+    //   |  ___|_ _\ \/ /  \/  | ____|
+    //   | |_   | | \  /| |\/| |  _|
+    //   |  _|  | | /  \| |  | | |___
+    //   |_|   |___/_/\_\_|  |_|_____|
+    //
+
     QSystemTrayIcon *trIcon = new QSystemTrayIcon(this);
     trIcon->setIcon(windowIcon());
     trIcon->setToolTip("Chicken Launcher");
     trIcon->show();
 
     QMenu *trayMenu = new QMenu (this);
-
     QAction *actionShowHide = new QAction (tr("Show\\Hide"), this);
     QAction *actionExit = new QAction (tr("Exit"), this);
 
@@ -66,347 +95,187 @@ void MainWindow::mainWindowShowHide()
     this->setWindowState(Qt::WindowActive);
 }
 
-void MainWindow::getWadList()
-{
-    ui->lw_iwad->clear();
-    ui->lw_pwad->clear();
-    QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3" << "*.7z" << "*.rar";
-
-    QDir iwad_dir(ui->le_iwad->text());
-    if(!iwad_dir.exists())
-        iwad_dir = QDir::currentPath();
-
-    QDir pwad_dir(ui->le_pwad->text());
-    if(!pwad_dir.exists())
-        pwad_dir = QDir::currentPath();
-
-    QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files /*| QDir::Dirs*/);
-    for (int i = 0; i < IWAD_files.size(); i++)
-    {
-        ui->lw_iwad->addItem(iwad_dir.absolutePath() + "/" + IWAD_files.at(i));
-    }
-
-    QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files /*| QDir::Dirs*/);
-    for (int i = 0; i < PWAD_files.size(); i++)
-    {
-        ui->lw_pwad->addItem(pwad_dir.absolutePath() + "/" + PWAD_files.at(i));
-    }
-
-}
-
-void MainWindow::writeSettings(QString file)
-{
-    QSettings settings(file, QSettings::IniFormat);
-
-    settings.beginGroup("WAD");
-    settings.setValue("iwad", ui->le_iwad->text());
-    settings.setValue("pwad", ui->le_pwad->text());
-    settings.setValue("last_iwad",  iwad);
-    settings.setValue("last_pwads", pwad);
-    settings.endGroup();
-
-    settings.beginGroup("Port");
-    //settings.setValue("port_name", NULL); //todo
-    settings.setValue("port_exe", ui->le_exe->text());
-    settings.setValue("additional_port_param", ui->le_adv_port_param->text());
-    settings.setValue("additional_cmd_param", ui->le_adv_cmd_param->text());
-    settings.endGroup();
-
-    /*settings.beginGroup("Profile");
-    settings.setValue("custom_profile", ui->lw_profile->currentItem()->text());
-    settings.endGroup();*/
-}
-
-void MainWindow::readSettings(QString file)
-{
-    QFile f(file);
-    if (!f.exists())
-    {
-        QMessageBox::critical(this, "", "Nobody, but us chicken! File does'n exist!");
-
-        //delete item, don't know, if it's ugly code, but working
-        QListWidgetItem *it = ui->lw_profile->item(ui->lw_profile->currentRow());
-        delete it;
-
-        return;
-    }
-
-    QSettings settings(file, QSettings::IniFormat);
-
-    settings.beginGroup("WAD");
-    ui->le_iwad->setText(settings.value("iwad").toString());
-    ui->le_pwad->setText(settings.value("pwad").toString());
-    iwad = settings.value("last_iwad").toString();
-    pwad = settings.value("last_pwads").toString();
-    settings.endGroup();
-
-    settings.beginGroup("Port");
-    //settings.setValue("port_name", NULL); //todo
-    ui->le_exe->setText(settings.value("port_exe").toString());
-    ui->le_adv_port_param->setText(settings.value("additional_port_param").toString());
-    ui->le_adv_cmd_param->setText(settings.value("additional_cmd_param").toString());
-    settings.endGroup();
-
-    /*settings.beginGroup("Profile");
-    readSettings(settings.value("custom_profile").toString());
-    settings.endGroup();*/
-}
-
-void MainWindow::getProfiles()
-{
-    ui->lw_profile->clear();
-    QDir dir(QDir::currentPath());
-    QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
-    for (int i = 0; i < ini_files.size(); i++)
-        ui->lw_profile->addItem(ini_files.at(i));
-}
-
-void MainWindow::parametrParser()
-{
-    pwad = "";
-    foreach(QListWidgetItem *item,  ui->lw_pwad->selectedItems())
-        pwad += item->text() + " ";
-
-    iwad = "";
-    if (ui->lw_iwad->currentItem() != nullptr)
-        iwad = ui->lw_iwad->currentItem()->text();
-
-    writeSettings("default.ini");
-
-    skill = "";
-    if (ui->cb_skill->isChecked())
-        skill = QString::number(ui->cob_skill->currentIndex());
-
-    exe = "";
-    if (!ui->le_exe->text().isEmpty())
-        exe = ui->le_exe->text();
-    else if (ui->lw_port->currentItem() != nullptr)
-        exe = ui->lw_port->currentItem()->text().toLower();
-    else
-        exe = "gzdoom";
-
-    if (!ui->le_exe->text().isEmpty())
-        exe = ui->le_exe->text();
-
-    nomusic = "";
-    if (ui->cb_nomusic->isChecked())
-        nomusic = " -nomusic ";
-
-    nosound = "";
-    if (ui->cb_nosound->isChecked())
-        nosound = " -nosound ";
-
-    nosfx = "";
-    if (ui->cb_nosfx->isChecked())
-        nosfx = " -nosfx ";
-
-    map = "";
-    if (!ui->le_map->text().isEmpty())
-    {
-        map = " -warp " + ui->le_map->text();
-        if (ui->le_map->text().at(0) == QChar('E', false) && ui->le_map->text().at(2) == QChar('M', false))
-            map = " -warp " + ui->le_map->text().mid(1,1) + " " + ui->le_map->text().mid(3,3);
-    }
-
-    demo = "";
-    QDateTime dt;
-    if (ui->cb_recorddemo->isChecked())
-        demo = " -record " + dt.currentDateTime().toString("yyyy-MM-dd_H:mm:s") + ".lmp";
-
-    oldsprites = "";
-    if (ui->cb_oldsprites->isChecked())
-        oldsprites = " -oldsprites ";
-
-    noautoload = "";
-    if (ui->cb_noautoload->isChecked())
-        noautoload = " -noautoload ";
-
-    nostartup = "";
-    if (ui->cb_nostartup->isChecked())
-        nostartup = " -nostartup ";
-}
-
 void MainWindow::startApp()
 {
-    if (ui->lw_iwad->currentItem() == nullptr)
-    {
-        ui->tabWidget->setCurrentIndex(1);
-        QMessageBox::information(this, "", "Choose at least one IWAD.");
-    }
+    /*
+    _____        _     _       _   _                            _
+   |_   _|__  __| |___(_)  ___| |_| |_  ___ _ _   _ __  ___ _ _| |_ ___
+     | |/ _ \/ _` / _ \_  / _ \  _| ' \/ -_) '_| | '_ \/ _ \ '_|  _(_-<
+     |_|\___/\__,_\___(_) \___/\__|_||_\___|_|   | .__/\___/_|  \__/__/
+                                                 |_|
+    */
+
+    if (!ui->le_playdemo->text().isEmpty())
+        Vgzdoom->startDemo();
+    else if (ui->gb_join->isChecked())
+        Vgzdoom->networkGame();
     else
-    {
-        QProcess *process1 = new QProcess(this);
-
-        if (!ui->le_loadgame->text().isEmpty())
-            process1->start(exe + " -loadgame " + ui->le_loadgame->text());
-        else if (!ui->le_playdemo->text().isEmpty())
-            process1->start(exe + " -playdemo " + ui->le_playdemo->text());
-        else if (!ui->le_playdemo_2->text().isEmpty())
-            process1->start(exe + " -timedemo " + ui->le_playdemo_2->text());
-        else if (ui->gb_join->isChecked())
-            process1->start(exe + " -join " + ui->le_ip->text() + ":" + ui->le_port->text());
-        else
-            //if exist more nice way... but, I'm don't know about it
-            #ifdef _WIN32
-            process1->start(ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
-                    + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
-                    + oldsprites + noautoload + nostartup);
-            #else //in MacOSX still exist link on x-terminal-emulator? Didn't it?
-            process1->start("x-terminal-emulator -e " + ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " +
-                    pwad + "-skill " + skill + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
-                    + oldsprites + noautoload + nostartup);
-            #endif
-
-        mainWindowShowHide();
-
-        if (process1->exitStatus() < 0 || process1->exitStatus() > 1)
-            QMessageBox::critical(this, "", "Process won't start :(");
-
-        if (process1->waitForFinished())
-            mainWindowShowHide();
-    }
+        Vgzdoom->startGzdoom();
 }
 
-void MainWindow::on_btn_load_last_wads_clicked()
-{
-    ui->lw_pwad->reset();
-    ui->lw_iwad->reset();
+/*
+ ___ _                _
+/ __(_)__ _ _ _  __ _| |___
+\__ \ / _` | ' \/ _` | (_-<
+|___/_\__, |_||_\__,_|_/__/
+     |___/
+*/
 
-    readSettings("default.ini");
-
-    QProcess *process1 = new QProcess(this);
-
-    exe = ui->le_exe->text();
-
-    if (ui->gb_join->isChecked())
-        process1->start(exe + " -join " + ui->le_ip->text() + ":" + ui->le_port->text());
-    else
-        #ifdef _WIN32
-            process1->start(ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " + pwad + "-skill " + skill\
-                + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
-                + oldsprites + noautoload + nostartup);
-        #else //in MacOSX still exist link on x-terminal-emulator? Didn't it?
-            process1->start("x-terminal-emulator -e " + ui->le_adv_cmd_param->text() + " " + exe + " -iwad " + iwad + " -file " +
-                pwad + "-skill " + skill + map + " " + ui->le_adv_port_param->text() + nomusic + nosound + nosfx + demo\
-                + oldsprites + noautoload + nostartup);
-        #endif
-
-    mainWindowShowHide();
-
-    if (process1->exitStatus() < 0 || process1->exitStatus() > 1)
-        QMessageBox::critical(this, "", "Process won't start :(");
-
-    if (process1->waitForFinished())
-        mainWindowShowHide();
-}
-
-/**********************************Signals***************************************************/
 void MainWindow::on_btn_pick_demo_file_clicked()
 {
-    QString fileName = fileDialog.getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
     ui->le_playdemo->setText(fileName);
 }
 
 void MainWindow::on_btn_pick_demo_file_2_clicked()
 {
-    QString fileName = fileDialog.getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
     ui->le_playdemo_2->setText(fileName);
 }
 
 void MainWindow::on_btn_loadgame_clicked()
 {
-    QString fileName = fileDialog.getOpenFileName(this, tr("Open save file"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), QDir::currentPath());
     ui->le_loadgame->setText(fileName);
 }
 
 
 void MainWindow::on_btn_load_clicked()
 {
+    VbaseConfig->setDefaultProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+
+    VlistFill->getWadList();
+
     if (ui->lw_profile->currentItem() != nullptr)
-        readSettings(ui->lw_profile->currentItem()->text());
+    {
+        for (int i = 0; i < ui->lw_profile->count(); i++)
+            ui->lw_profile->item(i)->setForeground(Qt::black);
+
+        VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
+        ui->lw_profile->currentItem()->setForeground(Qt::green);
+    }
 }
 
 void MainWindow::on_btn_exe_clicked()
 {
-    QString fileName = fileDialog.getOpenFileName(this, tr("Open Port Exe"),
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open Port Exe"),
                         QDir::currentPath(),
                         "Any file *.* (*)");
     ui->le_exe->setText(fileName);
-    writeSettings("default.ini");
+
+    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_new_clicked()
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+    QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
                                             tr("Add profile"), QLineEdit::Normal,
                                             "", &ok);
 
     if (ok && !text.isEmpty())
     {
         ui->lw_profile->addItem(text + ".ini");
-        writeSettings(text + ".ini");
+        VbaseConfig->writeSettings(VbaseConfig->getProfilesDir() + text + ".ini");
     }
-}
-
-void MainWindow::on_btn_about_clicked()
-{
-    QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.1</font></b></font>");
-    msgBox->setInformativeText("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
- Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
-Licensed under the Apache License, Version 2.0 (the \"License\"). \
-You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 or see LICENSE file.");
-    msgBox->setStandardButtons(QMessageBox::Ok);
-    msgBox->setIconPixmap(QPixmap(":/chicken.png"));
-    msgBox->exec();
-    QMessageBox::aboutQt(this, "About Qt");
 }
 
 void MainWindow::on_le_iwad_textChanged()
 {
-    getWadList();
+    VlistFill->getWadList();
 }
 
 void MainWindow::on_le_pwad_textChanged()
 {
-    getWadList();
+    VlistFill->getWadList();
 }
 
 void MainWindow::on_btn_start_clicked()
 {
-    parametrParser();
     startApp();
 }
 
 void MainWindow::on_btn_iwad_path_clicked()
 {
-    QString fileName = fileDialog.getExistingDirectory(this, tr("Open iwad folder"), QDir::currentPath());
+    QString fileName = fileDialog->getExistingDirectory(this, tr("Open iwad folder"), QDir::currentPath());
+
     ui->le_iwad->setText(fileName);
-    writeSettings("default.ini");
+
+    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_pwad_path_clicked()
 {
-    QString fileName = fileDialog.getExistingDirectory(this, tr("Open pwad folder"), QDir::currentPath());
+    QString fileName = fileDialog->getExistingDirectory(this, tr("Open pwad folder"), QDir::currentPath());
     ui->le_pwad->setText(fileName);
-    writeSettings("default.ini");
-}
 
-void MainWindow::on_btn_help_clicked()
-{
-    QMessageBox::information(this, "", "See docs on <a href=\"https://github.com/VolkMilit/ChickenLauncher\">github</a> or\
-                                       in downloaded repository in DOCS directory.");
+    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_delete_clicked()
 {
-    QListWidgetItem *it = ui->lw_profile->item(ui->lw_profile->currentRow());
-    delete it;
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Chicken Launcher", "Are you shure you want delete this profile?",
+            QMessageBox::Yes|QMessageBox::No);
 
-    //this delete NOT current item, but last item :/
-    //QFile f(ui->lw_profile->currentItem()->text());
-    //f.remove();
+    if (reply == QMessageBox::Yes && ui->lw_profile->count() != 0)
+    {
+        QString file = VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text();
+
+        QFile f(file);
+        f.remove();
+
+        VlistFill->getProfiles();
+
+        if (VbaseConfig->getDefaultProfile() == file)
+            VbaseConfig->setDefaultProfile(ui->lw_profile->item(0)->text());
+    }
+    else
+    {
+        return;
+    }
+}
+
+void MainWindow::on_btn_rename_clicked()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
+                                            tr("Rename profile"), QLineEdit::Normal,
+                                            "", &ok);
+
+    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+
+    if (ok && !text.isEmpty())
+        f.rename(VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text(),\
+                 VbaseConfig->getProfilesDir() + text + ".ini");
+
+    VlistFill->getProfiles();
+}
+
+void MainWindow::on_btn_clone_clicked()
+{
+    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
+                                            tr("Clone profile"), QLineEdit::Normal,
+                                            "", &ok);
+    if (ok && !text.isEmpty())
+        f.copy(VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text(),\
+               VbaseConfig->getProfilesDir() + text + ".ini");
+
+    VlistFill->getProfiles();
+}
+
+void MainWindow::on_le_exe_textChanged()
+{
+    //    _____ _____  ____  __ _____
+    //   |  ___|_ _\ \/ /  \/  | ____|
+    //   | |_   | | \  /| |\/| |  _|
+    //   |  _|  | | /  \| |  | | |___
+    //   |_|   |___/_/\_\_|  |_|_____|
+    //
+    //VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_gb_join_toggled()
@@ -520,17 +389,20 @@ void MainWindow::on_btn_clear_playdemo2_clicked()
 
 void MainWindow::on_le_loadgame_textChanged()
 {
+    QVector<int> vec;
+    vec << 0 << 2 << 3;
+
     if (!ui->le_loadgame->text().isEmpty())
     {
-        for (int i=0;i<4;i++)
-            ui->tabWidget->setTabEnabled(i, false);
+        for (int i = 0; i < vec.size(); i++)
+            ui->tabWidget->setTabEnabled(vec.at(i), false);
         ui->gb_game->setEnabled(false);
         ui->gb_demos->setEnabled(false);
     }
     else
     {
-        for (int i=0;i<4;i++)
-            ui->tabWidget->setTabEnabled(i, true);
+        for (int i = 0; i < vec.size(); i++)
+            ui->tabWidget->setTabEnabled(vec.at(i), true);
         ui->gb_game->setEnabled(true);
         ui->gb_demos->setEnabled(true);
     }
@@ -559,6 +431,11 @@ void MainWindow::on_btn_clear_selected_pwad_clicked()
     ui->lw_pwad->reset();
 }
 
+void MainWindow::on_btn_clear_selected_iwad_clicked()
+{
+    ui->lw_iwad->reset();
+}
+
 void MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
     QApplication::quit();
@@ -567,4 +444,22 @@ void MainWindow::on_actionExit_Ctrl_Q_triggered()
 void MainWindow::on_actionMinimize_to_tray_Ctrl_T_triggered()
 {
     mainWindowShowHide();
+}
+
+void MainWindow::on_actionAbout_QT_triggered()
+{
+    QMessageBox::aboutQt(this, "About Qt");
+}
+
+void MainWindow::on_actionAbout_Chicken_Launcher_triggered()
+{
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setText(tr("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.1</font></b></font>"));
+    msgBox->setInformativeText(tr("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
+ Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
+Licensed under the Apache License, Version 2.0 (the \"License\"). \
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 or see LICENSE file."));
+    msgBox->setStandardButtons(QMessageBox::Ok);
+    msgBox->setIconPixmap(QPixmap(":/chicken.png"));
+    msgBox->exec();
 }

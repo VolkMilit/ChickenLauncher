@@ -11,12 +11,22 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ChickenLauncher
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=c++11 -O3
+QMAKE_CXXFLAGS += -std=c++11 -g
 
 SOURCES += ./scr/main.cpp\
-        ./scr/mainwindow.cpp
+        ./scr/mainwindow.cpp \
+    scr/baseconfig.cpp \
+    scr/gzdoom.cpp \
+    scr/prboom.cpp \
+    scr/listsfill.cpp \
+    scr/functions.cpp
 
-HEADERS  += ./scr/mainwindow.h
+HEADERS  += ./scr/mainwindow.h \
+    scr/baseconfig.h \
+    scr/gzdoom.h \
+    scr/prboom.h \
+    scr/listsfill.h \
+    scr/functions.h
 
 FORMS    += ./scr/mainwindow.ui
 

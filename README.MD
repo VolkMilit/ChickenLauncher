@@ -1,13 +1,22 @@
 #Chicken Launcher. A crossplatrom doom launcher.
 
 Damn small and powerful!																																																											
-![Oh, I know how to call chicken](/scr/images/chicken.png)
+![Oh, I know how to call chicken](/scr/images/chicken.png)                                                                                                                                                                                                      
 
-####NEW IN 1.1
-- Load last wad now as button
-- Fix icon in tray: now open and close normaly
-- New directory structure for make
-- Global menu and shortcuts
+####NEW IN 1.2
+- New button in profiles tab
+- Delete "Load last wad" button, now "Play Doom!" button do same things, but automaticly
+- Green forground for listwidget, if profile active, same for iwad\pwad listwidgets
+- Bug fixes
+
+- Clear code, add classes
+
+####Screenshots:
+![Profile tab](/screenshots/1profile_tab.png)
+![Wad's tab](/screenshots/2wads_tab.png)
+![Settings tab](/screenshots/3settings_tab.png)
+![Multiplayer tab](/screenshots/4multiplayer_tab.png)
+![Advenced tab](/screenshots/5advenced_tab.png)
 
 ####KNOW ISSUES
 See bug tracker
@@ -17,9 +26,9 @@ QT >= 4.8
 
 ####INSTALLATION
 $ make && make clean																																																												
-$ cp {ChickenLauncher, default.ini} ${doom_dir}																																																		
-$ rm {ChickenLauncher}																																																												
+Copy ChickenLauncher in any place.																																																										
 
 ####LICENSE
 Licensed under Apache License Ver 2.0. See LICENSE file in root directory.
-Scootaloo Chicken by Speedingturtle (http://speedingturtle.deviantart.com/art/Scootaloo-257329851)
+Scootaloo Chicken (c) Speedingturtle (http://speedingturtle.deviantart.com/art/Scootaloo-257329851)                                                                                                                                
+Vimix icon theme (c) 2015 vinceliuice, GPL v3 (http://gnome-look.org/content/show.php/Vimix-Icon-Theme?content=169873)

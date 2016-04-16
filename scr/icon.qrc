@@ -2,5 +2,15 @@
  <qresource>
      <file>images/chicken.png</file>
      <file alias="chicken.png">images/chicken.png</file>
+     <file>images/load.svg</file>
+     <file alias="load.svg">images/load.svg</file>
+     <file>images/delete.svg</file>
+     <file alias="delete.svg">images/delete.svg</file>
+     <file>images/clone.svg</file>
+     <file alias="clone.svg">images/clone.svg</file>
+     <file>images/new.svg</file>
+     <file alias="new.svg">images/new.svg</file>
+     <file>images/rename.svg</file>
+     <file alias="rename.svg">images/rename.svg</file>
  </qresource>
  </RCC>
