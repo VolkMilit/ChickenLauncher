@@ -6,7 +6,8 @@ Damn small and powerful!
 ####NEW IN 1.2
 - New button in profiles tab
 - Delete "Load last wad" button, now "Play Doom!" button do same things, but automaticly
-- Green forground for listwidget, if profile active, same for iwad\pwad listwidgets
+- Green foreground for listwidget, if profile active, same for iwad\pwad listwidgets
+- Now all settings are stored in $HOME/.config/ChickenLauncher on Linux and %userprofile%\ApplicationData\ChickenLauncher on Windows
 - Bug fixes
 
 - Clear code, add classes
