@@ -27,7 +27,7 @@ void gzdoom::parametrParser()
         if (myUi->lw_iwad->currentItem() != nullptr)
             VbaseConfig->iwad = myUi->lw_iwad->currentItem()->text();
 
-        //VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
+        VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
     }
     else
         VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
