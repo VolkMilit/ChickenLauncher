@@ -11,6 +11,7 @@ Damn small and powerful!
 - Hide full pwad\iwad path
 - Foreground color now customizable
 - Bug fixes
+- PWAD set priority
 
 - Clear code
 
