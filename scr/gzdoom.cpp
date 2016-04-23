@@ -13,51 +13,61 @@ gzdoom::gzdoom(Ui::MainWindow *ui)
 gzdoom::~gzdoom()
 {
     delete VbaseConfig;
+    delete Vfunctions;
+    delete process;
+    delete myUi;
 }
 
 void gzdoom::parametrParser()
 {
-    if (myUi->lw_iwad->currentItem() != nullptr && VbaseConfig->iwad.isEmpty())
+    QString profile = VbaseConfig->getDefaultProfile();
+
+    iwad = VbaseConfig->getLastIwad(profile);
+    if (iwad.isEmpty())
     {
-        VbaseConfig->pwad = "";
-        foreach(QListWidgetItem *item, myUi->lw_pwad->selectedItems())
-            VbaseConfig->pwad += item->text() + " ";
-
-        VbaseConfig->iwad = "";
-        if (myUi->lw_iwad->currentItem() != nullptr)
-            VbaseConfig->iwad = myUi->lw_iwad->currentItem()->text();
-
-        VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
+        QMessageBox::critical(this, "Chicken Launcher", "IWad is not set!", QMessageBox::Ok);
+        return;
     }
-    else
-        VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
 
+    pwad = "";
     skill = "";
-    if (myUi->cb_skill->isChecked())
-        skill = QString::number(myUi->cob_skill->currentIndex());
-
     exe = "";
-    if (!myUi->le_exe->text().isEmpty())
-        exe = myUi->le_exe->text();
-    else
-        exe = "gzdoom";
-
-    if (!myUi->le_exe->text().isEmpty())
-        exe = myUi->le_exe->text();
-
     nomusic = "";
+    nosound = "";
+    nosfx = "";
+    map = "";
+    demo = "";
+    oldsprites = "";
+    noautoload = "";
+    nostartup = "";
+
+    //FILE
+    if (!VbaseConfig->getLastPwad(profile).isEmpty())
+         pwad = " -file " + VbaseConfig->getLastPwad(profile);
+
+    //SKILL
+    if (myUi->cb_skill->isChecked())
+        skill = "-skill " + QString::number(myUi->cob_skill->currentIndex());
+
+    //EXE
+    if (myUi->le_exe->text().isEmpty())
+        exe = "gzdoom";
+    else
+        exe = myUi->le_exe->text();
+
+    //NOMUSIC
     if (myUi->cb_nomusic->isChecked())
         nomusic = " -nomusic ";
 
-    nosound = "";
+    //NOSOUND
     if (myUi->cb_nosound->isChecked())
         nosound = " -nosound ";
 
-    nosfx = "";
+    //NOSFX
     if (myUi->cb_nosfx->isChecked())
         nosfx = " -nosfx ";
 
-    map = "";
+    //MAP
     if (!myUi->le_map->text().isEmpty())
     {
         map = " -warp " + myUi->le_map->text();
@@ -65,20 +75,20 @@ void gzdoom::parametrParser()
             map = " -warp " + myUi->le_map->text().mid(1,1) + " " + myUi->le_map->text().mid(3,3);
     }
 
-    demo = "";
+    //RECORD
     QDateTime dt;
     if (myUi->cb_recorddemo->isChecked())
         demo = " -record " + dt.currentDateTime().toString("yyyy-MM-dd_H:mm:s") + ".lmp";
 
-    oldsprites = "";
+    //OLDSPRITES
     if (myUi->cb_oldsprites->isChecked())
         oldsprites = " -oldsprites ";
 
-    noautoload = "";
+    //NOAUTOLOAD
     if (myUi->cb_noautoload->isChecked())
         noautoload = " -noautoload ";
 
-    nostartup = "";
+    //NOSTARTUP
     if (myUi->cb_nostartup->isChecked())
         nostartup = " -nostartup ";
 }
@@ -100,7 +110,8 @@ void gzdoom::startGzdoom()
 {
     parametrParser();
 
-    if (myUi->lw_iwad->currentItem() == nullptr && VbaseConfig->iwad.isEmpty())
+    if (myUi->lw_iwad->currentItem() == nullptr && \
+            VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile()).isEmpty())
     {
         myUi->tabWidget->setCurrentIndex(1);
         QMessageBox::information(this, "", tr("Choose at least one IWAD."));
@@ -119,9 +130,9 @@ void gzdoom::startGzdoom()
                        term +\
                        myUi->le_adv_cmd_param->text() + " " +\
                        exe +\
-                       " -iwad " + VbaseConfig->iwad +\
-                       " -file " + VbaseConfig->pwad +\
-                       "-skill " + skill +\
+                       " -iwad " + iwad +\
+                       pwad +\
+                       skill +\
                        map + " " +\
                        myUi->le_adv_port_param->text() +\
                        nomusic +\
@@ -133,12 +144,5 @@ void gzdoom::startGzdoom()
                        nostartup +\
                        loadgame\
                       );
-
-        /*Vfunctions->showHideMainWindow();
-
-        if (process->waitForFinished())
-            Vfunctions->showHideMainWindow();*/
-
-        //deяrp! 6_9
     }
 }

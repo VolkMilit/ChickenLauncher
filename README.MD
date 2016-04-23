@@ -1,16 +1,18 @@
 #Chicken Launcher. A crossplatrom doom launcher.
 
 Damn small and powerful!																																																											
-![Oh, I know how to call chicken](/scr/images/chicken.png)                                                                                                                                                                                                      
+![Oh, I know how to call chicken](/scr/images/chicken.png)     	
 
-####NEW IN 1.2
-- New button in profiles tab
-- Delete "Load last wad" button, now "Play Doom!" button do same things, but automaticly
-- Green foreground for listwidget, if profile active, same for iwad\pwad listwidgets
-- Now all settings are stored in $HOME/.config/ChickenLauncher on Linux and %userprofile%\ApplicationData\ChickenLauncher on Windows
+####Also:
+[Check my blog](https://javirrdar.tumblr.com/)																																																						
+
+####NEW IN 1.3
+- Preference dialog
+- Hide full pwad\iwad path
+- Foreground color now customizable
 - Bug fixes
 
-- Clear code, add classes
+- Clear code
 
 ####Screenshots:
 ![Profile tab](/screenshots/1profile_tab.png)
@@ -18,9 +20,18 @@ Damn small and powerful!
 ![Settings tab](/screenshots/3settings_tab.png)
 ![Multiplayer tab](/screenshots/4multiplayer_tab.png)
 ![Advenced tab](/screenshots/5advenced_tab.png)
+![Preference dialog](/screenshots/6preferenced_dialog.png)
 
 ####KNOW ISSUES
 See bug tracker
+
+####TODO:
+#####v 1.4
+- Sort colored items
+- Translations
+
+#####v 1.5 (?)
+- Migrate to Qt5
 
 ####REQUIREMENTS
 QT >= 4.8

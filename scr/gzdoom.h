@@ -30,7 +30,7 @@ class gzdoom : public QWidget
 {
 public:
     gzdoom(Ui::MainWindow *ui);
-    ~gzdoom();
+    virtual ~gzdoom();
 
     void startGzdoom();
     void startDemo();
@@ -65,6 +65,9 @@ private:
     QString noautoload;     //Prevents files from being autoloaded based on the “AutoLoad” sections in the user's configuration file.
     QString nostartup;      //Disables the startup screens used by Heretic, Hexen and Strife, and use the Doom text-mode startup instead.
     QString loadgame;       //load games files, but need -iwad и -file =/
+
+    QString iwad;
+    QString pwad;
 
     QString exe;            //specify executable file (I use my own gzdoom installation)
     QString term;           //(Linux specific) run in terminal to see output, like in Windows version

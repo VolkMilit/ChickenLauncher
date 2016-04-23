@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     VbaseConfig = new baseConfig(ui);
     VlistFill = new listFill(ui);
     Vgzdoom = new gzdoom(ui);
+    VconfigDialog = new configDialog();
 
     windowInit();
 }
@@ -19,6 +20,7 @@ MainWindow::~MainWindow()
     delete VbaseConfig;
     delete VlistFill;
     delete Vgzdoom;
+    delete VconfigDialog;
 }
 
 
@@ -32,15 +34,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::windowInit()
 {
-    VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
-    VlistFill->getWadList();
+    VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
+
+    VlistFill->getIWadList();
+    VlistFill->getPWadList();
     VlistFill->getProfiles();
 
     trayIcon();
 
     //shortcurts
     ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
-    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
+    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));    
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -70,14 +74,17 @@ void MainWindow::trayIcon()
     trIcon->show();
 
     QMenu *trayMenu = new QMenu (this);
+    QAction *actionPlayDoom = new QAction (tr("PLAY DOOM!"), this);
     QAction *actionShowHide = new QAction (tr("Show\\Hide"), this);
     QAction *actionExit = new QAction (tr("Exit"), this);
 
+    trayMenu->addAction(actionPlayDoom);
     trayMenu->addAction(actionShowHide);
     trayMenu->addAction(actionExit);
 
     connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,\
             SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(actionPlayDoom, SIGNAL(toggled()), this, SLOT(startApp()));
     connect(actionExit, SIGNAL(triggered()), this, SLOT(exitApp()));
     connect(actionShowHide, SIGNAL(triggered()), this, SLOT(mainWindowShowHide()));
 
@@ -113,6 +120,14 @@ void MainWindow::startApp()
         Vgzdoom->startGzdoom();
 }
 
+void MainWindow::setLastPwadFunc()
+{
+    QString last_pwad;
+    foreach(QListWidgetItem *item, ui->lw_pwad->selectedItems())
+        last_pwad += item->text() + " ";
+    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+}
+
 /*
  ___ _                _
 / __(_)__ _ _ _  __ _| |___
@@ -120,6 +135,18 @@ void MainWindow::startApp()
 |___/_\__, |_||_\__,_|_/__/
      |___/
 */
+
+
+void MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
+{
+    VbaseConfig->setLastIwad(VbaseConfig->getDefaultProfile(), item->text());
+    VlistFill->getIWadList();
+}
+
+void MainWindow::on_lw_pwad_clicked()
+{
+    setLastPwadFunc();
+}
 
 void MainWindow::on_btn_pick_demo_file_clicked()
 {
@@ -144,14 +171,15 @@ void MainWindow::on_btn_load_clicked()
 {
     VbaseConfig->setDefaultProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
 
-    VlistFill->getWadList();
+    VlistFill->getIWadList();
+    VlistFill->getPWadList();
 
     if (ui->lw_profile->currentItem() != nullptr)
     {
         for (int i = 0; i < ui->lw_profile->count(); i++)
             ui->lw_profile->item(i)->setForeground(Qt::black);
 
-        VbaseConfig->readSettings(VbaseConfig->getDefaultProfile());
+        VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
         ui->lw_profile->currentItem()->setForeground(Qt::green);
     }
 }
@@ -162,8 +190,6 @@ void MainWindow::on_btn_exe_clicked()
                         QDir::currentPath(),
                         "Any file *.* (*)");
     ui->le_exe->setText(fileName);
-
-    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_new_clicked()
@@ -176,18 +202,20 @@ void MainWindow::on_btn_new_clicked()
     if (ok && !text.isEmpty())
     {
         ui->lw_profile->addItem(text + ".ini");
-        VbaseConfig->writeSettings(VbaseConfig->getProfilesDir() + text + ".ini");
+        VbaseConfig->writeAllSettings(VbaseConfig->getProfilesDir() + text + ".ini");
     }
 }
 
 void MainWindow::on_le_iwad_textChanged()
 {
-    VlistFill->getWadList();
+    VbaseConfig->setIwadDir(VbaseConfig->getDefaultProfile(), ui->le_iwad->text());
+    VlistFill->getIWadList();
 }
 
 void MainWindow::on_le_pwad_textChanged()
 {
-    VlistFill->getWadList();
+    VbaseConfig->setPwadDir(VbaseConfig->getDefaultProfile(), ui->le_pwad->text());
+    VlistFill->getPWadList();
 }
 
 void MainWindow::on_btn_start_clicked()
@@ -198,18 +226,13 @@ void MainWindow::on_btn_start_clicked()
 void MainWindow::on_btn_iwad_path_clicked()
 {
     QString fileName = fileDialog->getExistingDirectory(this, tr("Open iwad folder"), QDir::currentPath());
-
     ui->le_iwad->setText(fileName);
-
-    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_pwad_path_clicked()
 {
     QString fileName = fileDialog->getExistingDirectory(this, tr("Open pwad folder"), QDir::currentPath());
     ui->le_pwad->setText(fileName);
-
-    VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::on_btn_delete_clicked()
@@ -269,13 +292,48 @@ void MainWindow::on_btn_clone_clicked()
 
 void MainWindow::on_le_exe_textChanged()
 {
-    //    _____ _____  ____  __ _____
-    //   |  ___|_ _\ \/ /  \/  | ____|
-    //   | |_   | | \  /| |\/| |  _|
-    //   |  _|  | | /  \| |  | | |___
-    //   |_|   |___/_/\_\_|  |_|_____|
-    //
-    //VbaseConfig->writeSettings(VbaseConfig->getDefaultProfile());
+    VbaseConfig->setExePath(VbaseConfig->getDefaultProfile(),\
+                              ui->le_exe->text());
+}
+
+//moving item up and down, http://www.qtcentre.org/threads/17996-Move-items-up-and-down-in-QListWidget
+void MainWindow::on_btn_pwad_up_clicked()
+{
+    QListWidgetItem *current = ui->lw_pwad->currentItem();
+    int currIndex = ui->lw_pwad->row(current);
+
+    QListWidgetItem *prev = ui->lw_pwad->item(ui->lw_pwad->row(current) - 1);
+    int prevIndex = ui->lw_pwad->row(prev);
+
+    QListWidgetItem *temp = ui->lw_pwad->takeItem(prevIndex);
+    ui->lw_pwad->insertItem(prevIndex, current);
+    ui->lw_pwad->insertItem(currIndex, temp);
+
+    setLastPwadFunc();
+}
+
+void MainWindow::on_btn_pwad_down_clicked()
+{
+    QListWidgetItem *current = ui->lw_pwad->currentItem();
+    int currIndex = ui->lw_pwad->row(current);
+
+    QListWidgetItem *next = ui->lw_pwad->item(ui->lw_pwad->row(current) + 1);
+    int nextIndex = ui->lw_pwad->row(next);
+
+    QListWidgetItem *temp = ui->lw_pwad->takeItem(nextIndex);
+    ui->lw_pwad->insertItem(currIndex, temp);
+    ui->lw_pwad->insertItem(nextIndex, current);
+
+    setLastPwadFunc();
+}
+
+void MainWindow::on_btn_pwad_top_clicked()
+{
+}
+
+void MainWindow::on_btn_pwad_bottom_clicked()
+{
+
 }
 
 void MainWindow::on_gb_join_toggled()
@@ -285,12 +343,14 @@ void MainWindow::on_gb_join_toggled()
         ui->tabWidget->setTabEnabled(1, false);
         ui->tabWidget->setTabEnabled(2, false);
         ui->tabWidget->setTabEnabled(4, false);
+        ui->btn_start->setText("Join game");
     }
     else
     {
         ui->tabWidget->setTabEnabled(1, true);
         ui->tabWidget->setTabEnabled(2, true);
         ui->tabWidget->setTabEnabled(4, true);
+        ui->btn_start->setText("PLAY DOOM!");
     }
 }
 
@@ -329,6 +389,7 @@ void MainWindow::on_le_playdemo_textChanged()
         ui->lb_playdemo2->setEnabled(false);
         ui->tabWidget->setTabEnabled(1, false);
         ui->tabWidget->setTabEnabled(3, false);
+        ui->btn_start->setText("Play demo file");
     }
     else
     {
@@ -340,6 +401,7 @@ void MainWindow::on_le_playdemo_textChanged()
         ui->lb_playdemo2->setEnabled(true);
         ui->tabWidget->setTabEnabled(1, true);
         ui->tabWidget->setTabEnabled(3, true);
+        ui->btn_start->setText("PLAY DOOM!");
     }
 }
 
@@ -355,6 +417,7 @@ void MainWindow::on_le_playdemo_2_textChanged()
         ui->lb_playdemo->setEnabled(false);
         ui->tabWidget->setTabEnabled(1, false);
         ui->tabWidget->setTabEnabled(3, false);
+        ui->btn_start->setText("Play demo file");
     }
     else
     {
@@ -366,6 +429,7 @@ void MainWindow::on_le_playdemo_2_textChanged()
         ui->lb_playdemo->setEnabled(true);
         ui->tabWidget->setTabEnabled(1, true);
         ui->tabWidget->setTabEnabled(3, true);
+        ui->btn_start->setText("PLAY DOOM!");
     }
 }
 
@@ -398,6 +462,7 @@ void MainWindow::on_le_loadgame_textChanged()
             ui->tabWidget->setTabEnabled(vec.at(i), false);
         ui->gb_game->setEnabled(false);
         ui->gb_demos->setEnabled(false);
+        ui->btn_start->setText("LOAD GAME!");
     }
     else
     {
@@ -405,6 +470,7 @@ void MainWindow::on_le_loadgame_textChanged()
             ui->tabWidget->setTabEnabled(vec.at(i), true);
         ui->gb_game->setEnabled(true);
         ui->gb_demos->setEnabled(true);
+        ui->btn_start->setText("PLAY DOOM!");
     }
 }
 
@@ -449,6 +515,11 @@ void MainWindow::on_actionMinimize_to_tray_Ctrl_T_triggered()
 void MainWindow::on_actionAbout_QT_triggered()
 {
     QMessageBox::aboutQt(this, "About Qt");
+}
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    VconfigDialog->show();
 }
 
 void MainWindow::on_actionAbout_Chicken_Launcher_triggered()

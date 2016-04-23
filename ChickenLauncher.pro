@@ -19,16 +19,19 @@ SOURCES += ./scr/main.cpp\
     scr/gzdoom.cpp \
     scr/prboom.cpp \
     scr/listsfill.cpp \
-    scr/functions.cpp
+    scr/functions.cpp \
+    scr/configdialog.cpp
 
 HEADERS  += ./scr/mainwindow.h \
     scr/baseconfig.h \
     scr/gzdoom.h \
     scr/prboom.h \
     scr/listsfill.h \
-    scr/functions.h
+    scr/functions.h \
+    scr/configdialog.h
 
-FORMS    += ./scr/mainwindow.ui
+FORMS    += ./scr/mainwindow.ui \
+    scr/configdialog.ui
 
 RESOURCES += \
     ./scr/icon.qrc

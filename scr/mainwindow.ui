@@ -157,7 +157,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>371</width>
+        <width>381</width>
         <height>141</height>
        </rect>
       </property>
@@ -170,12 +170,24 @@
        <rect>
         <x>10</x>
         <y>200</y>
-        <width>371</width>
+        <width>351</width>
         <height>151</height>
        </rect>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::MultiSelection</enum>
+      </property>
+      <property name="movement">
+       <enum>QListView::Static</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="label">
@@ -228,6 +240,74 @@
       </property>
       <property name="text">
        <string>Clear selected IWAD</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_pwad_up">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>220</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icon.qrc">
+        <normaloff>:/images/up.svg</normaloff>:/images/up.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_pwad_down">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>310</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icon.qrc">
+        <normaloff>:/images/down.svg</normaloff>:/images/down.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_pwad_top">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>250</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icon.qrc">
+        <normaloff>:/images/top.svg</normaloff>:/images/top.svg</iconset>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_pwad_bottom">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>280</y>
+        <width>21</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="icon.qrc">
+        <normaloff>:/images/bottom.svg</normaloff>:/images/bottom.svg</iconset>
       </property>
      </widget>
     </widget>
@@ -366,7 +446,7 @@
        <rect>
         <x>10</x>
         <y>300</y>
-        <width>311</width>
+        <width>341</width>
         <height>21</height>
        </rect>
       </property>
@@ -407,26 +487,10 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_help">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>300</y>
-        <width>21</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="cursor">
-       <cursorShape>WhatsThisCursor</cursorShape>
-      </property>
-      <property name="text">
-       <string>?</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="btn_clear_advancedparam">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>300</y>
         <width>21</width>
         <height>20</height>
@@ -441,7 +505,7 @@
        <rect>
         <x>10</x>
         <y>250</y>
-        <width>311</width>
+        <width>341</width>
         <height>21</height>
        </rect>
       </property>
@@ -462,7 +526,7 @@
      <widget class="QPushButton" name="btn_clear_advancedparam_2">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>250</y>
         <width>21</width>
         <height>20</height>
@@ -1015,6 +1079,7 @@
      <string>FIle</string>
     </property>
     <addaction name="actionMinimize_to_tray_Ctrl_T"/>
+    <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionExit_Ctrl_Q"/>
    </widget>
@@ -1048,14 +1113,9 @@
     <string>About &quot;Qt&quot;</string>
    </property>
   </action>
-  <action name="actionNeed_help">
+  <action name="actionPreferences">
    <property name="text">
-    <string>Need help?</string>
-   </property>
-  </action>
-  <action name="actionLicense">
-   <property name="text">
-    <string>Apache 2.0</string>
+    <string>Preferences</string>
    </property>
   </action>
  </widget>

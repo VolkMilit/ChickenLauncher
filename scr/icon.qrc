@@ -12,5 +12,13 @@
      <file alias="new.svg">images/new.svg</file>
      <file>images/rename.svg</file>
      <file alias="rename.svg">images/rename.svg</file>
+     <file>images/up.svg</file>
+     <file alias="up.svg">images/up.svg</file>
+     <file>images/down.svg</file>
+     <file alias="down.svg">images/down.svg</file>
+     <file>images/top.svg</file>
+     <file alias="top.svg">images/top.svg</file>
+     <file>images/bottom.svg</file>
+     <file alias="bottom.svg">images/bottom.svg</file>
  </qresource>
  </RCC>

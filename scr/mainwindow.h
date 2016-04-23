@@ -13,6 +13,7 @@
 #include "baseconfig.h"
 #include "listsfill.h"
 #include "gzdoom.h"
+#include "configdialog.h"
 
 namespace Ui {class MainWindow;}
 
@@ -25,9 +26,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-public slots:
-    void mainWindowShowHide();
 
 private slots:
 
@@ -44,6 +42,8 @@ private slots:
     void startApp(); //Todo other doom ports. I mean prboom works, anyway, but WTF guyzz, -files not working ;(
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void windowInit();
+    void setLastPwadFunc();
+    void mainWindowShowHide();
 
 /*
     ___ _                _
@@ -65,6 +65,12 @@ private slots:
     //WAD TAB
     void on_btn_clear_selected_iwad_clicked();
     void on_btn_clear_selected_pwad_clicked();
+    void on_btn_pwad_up_clicked();
+    void on_btn_pwad_top_clicked();
+    void on_btn_pwad_bottom_clicked();
+    void on_btn_pwad_down_clicked();
+    void on_lw_iwad_itemClicked(QListWidgetItem *item);
+    void on_lw_pwad_clicked();
 
     //NETWORK TAB
     void on_gb_join_toggled();
@@ -95,6 +101,7 @@ private slots:
     //MENU
     void on_actionAbout_QT_triggered();
     void on_actionAbout_Chicken_Launcher_triggered();
+    void on_actionPreferences_triggered();
 
     //SHORTCURTS
     void on_actionExit_Ctrl_Q_triggered();
@@ -114,6 +121,7 @@ private:
     baseConfig *VbaseConfig;
     listFill *VlistFill;
     gzdoom *Vgzdoom;
+    configDialog *VconfigDialog;
 
     QListWidgetItem* item;
     QFileDialog *fileDialog;
