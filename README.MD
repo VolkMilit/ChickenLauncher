@@ -10,8 +10,9 @@ Damn small and powerful!
 - Preference dialog
 - Hide full pwad\iwad path
 - Foreground color now customizable
-- Bug fixes
 - PWAD set priority
+- Now if join or demo checked - play button change label
+- Bug fixes
 
 - Clear code
 
