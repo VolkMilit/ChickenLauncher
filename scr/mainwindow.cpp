@@ -193,7 +193,7 @@ void MainWindow::on_btn_exe_clicked()
 }
 
 void MainWindow::on_btn_new_clicked()
-{
+{    
     bool ok;
     QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
                                             tr("Add profile"), QLineEdit::Normal,
@@ -201,6 +201,8 @@ void MainWindow::on_btn_new_clicked()
 
     if (ok && !text.isEmpty())
     {
+        QFile f(VbaseConfig->getProfilesDir() + text + ".ini");
+        f.open(QIODevice::WriteOnly);
         ui->lw_profile->addItem(text + ".ini");
         VbaseConfig->writeAllSettings(VbaseConfig->getProfilesDir() + text + ".ini");
     }
