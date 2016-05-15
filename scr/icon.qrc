@@ -20,5 +20,7 @@
      <file alias="top.svg">images/top.svg</file>
      <file>images/bottom.svg</file>
      <file alias="bottom.svg">images/bottom.svg</file>
+     <file>images/refresh.svg</file>
+     <file alias="refresh.svg">images/refresh.svg</file>
  </qresource>
  </RCC>

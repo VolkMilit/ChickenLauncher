@@ -528,6 +528,12 @@ void MainWindow::on_actionPreferences_triggered()
     VconfigDialog->show();
 }
 
+
+void MainWindow::on_btn_refresh_clicked()
+{
+    VlistFill->getPWadList();
+}
+
 void MainWindow::on_actionAbout_Chicken_Launcher_triggered()
 {
     QMessageBox *msgBox = new QMessageBox(this);

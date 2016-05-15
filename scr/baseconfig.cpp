@@ -258,3 +258,4 @@ QString baseConfig::readSettings(QString file, QString group, QString value)
 
     return rv;
 }
+
