@@ -37,6 +37,10 @@ public:
     void setForegroundColor(QString file, QString value);
     QString getForegroundColor(QString file);
 
+    //hide
+    void setHide(QString file, QString value);
+    QString getHide(QString file);
+
     /***[profile_name].ini***/
     /*[WAD]*/
 

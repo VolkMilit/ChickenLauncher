@@ -33,6 +33,7 @@ private:
 
     QString color;
     QString offPathWad;
+    QString hide;
 };
 
 #endif // CONFIGDIALOG_H

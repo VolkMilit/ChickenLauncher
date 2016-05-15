@@ -87,6 +87,18 @@ QString baseConfig::getForegroundColor(QString file)
     return ret;
 }
 
+//hide
+void baseConfig::setHide(QString file, QString value)
+{
+    writeSettings(file, "settings", "hide", value);
+}
+
+QString baseConfig::getHide(QString file)
+{
+    QString ret = readSettings(file, "settings", "hide");
+    return ret;
+}
+
 /***[profile_name].ini***/
 /*[WAD]*/
 

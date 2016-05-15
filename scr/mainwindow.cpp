@@ -506,7 +506,11 @@ void MainWindow::on_btn_clear_selected_iwad_clicked()
 
 void MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
-    QApplication::quit();
+    QString hide = VbaseConfig->getHide(VbaseConfig->getDefaultProfile());
+    if (hide == "true")
+        mainWindowShowHide();
+    else
+        QApplication::quit();
 }
 
 void MainWindow::on_actionMinimize_to_tray_Ctrl_T_triggered()

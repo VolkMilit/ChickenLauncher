@@ -23,12 +23,15 @@ void configDialog::settingsInit()
 {
     QString profile = VbaseConfig->getDefaultSettings();
 
+    //hide program instead of closing
+    hide = VbaseConfig->getHide(profile);
+    if (hide == "true")
+        ui->cb_hide->setChecked(true);
+
     //hide IWAD\PWAD full path
     offPathWad = VbaseConfig->getOffWadPath(profile);
     if (offPathWad == "true")
         ui->cb_hide_iwad_pwad_full_path->setChecked(true);
-    else
-        ui->cb_hide_iwad_pwad_full_path->setChecked(false);
 
     //foreground color
     color = VbaseConfig->getForegroundColor(profile);
@@ -56,6 +59,11 @@ void configDialog::settingsInit()
 void configDialog::on_buttonBox_accepted()
 {
     QString profile = VbaseConfig->getDefaultSettings();
+
+    if (ui->cb_hide->isChecked())
+        VbaseConfig->setHide(profile, "true");
+    else
+        VbaseConfig->setHide(profile, "false");
 
     if (ui->cb_hide_iwad_pwad_full_path->isChecked())
         VbaseConfig->setOffWadPath(profile, "true");

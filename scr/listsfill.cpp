@@ -31,7 +31,7 @@ QColor listFill::getColor()
     if (color == "Red")
         ret = Qt::red;
     else if (color == "Orange")
-        ret = Qt::black; //Qt::orange doesn't exist WTF?!
+        ret = QColor(255, 160, 0);
     else if (color == "Yellow")
         ret = Qt::yellow;
     else if (color == "Green")
@@ -41,7 +41,7 @@ QColor listFill::getColor()
     else if (color == "Dark blue")
         ret = Qt::darkBlue;
     else if (color == "Purple")
-        ret = Qt::black; //Qt::purple doesn't exist.. oh, ~shi!
+        ret = QColor(173, 0, 255);
     else if (color.isEmpty() || color == "Black")
         ret = Qt::black;
 
