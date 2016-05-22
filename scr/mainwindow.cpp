@@ -51,13 +51,9 @@ void MainWindow::windowInit()
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch (reason)
+    if (reason == QSystemTrayIcon::Trigger)
     {
-        case QSystemTrayIcon::Trigger:
-            mainWindowShowHide();
-            break;
-        default:
-            break;
+        mainWindowShowHide();
     }
 }
 
@@ -241,7 +237,7 @@ void MainWindow::on_btn_pwad_path_clicked()
 void MainWindow::on_btn_delete_clicked()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Chicken Launcher", "Are you shure you want delete this profile?",
+    reply = QMessageBox::question(this, "Chicken Launcher", tr("Are you shure you want delete this profile?"),
             QMessageBox::Yes|QMessageBox::No);
 
     if (reply == QMessageBox::Yes && ui->lw_profile->count() != 0)
@@ -348,99 +344,77 @@ void MainWindow::on_btn_pwad_bottom_clicked()
 
 void MainWindow::on_gb_join_toggled()
 {
+    QVector<int> vec;
+    vec << 1 << 2 << 4;
+
+    bool off = true;
+    ui->btn_start->setText(tr("PLAY DOOM!"));
+
     if (ui->gb_join->isChecked())
     {
-        ui->tabWidget->setTabEnabled(1, false);
-        ui->tabWidget->setTabEnabled(2, false);
-        ui->tabWidget->setTabEnabled(4, false);
-        ui->btn_start->setText("Join game");
+        off = false;
+        ui->btn_start->setText(tr("Join game"));
     }
-    else
-    {
-        ui->tabWidget->setTabEnabled(1, true);
-        ui->tabWidget->setTabEnabled(2, true);
-        ui->tabWidget->setTabEnabled(4, true);
-        ui->btn_start->setText("PLAY DOOM!");
-    }
+
+    for (int i = 0; i < vec.size(); i++)
+        ui->tabWidget->setTabEnabled(vec.at(i), off);
 }
 
 void MainWindow::on_cb_recorddemo_clicked()
 {
-    if (ui->cb_recorddemo->isChecked())
-    {
-        ui->le_playdemo->setEnabled(false);
-        ui->le_playdemo_2->setEnabled(false);
-        ui->lb_playdemo->setEnabled(false);
-        ui->lb_playdemo2->setEnabled(false);
-        ui->btn_pick_demo_file->setEnabled(false);
-        ui->btn_pick_demo_file_2->setEnabled(false);
+    bool off = true;
 
-    }
-    else
-    {
-        ui->le_playdemo->setEnabled(true);
-        ui->le_playdemo_2->setEnabled(true);
-        ui->lb_playdemo->setEnabled(true);
-        ui->lb_playdemo2->setEnabled(true);
-        ui->btn_pick_demo_file->setEnabled(true);
-        ui->btn_pick_demo_file_2->setEnabled(true);
-    }
+    if (ui->cb_recorddemo->isChecked())
+        off = false;
+
+    ui->le_playdemo->setEnabled(off);
+    ui->le_playdemo_2->setEnabled(off);
+    ui->lb_playdemo->setEnabled(off);
+    ui->lb_playdemo2->setEnabled(off);
+    ui->btn_pick_demo_file->setEnabled(off);
+    ui->btn_pick_demo_file_2->setEnabled(off);
 }
 
 void MainWindow::on_le_playdemo_textChanged()
 {
+    bool off = true;
+    ui->btn_start->setText(tr("PLAY DOOM!"));
+
     if (!ui->le_playdemo->text().isEmpty())
     {
-        ui->gb_game->setEnabled(false);
-        ui->cb_recorddemo->setEnabled(false);
-        ui->le_playdemo_2->setEnabled(false);
-        ui->btn_clear_playdemo2->setEnabled(false);
-        ui->btn_pick_demo_file_2->setEnabled(false);
-        ui->lb_playdemo2->setEnabled(false);
-        ui->tabWidget->setTabEnabled(1, false);
-        ui->tabWidget->setTabEnabled(3, false);
-        ui->btn_start->setText("Play demo file");
+        off = false;
+        ui->btn_start->setText(tr("Play demo file"));
     }
-    else
-    {
-        ui->gb_game->setEnabled(true);
-        ui->cb_recorddemo->setEnabled(true);
-        ui->le_playdemo_2->setEnabled(true);
-        ui->btn_clear_playdemo2->setEnabled(true);
-        ui->btn_pick_demo_file_2->setEnabled(true);
-        ui->lb_playdemo2->setEnabled(true);
-        ui->tabWidget->setTabEnabled(1, true);
-        ui->tabWidget->setTabEnabled(3, true);
-        ui->btn_start->setText("PLAY DOOM!");
-    }
+
+    ui->gb_game->setEnabled(off);
+    ui->cb_recorddemo->setEnabled(off);
+    ui->le_playdemo_2->setEnabled(off);
+    ui->btn_clear_playdemo2->setEnabled(off);
+    ui->btn_pick_demo_file_2->setEnabled(off);
+    ui->lb_playdemo2->setEnabled(off);
+    ui->tabWidget->setTabEnabled(1, off);
+    ui->tabWidget->setTabEnabled(3, off);
 }
 
 void MainWindow::on_le_playdemo_2_textChanged()
 {
+    bool off = true;
+    ui->btn_start->setText(tr("PLAY DOOM!"));
+
     if (!ui->le_playdemo_2->text().isEmpty())
     {
-        ui->gb_game->setEnabled(false);
-        ui->cb_recorddemo->setEnabled(false);
-        ui->le_playdemo->setEnabled(false);
-        ui->btn_clear_playdemo->setEnabled(false);
-        ui->btn_pick_demo_file->setEnabled(false);
-        ui->lb_playdemo->setEnabled(false);
-        ui->tabWidget->setTabEnabled(1, false);
-        ui->tabWidget->setTabEnabled(3, false);
-        ui->btn_start->setText("Play demo file");
+        off = false;
+        ui->btn_start->setText(tr("Play demo file"));
     }
-    else
-    {
-        ui->gb_game->setEnabled(true);
-        ui->cb_recorddemo->setEnabled(true);
-        ui->le_playdemo->setEnabled(true);
-        ui->btn_clear_playdemo->setEnabled(true);
-        ui->btn_pick_demo_file->setEnabled(true);
-        ui->lb_playdemo->setEnabled(true);
-        ui->tabWidget->setTabEnabled(1, true);
-        ui->tabWidget->setTabEnabled(3, true);
-        ui->btn_start->setText("PLAY DOOM!");
-    }
+
+    ui->gb_game->setEnabled(off);
+    ui->cb_recorddemo->setEnabled(off);
+    ui->le_playdemo->setEnabled(off);
+    ui->btn_clear_playdemo->setEnabled(off);
+    ui->btn_pick_demo_file->setEnabled(off);
+    ui->lb_playdemo->setEnabled(off);
+    ui->tabWidget->setTabEnabled(1, off);
+    ui->tabWidget->setTabEnabled(3, off);
 }
 
 void MainWindow::on_btn_clear_loadgame_clicked()
@@ -466,22 +440,19 @@ void MainWindow::on_le_loadgame_textChanged()
     QVector<int> vec;
     vec << 0 << 2 << 3;
 
+    bool off = true;
+    ui->btn_start->setText(tr("PLAY DOOM!"));
+
     if (!ui->le_loadgame->text().isEmpty())
     {
-        for (int i = 0; i < vec.size(); i++)
-            ui->tabWidget->setTabEnabled(vec.at(i), false);
-        ui->gb_game->setEnabled(false);
-        ui->gb_demos->setEnabled(false);
-        ui->btn_start->setText("LOAD GAME!");
+        off = false;
+        ui->btn_start->setText(tr("LOAD GAME!"));
     }
-    else
-    {
-        for (int i = 0; i < vec.size(); i++)
-            ui->tabWidget->setTabEnabled(vec.at(i), true);
-        ui->gb_game->setEnabled(true);
-        ui->gb_demos->setEnabled(true);
-        ui->btn_start->setText("PLAY DOOM!");
-    }
+
+    for (int i = 0; i < vec.size(); i++)
+        ui->tabWidget->setTabEnabled(vec.at(i), off);
+    ui->gb_game->setEnabled(off);
+    ui->gb_demos->setEnabled(off);
 }
 
 void MainWindow::on_btn_clear_advancedparam_clicked()
@@ -528,7 +499,7 @@ void MainWindow::on_actionMinimize_to_tray_Ctrl_T_triggered()
 
 void MainWindow::on_actionAbout_QT_triggered()
 {
-    QMessageBox::aboutQt(this, "About Qt");
+    QMessageBox::aboutQt(this, tr("About Qt"));
 }
 
 void MainWindow::on_actionPreferences_triggered()
