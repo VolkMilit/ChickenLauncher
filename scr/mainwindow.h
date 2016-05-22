@@ -14,6 +14,7 @@
 #include "listsfill.h"
 #include "gzdoom.h"
 #include "configdialog.h"
+#include "colors.h"
 
 namespace Ui {class MainWindow;}
 
@@ -42,8 +43,8 @@ private slots:
     void startApp(); //Todo other doom ports. I mean prboom works, anyway, but WTF guyzz, -files not working ;(
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void windowInit();
-    void setLastPwadFunc();
     void mainWindowShowHide();
+    void setLastPwadFunc();
 
 /*
     ___ _                _
@@ -69,7 +70,7 @@ private slots:
     void on_btn_pwad_top_clicked();
     void on_btn_pwad_bottom_clicked();
     void on_btn_pwad_down_clicked();
-    void on_lw_iwad_itemClicked(QListWidgetItem *item);
+    void on_lw_iwad_itemClicked();
     void on_lw_pwad_clicked();
     void on_btn_refresh_clicked();
 
@@ -123,6 +124,7 @@ private:
     listFill *VlistFill;
     gzdoom *Vgzdoom;
     configDialog *VconfigDialog;
+    colors *Vcolors;
 
     QListWidgetItem* item;
     QFileDialog *fileDialog;

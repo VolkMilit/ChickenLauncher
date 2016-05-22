@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     VlistFill = new listFill(ui);
     Vgzdoom = new gzdoom(ui);
     VconfigDialog = new configDialog();
+    Vcolors = new colors(ui);
 
     windowInit();
 }
@@ -21,6 +22,7 @@ MainWindow::~MainWindow()
     delete VlistFill;
     delete Vgzdoom;
     delete VconfigDialog;
+    delete Vcolors;
 }
 
 
@@ -120,14 +122,6 @@ void MainWindow::startApp()
         Vgzdoom->startGzdoom();
 }
 
-void MainWindow::setLastPwadFunc()
-{
-    QString last_pwad;
-    foreach(QListWidgetItem *item, ui->lw_pwad->selectedItems())
-        last_pwad += item->text() + " ";
-    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
-}
-
 /*
  ___ _                _
 / __(_)__ _ _ _  __ _| |___
@@ -137,15 +131,24 @@ void MainWindow::setLastPwadFunc()
 */
 
 
-void MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
+void MainWindow::on_lw_iwad_itemClicked()
 {
-    VbaseConfig->setLastIwad(VbaseConfig->getDefaultProfile(), item->text());
-    VlistFill->getIWadList();
+    VbaseConfig->setLastIwad(VbaseConfig->getDefaultProfile(), ui->lw_iwad->currentItem()->text());
+    Vcolors->clearColor(ui->lw_iwad);
+    ui->lw_iwad->currentItem()->setForeground(Vcolors->getColor());
+    ui->lw_iwad->currentItem()->setSelected(false);
 }
 
 void MainWindow::on_lw_pwad_clicked()
 {
-    setLastPwadFunc();
+    ui->lw_pwad->currentItem()->setForeground(Vcolors->getColor());
+    ui->lw_pwad->currentItem()->setCheckState(Qt::Checked);
+
+    QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
+            + ui->lw_pwad->currentItem()->text() + " ";
+    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+
+    ui->lw_pwad->currentItem()->setSelected(false);
 }
 
 void MainWindow::on_btn_pick_demo_file_clicked()
@@ -176,11 +179,9 @@ void MainWindow::on_btn_load_clicked()
 
     if (ui->lw_profile->currentItem() != nullptr)
     {
-        for (int i = 0; i < ui->lw_profile->count(); i++)
-            ui->lw_profile->item(i)->setForeground(Qt::black);
-
+        Vcolors->clearColor(ui->lw_profile);
         VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
-        ui->lw_profile->currentItem()->setForeground(Qt::green);
+        ui->lw_profile->currentItem()->setForeground(Vcolors->getColor());
     }
 }
 
@@ -298,6 +299,14 @@ void MainWindow::on_le_exe_textChanged()
                               ui->le_exe->text());
 }
 
+void MainWindow::setLastPwadFunc()
+{
+    QString last_pwad;
+    foreach(QListWidgetItem *item, ui->lw_pwad->selectedItems())
+        last_pwad += item->text() + " ";
+    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+}
+
 //moving item up and down, http://www.qtcentre.org/threads/17996-Move-items-up-and-down-in-QListWidget
 void MainWindow::on_btn_pwad_up_clicked()
 {
@@ -335,7 +344,6 @@ void MainWindow::on_btn_pwad_top_clicked()
 
 void MainWindow::on_btn_pwad_bottom_clicked()
 {
-
 }
 
 void MainWindow::on_gb_join_toggled()

@@ -28,7 +28,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <property name="tabBarAutoHide">
      <bool>false</bool>
@@ -407,49 +407,11 @@
        <string>...</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>381</width>
-        <height>151</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Port</string>
-      </property>
-      <widget class="QListWidget" name="lw_port">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>21</y>
-         <width>381</width>
-         <height>121</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>(G)ZDoom</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Zandronum</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>[Pr]Boom(-plus)</string>
-        </property>
-       </item>
-      </widget>
-     </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
+        <y>120</y>
         <width>231</width>
         <height>16</height>
        </rect>
@@ -462,7 +424,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>300</y>
+        <y>140</y>
         <width>341</width>
         <height>21</height>
        </rect>
@@ -472,7 +434,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>350</y>
+        <y>190</y>
         <width>341</width>
         <height>21</height>
        </rect>
@@ -482,7 +444,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>330</y>
+        <y>170</y>
         <width>241</width>
         <height>21</height>
        </rect>
@@ -495,7 +457,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>350</y>
+        <y>190</y>
         <width>21</width>
         <height>20</height>
        </rect>
@@ -508,7 +470,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>300</y>
+        <y>140</y>
         <width>21</width>
         <height>20</height>
        </rect>
@@ -521,7 +483,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>250</y>
+        <y>90</y>
         <width>341</width>
         <height>21</height>
        </rect>
@@ -531,7 +493,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>230</y>
+        <y>70</y>
         <width>231</width>
         <height>16</height>
        </rect>
@@ -544,7 +506,7 @@
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>250</y>
+        <y>90</y>
         <width>21</width>
         <height>20</height>
        </rect>

@@ -4,11 +4,13 @@ listFill::listFill(Ui::MainWindow *ui)
 {
     this->myUi = ui;
     VbaseConfig = new baseConfig(ui);
+    Vcolors = new colors(ui);
 }
 
 listFill::~listFill()
 {
     delete VbaseConfig;
+    delete Vcolors;
     delete myUi;
 }
 
@@ -20,32 +22,6 @@ void listFill::setOffPathWad(bool set)
         offPathWad = "false";
 
     VbaseConfig->setOffWadPath(VbaseConfig->getDefaultSettings(), offPathWad);
-}
-
-QColor listFill::getColor()
-{
-    QColor ret;
-
-    color = VbaseConfig->getForegroundColor(VbaseConfig->getDefaultSettings());
-
-    if (color == "Red")
-        ret = Qt::red;
-    else if (color == "Orange")
-        ret = QColor(255, 160, 0);
-    else if (color == "Yellow")
-        ret = Qt::yellow;
-    else if (color == "Green")
-        ret = Qt::green;
-    else if (color == "Blue")
-        ret = Qt::blue;
-    else if (color == "Dark blue")
-        ret = Qt::darkBlue;
-    else if (color == "Purple")
-        ret = QColor(173, 0, 255);
-    else if (color.isEmpty() || color == "Black")
-        ret = Qt::black;
-
-    return ret;
 }
 
 QString listFill::getOffPathWad()
@@ -75,7 +51,7 @@ void listFill::getIWadList()
         myUi->lw_iwad->addItem(path + IWAD_files.at(i));
 
         if (myUi->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(profile))        
-            myUi->lw_iwad->item(i)->setForeground(getColor());
+            myUi->lw_iwad->item(i)->setForeground(Vcolors->getColor());
     }
 }
 
@@ -100,13 +76,14 @@ void listFill::getPWadList()
     for (int i = 0; i < PWAD_files.length(); i++)
     {
         myUi->lw_pwad->addItem(path + PWAD_files.at(i));
+        myUi->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
 
         for (int j = 0; j < pwad_list.length(); j++)
         {
             if (myUi->lw_pwad->item(i)->text() == pwad_list.at(j))
             {
-                myUi->lw_pwad->item(i)->setForeground(getColor());
-                //myUi->lw_pwad->sortItems(myUi->lw_pwad->item(i)->foreground() == Qt::green);
+                myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
+                myUi->lw_pwad->item(i)->setForeground(Vcolors->getColor());
             }
         }
     }
@@ -127,6 +104,6 @@ void listFill::getProfiles()
         myUi->lw_profile->addItem(ini_files.at(i));
 
         if (myUi->lw_profile->item(i)->text() == VbaseConfig->getDefaultProfileName())
-            myUi->lw_profile->item(i)->setForeground(getColor());
+            myUi->lw_profile->item(i)->setForeground(Vcolors->getColor());
     }
 }

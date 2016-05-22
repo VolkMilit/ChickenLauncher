@@ -20,7 +20,8 @@ SOURCES += ./scr/main.cpp\
     scr/prboom.cpp \
     scr/listsfill.cpp \
     scr/functions.cpp \
-    scr/configdialog.cpp
+    scr/configdialog.cpp \
+    scr/colors.cpp
 
 HEADERS  += ./scr/mainwindow.h \
     scr/baseconfig.h \
@@ -28,7 +29,8 @@ HEADERS  += ./scr/mainwindow.h \
     scr/prboom.h \
     scr/listsfill.h \
     scr/functions.h \
-    scr/configdialog.h
+    scr/configdialog.h \
+    scr/colors.h
 
 FORMS    += ./scr/mainwindow.ui \
     scr/configdialog.ui

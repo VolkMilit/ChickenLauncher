@@ -5,6 +5,7 @@
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"
+#include "colors.h"
 
 class listFill
 {
@@ -22,11 +23,9 @@ public:
 private:
     Ui::MainWindow *myUi;
     baseConfig *VbaseConfig;
-
-    QColor getColor();
+    colors *Vcolors;
 
     QString offPathWad; //QVariant not work, boost too overhead, qt5 is not in my distribution
-    QString color;
 };
 
 #endif // LISTSFILL_H
