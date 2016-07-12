@@ -21,6 +21,7 @@
 #include <QListWidgetItem>
 #include <QDateTime>
 #include <QProcess>
+#include <QDebug>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"

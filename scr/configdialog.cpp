@@ -71,11 +71,6 @@ void configDialog::on_buttonBox_accepted()
         VbaseConfig->setOffWadPath(profile, "false");
 
     VbaseConfig->setForegroundColor(profile, ui->comb_foreground_color->currentText().remove(" (off)"));
-
-    //FIXME
-    /*VlistFill->getIWadList();
-    VlistFill->getPWadList();
-    VlistFill->getProfiles();*/
 }
 
 void configDialog::on_buttonBox_rejected()

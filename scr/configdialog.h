@@ -3,6 +3,7 @@
 
 #include "baseconfig.h"
 #include "listsfill.h"
+#include "colors.h"
 #include "ui_mainwindow.h"
 
 namespace Ui {class configDialog;}
@@ -19,10 +20,8 @@ public slots:
 
 private slots:
     void on_buttonBox_accepted();
-
-    void settingsInit();
-
     void on_buttonBox_rejected();
+    void settingsInit();
 
 private:
     Ui::configDialog *ui;
@@ -30,6 +29,7 @@ private:
 
     baseConfig *VbaseConfig;
     listFill *VlistFill;
+    colors *Vcolor;
 
     QString color;
     QString offPathWad;

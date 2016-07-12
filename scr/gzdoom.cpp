@@ -134,7 +134,6 @@ void gzdoom::startGzdoom()
                        pwad +\
                        skill +\
                        map + " " +\
-                       myUi->le_adv_port_param->text() +\
                        nomusic +\
                        nosound +\
                        nosfx +\
@@ -142,7 +141,8 @@ void gzdoom::startGzdoom()
                        oldsprites +\
                        noautoload +\
                        nostartup +\
-                       loadgame\
-                      );
+                       loadgame +\
+                       myUi->le_adv_port_param->text()
+                    );
     }
 }

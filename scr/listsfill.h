@@ -16,6 +16,7 @@ public:
     void getIWadList();
     void getPWadList();
     void getProfiles();
+    void updateColors();
 
     void setOffPathWad(bool set);
     QString getOffPathWad();
@@ -25,7 +26,8 @@ private:
     baseConfig *VbaseConfig;
     colors *Vcolors;
 
-    QString offPathWad; //QVariant not work, boost too overhead, qt5 is not in my distribution
+    QString offPathWad; //QVariant not work, hmm...
+    QStringList pwad_list;
 };
 
 #endif // LISTSFILL_H

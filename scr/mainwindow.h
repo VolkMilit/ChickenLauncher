@@ -9,6 +9,7 @@
 #include <QSystemTrayIcon>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QTextStream>
 
 #include "baseconfig.h"
 #include "listsfill.h"
@@ -27,6 +28,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void updateColors();
 
 private slots:
 
@@ -73,6 +77,7 @@ private slots:
     void on_lw_iwad_itemClicked();
     void on_lw_pwad_clicked();
     void on_btn_refresh_clicked();
+    void on_lw_pwad_itemChanged(QListWidgetItem *item);
 
     //NETWORK TAB
     void on_gb_join_toggled();

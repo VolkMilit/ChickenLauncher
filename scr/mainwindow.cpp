@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,6 +34,18 @@ MainWindow::~MainWindow()
 |_| \_,_|_||_\__|\__|_\___/_||_/__/
 
 */
+
+void MainWindow::updateColors()
+{
+    for (int i = 0; i < ui->lw_iwad->count(); i++)
+    {
+        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile()))
+        {
+            ui->lw_iwad->item(i)->setForeground(Qt::black);
+        }
+    }
+    qDebug() << VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile());
+}
 
 void MainWindow::windowInit()
 {
@@ -82,7 +95,7 @@ void MainWindow::trayIcon()
 
     connect(trIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,\
             SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    connect(actionPlayDoom, SIGNAL(toggled()), this, SLOT(startApp()));
+    connect(actionPlayDoom, SIGNAL(triggered()), this, SLOT(startApp()));
     connect(actionExit, SIGNAL(triggered()), this, SLOT(exitApp()));
     connect(actionShowHide, SIGNAL(triggered()), this, SLOT(mainWindowShowHide()));
 
@@ -128,7 +141,7 @@ void MainWindow::startApp()
 
 
 void MainWindow::on_lw_iwad_itemClicked()
-{
+{       
     VbaseConfig->setLastIwad(VbaseConfig->getDefaultProfile(), ui->lw_iwad->currentItem()->text());
     Vcolors->clearColor(ui->lw_iwad);
     ui->lw_iwad->currentItem()->setForeground(Vcolors->getColor());
@@ -137,14 +150,15 @@ void MainWindow::on_lw_iwad_itemClicked()
 
 void MainWindow::on_lw_pwad_clicked()
 {
-    ui->lw_pwad->currentItem()->setForeground(Vcolors->getColor());
-    ui->lw_pwad->currentItem()->setCheckState(Qt::Checked);
-
     QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
             + ui->lw_pwad->currentItem()->text() + " ";
     VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+}
 
-    ui->lw_pwad->currentItem()->setSelected(false);
+
+void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
+{
+
 }
 
 void MainWindow::on_btn_pick_demo_file_clicked()
@@ -276,12 +290,13 @@ void MainWindow::on_btn_rename_clicked()
 
 void MainWindow::on_btn_clone_clicked()
 {
-    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
-
     bool ok;
     QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
                                             tr("Clone profile"), QLineEdit::Normal,
                                             "", &ok);
+
+    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+
     if (ok && !text.isEmpty())
         f.copy(VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text(),\
                VbaseConfig->getProfilesDir() + text + ".ini");
@@ -476,6 +491,8 @@ void MainWindow::on_btn_clear_port_clicked()
 void MainWindow::on_btn_clear_selected_pwad_clicked()
 {
     ui->lw_pwad->reset();
+    for(int i = 0; i < ui->lw_pwad->count(); i++)
+        ui->lw_pwad->item(i)->setForeground(Qt::black);
 }
 
 void MainWindow::on_btn_clear_selected_iwad_clicked()
@@ -504,9 +521,9 @@ void MainWindow::on_actionAbout_QT_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
+    connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
     VconfigDialog->show();
 }
-
 
 void MainWindow::on_btn_refresh_clicked()
 {

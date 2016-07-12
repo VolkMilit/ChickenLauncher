@@ -1,4 +1,5 @@
 #include "listsfill.h"
+#include <QDebug>
 
 listFill::listFill(Ui::MainWindow *ui)
 {
@@ -31,12 +32,14 @@ QString listFill::getOffPathWad()
 
 void listFill::getIWadList()
 {
-    QString path = "";
-    QString profile = VbaseConfig->getDefaultProfile();
-
     myUi->lw_iwad->clear();
 
-    QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3" << "*.7z" << "*.rar" << "*.tar.*";
+    QString path = "";
+    const QString profile = VbaseConfig->getDefaultProfile();
+    const QColor color = Vcolors->getColor();
+    const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
+                                       << "*.7z" << "*.rar" << "*.tar.*";
+    const QString lastIwad = VbaseConfig->getLastIwad(profile);
 
     QDir iwad_dir(VbaseConfig->getIwadDir(profile));
     if(!iwad_dir.exists())
@@ -45,25 +48,27 @@ void listFill::getIWadList()
     if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == "false") //see comment in listfill.h
         path = iwad_dir.absolutePath() + "/";
 
-    QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files);
+    const QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files);
     for (int i = 0; i < IWAD_files.length(); i++)
     {
         myUi->lw_iwad->addItem(path + IWAD_files.at(i));
 
-        if (myUi->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(profile))        
-            myUi->lw_iwad->item(i)->setForeground(Vcolors->getColor());
+        if (myUi->lw_iwad->item(i)->text() == lastIwad)
+            myUi->lw_iwad->item(i)->setForeground(color);
     }
 }
 
 void listFill::getPWadList()
 {
-    QString path = "";
-    QString profile = VbaseConfig->getDefaultProfile();
-    QStringList pwad_list = VbaseConfig->getLastPwad(profile).split(" ");
-
     myUi->lw_pwad->clear();
 
-    QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3" << "*.7z" << "*.rar" << "*.tar.*";
+    QString path = "";
+    const QString profile = VbaseConfig->getDefaultProfile();
+    pwad_list = VbaseConfig->getLastPwad(profile).split(" ");
+    const QColor color = Vcolors->getColor();
+    const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
+                                       << "*.7z" << "*.rar" << "*.tar.*";
+    int index = -1;
 
     QDir pwad_dir(VbaseConfig->getPwadDir(profile));
     if(!pwad_dir.exists())
@@ -72,7 +77,8 @@ void listFill::getPWadList()
     if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == "false") //see comment in listfill.h
         path = pwad_dir.absolutePath() + "/";
 
-    QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
+    const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
+    QListWidgetItem *temp;
     for (int i = 0; i < PWAD_files.length(); i++)
     {
         myUi->lw_pwad->addItem(path + PWAD_files.at(i));
@@ -83,7 +89,11 @@ void listFill::getPWadList()
             if (myUi->lw_pwad->item(i)->text() == pwad_list.at(j))
             {
                 myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
-                myUi->lw_pwad->item(i)->setForeground(Vcolors->getColor());
+                myUi->lw_pwad->item(i)->setForeground(color);
+
+                // sort, all item from pwad_list on top
+                temp = myUi->lw_pwad->takeItem(i);
+                myUi->lw_pwad->insertItem(index++, temp);
             }
         }
     }
@@ -94,7 +104,9 @@ void listFill::getProfiles()
     myUi->lw_profile->clear();
 
     QDir dir(VbaseConfig->getProfilesDir());
-    QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
+    const QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
+    const QColor color = Vcolors->getColor();
+    const QString getDefaultProfileName = VbaseConfig->getDefaultProfileName();
 
     if (ini_files.isEmpty())
         VbaseConfig->readAllSettings(VbaseConfig->getProfilesDir() + "default.ini");
@@ -103,7 +115,12 @@ void listFill::getProfiles()
     {
         myUi->lw_profile->addItem(ini_files.at(i));
 
-        if (myUi->lw_profile->item(i)->text() == VbaseConfig->getDefaultProfileName())
-            myUi->lw_profile->item(i)->setForeground(Vcolors->getColor());
+        if (myUi->lw_profile->item(i)->text() == getDefaultProfileName)
+            myUi->lw_profile->item(i)->setForeground(color);
     }
+}
+
+void listFill::updateColors()
+{
+    // not inplemented yet
 }
