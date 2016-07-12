@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -150,15 +151,27 @@ void MainWindow::on_lw_iwad_itemClicked()
 
 void MainWindow::on_lw_pwad_clicked()
 {
-    QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
+    /*QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
             + ui->lw_pwad->currentItem()->text() + " ";
-    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);*/
 }
 
 
 void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
 {
-
+    if (item->checkState())
+    {
+        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
+                    + item->text() + " ";
+        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+    }
+    else
+    {
+        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile());
+        last_pwad.remove(item->text());
+        last_pwad.remove("  ");
+        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+    }
 }
 
 void MainWindow::on_btn_pick_demo_file_clicked()

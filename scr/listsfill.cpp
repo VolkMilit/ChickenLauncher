@@ -1,5 +1,4 @@
 #include "listsfill.h"
-#include <QDebug>
 
 listFill::listFill(Ui::MainWindow *ui)
 {

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+// Qt headers
 #include <QMainWindow>
 #include <QDir>
 #include <QFile>
@@ -11,6 +12,10 @@
 #include <QInputDialog>
 #include <QTextStream>
 
+// std headers
+#include <algorithm>
+
+// libraries
 #include "baseconfig.h"
 #include "listsfill.h"
 #include "gzdoom.h"
