@@ -53,7 +53,7 @@ QString baseConfig::getDefaultProfile()
 void baseConfig::setDefaultProfile(QString profile)
 {
     getValues();
-    writeSettings(defaultSettings, "Settings", "profile", profile);
+    writeSettings(defaultSettings, "settings", "profile", profile);
 }
 
 QString baseConfig::getDefaultProfileName()

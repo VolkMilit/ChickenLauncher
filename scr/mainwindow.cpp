@@ -1,6 +1,5 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -45,7 +44,6 @@ void MainWindow::updateColors()
             ui->lw_iwad->item(i)->setForeground(Qt::black);
         }
     }
-    qDebug() << VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile());
 }
 
 void MainWindow::windowInit()
@@ -149,28 +147,22 @@ void MainWindow::on_lw_iwad_itemClicked()
     ui->lw_iwad->currentItem()->setSelected(false);
 }
 
-void MainWindow::on_lw_pwad_clicked()
-{
-    /*QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
-            + ui->lw_pwad->currentItem()->text() + " ";
-    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);*/
-}
-
-
 void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
 {
     if (item->checkState())
     {
         QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
                     + item->text() + " ";
+        item->setForeground(Vcolors->getColor());
         VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
     }
     else
     {
         QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile());
-        last_pwad.remove(item->text());
-        last_pwad.remove("  ");
-        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+        item->setForeground(Qt::black);
+        last_pwad.simplified();
+        last_pwad.remove(item->text() + " ");\
+        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad + " ");
     }
 }
 
@@ -195,16 +187,16 @@ void MainWindow::on_btn_loadgame_clicked()
 
 void MainWindow::on_btn_load_clicked()
 {
-    VbaseConfig->setDefaultProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
-
-    VlistFill->getIWadList();
-    VlistFill->getPWadList();
-
     if (ui->lw_profile->currentItem() != nullptr)
     {
+        VbaseConfig->setDefaultProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+
         Vcolors->clearColor(ui->lw_profile);
-        VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
+        VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile()); // this fill exe, iwad, pwad path's
         ui->lw_profile->currentItem()->setForeground(Vcolors->getColor());
+
+        VlistFill->getIWadList();
+        VlistFill->getPWadList();
     }
 }
 
@@ -503,9 +495,12 @@ void MainWindow::on_btn_clear_port_clicked()
 
 void MainWindow::on_btn_clear_selected_pwad_clicked()
 {
-    ui->lw_pwad->reset();
+    ui->lw_pwad->currentItem()->setSelected(false);
     for(int i = 0; i < ui->lw_pwad->count(); i++)
+    {
+        ui->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
         ui->lw_pwad->item(i)->setForeground(Qt::black);
+    }
 }
 
 void MainWindow::on_btn_clear_selected_iwad_clicked()

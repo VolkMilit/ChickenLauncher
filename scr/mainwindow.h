@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QTextStream>
+#include <QtAlgorithms>
 
 // std headers
 #include <algorithm>
@@ -80,7 +81,6 @@ private slots:
     void on_btn_pwad_bottom_clicked();
     void on_btn_pwad_down_clicked();
     void on_lw_iwad_itemClicked();
-    void on_lw_pwad_clicked();
     void on_btn_refresh_clicked();
     void on_lw_pwad_itemChanged(QListWidgetItem *item);
 
