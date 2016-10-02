@@ -17,23 +17,22 @@ Damn small and powerful!
 - Clear code
 
 ####Screenshots:
-![Profile tab](/screenshots/1profile_tab.png)
-![Wad's tab](/screenshots/2wads_tab.png)
-![Settings tab](/screenshots/3settings_tab.png)
-![Multiplayer tab](/screenshots/4multiplayer_tab.png)
-![Advenced tab](/screenshots/5advenced_tab.png)
-![Preference dialog](/screenshots/6preferenced_dialog.png)
+See ./screenshots/
 
 ####KNOW ISSUES
 See bug tracker
 
 ####TODO:
 #####v 1.4
-- ~Sort colored items~
-- Translations
+- ~~Sort colored items~~																															
+- Debian\Ubuntu packaging script																																																
 
-#####v 1.5 (?)
-- Migrate to Qt5
+#####v 1.5
+- Add PrBoom+ and Chocolate Doom																					
+- Translations																		
+
+#####v 1.x
+- Migrate to Qt5 (have problems with png on version 5.3.x in Debian)									
 
 ####REQUIREMENTS
 QT >= 4.8
