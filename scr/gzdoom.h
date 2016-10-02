@@ -17,8 +17,8 @@
 #ifndef GZDOOM_H
 #define GZDOOM_H
 
-#include <QString>
 #include <QListWidgetItem>
+#include <QString>
 #include <QDateTime>
 #include <QProcess>
 #include <QDebug>

@@ -29,7 +29,7 @@ See bug tracker
 
 ####TODO:
 #####v 1.4
-- Sort colored items
+- ~Sort colored items~
 - Translations
 
 #####v 1.5 (?)

@@ -1,15 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-// Qt headers
 #include <QMainWindow>
-#include <QDir>
-#include <QFile>
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QSystemTrayIcon>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QDir>
+#include <QFile>
 #include <QTextStream>
 #include <QtAlgorithms>
 
@@ -109,6 +108,8 @@ private slots:
     void on_le_exe_textChanged();
     void on_le_iwad_textChanged();
     void on_le_pwad_textChanged();
+    void on_le_adv_cmd_param_textChanged();
+    void on_le_adv_port_param_textChanged();
 
     //MENU
     void on_actionAbout_QT_triggered();

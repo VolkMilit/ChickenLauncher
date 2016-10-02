@@ -1,6 +1,5 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -38,12 +37,8 @@ MainWindow::~MainWindow()
 void MainWindow::updateColors()
 {
     for (int i = 0; i < ui->lw_iwad->count(); i++)
-    {
         if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile()))
-        {
             ui->lw_iwad->item(i)->setForeground(Qt::black);
-        }
-    }
 }
 
 void MainWindow::windowInit()
@@ -58,15 +53,13 @@ void MainWindow::windowInit()
 
     //shortcurts
     ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
-    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));    
+    ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger)
-    {
         mainWindowShowHide();
-    }
 }
 
 void MainWindow::trayIcon()
@@ -234,6 +227,16 @@ void MainWindow::on_le_pwad_textChanged()
 {
     VbaseConfig->setPwadDir(VbaseConfig->getDefaultProfile(), ui->le_pwad->text());
     VlistFill->getPWadList();
+}
+
+void MainWindow::on_le_adv_cmd_param_textChanged()
+{
+    VbaseConfig->setAdvCmdParam(VbaseConfig->getDefaultProfile(), ui->le_adv_cmd_param->text());
+}
+
+void MainWindow::on_le_adv_port_param_textChanged()
+{
+    VbaseConfig->setAdvExeParam(VbaseConfig->getDefaultProfile(), ui->le_adv_port_param->text());
 }
 
 void MainWindow::on_btn_start_clicked()
@@ -471,6 +474,7 @@ void MainWindow::on_le_loadgame_textChanged()
 
     for (int i = 0; i < vec.size(); i++)
         ui->tabWidget->setTabEnabled(vec.at(i), off);
+
     ui->gb_game->setEnabled(off);
     ui->gb_demos->setEnabled(off);
 }
@@ -496,6 +500,7 @@ void MainWindow::on_btn_clear_port_clicked()
 void MainWindow::on_btn_clear_selected_pwad_clicked()
 {
     ui->lw_pwad->currentItem()->setSelected(false);
+
     for(int i = 0; i < ui->lw_pwad->count(); i++)
     {
         ui->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
@@ -510,8 +515,9 @@ void MainWindow::on_btn_clear_selected_iwad_clicked()
 
 void MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
-    QString hide = VbaseConfig->getHide(VbaseConfig->getDefaultProfile());
-    if (hide == "true")
+    int hide = VbaseConfig->getHide(VbaseConfig->getDefaultSettings());
+
+    if (hide == 1)
         mainWindowShowHide();
     else
         QApplication::quit();

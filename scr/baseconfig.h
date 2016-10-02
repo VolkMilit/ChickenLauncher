@@ -2,10 +2,10 @@
 #define BASECONFIG_H
 
 #include <QWidget>
+#include <QMessageBox>
 #include <QString>
 #include <QDir>
 #include <QSettings>
-#include <QMessageBox>
 
 #include "ui_mainwindow.h"
 
@@ -30,16 +30,16 @@ public:
     QString getDefaultProfileName();
 
     //off_wad_path
-    void setOffWadPath(QString file, QString value);
-    QString getOffWadPath(QString file);
+    void setOffWadPath(QString file, int value);
+    int getOffWadPath(QString file);
 
     //foreground_color
     void setForegroundColor(QString file, QString value);
     QString getForegroundColor(QString file);
 
     //hide
-    void setHide(QString file, QString value);
-    QString getHide(QString file);
+    void setHide(QString file, int value);
+    int getHide(QString file);
 
     /***[profile_name].ini***/
     /*[WAD]*/
@@ -84,7 +84,9 @@ private:
     void getValues();
     bool fileExist(QString file);
     void writeSettings(QString file, QString group, QString value, QString var);
+    void writeSettings(QString file, QString group, QString value, int var);
     QString readSettings(QString file, QString group, QString value);
+    int readIntSettings(QString file, QString group, QString value);
 };
 
 #endif // BASECONFIG_H

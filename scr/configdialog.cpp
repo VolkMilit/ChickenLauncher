@@ -61,14 +61,14 @@ void configDialog::on_buttonBox_accepted()
     QString profile = VbaseConfig->getDefaultSettings();
 
     if (ui->cb_hide->isChecked())
-        VbaseConfig->setHide(profile, "true");
+        VbaseConfig->setHide(profile, 1);
     else
-        VbaseConfig->setHide(profile, "false");
+        VbaseConfig->setHide(profile, 0);
 
     if (ui->cb_hide_iwad_pwad_full_path->isChecked())
-        VbaseConfig->setOffWadPath(profile, "true");
+        VbaseConfig->setOffWadPath(profile, 1);
     else
-        VbaseConfig->setOffWadPath(profile, "false");
+        VbaseConfig->setOffWadPath(profile, 0);
 
     VbaseConfig->setForegroundColor(profile, ui->comb_foreground_color->currentText().remove(" (off)"));
 }

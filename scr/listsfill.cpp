@@ -17,14 +17,14 @@ listFill::~listFill()
 void listFill::setOffPathWad(bool set)
 {
     if (set)
-        offPathWad = "true";
+        offPathWad = 1;
     else
-        offPathWad = "false";
+        offPathWad = 0;
 
     VbaseConfig->setOffWadPath(VbaseConfig->getDefaultSettings(), offPathWad);
 }
 
-QString listFill::getOffPathWad()
+int listFill::getOffPathWad()
 {
     return offPathWad;
 }
@@ -44,7 +44,7 @@ void listFill::getIWadList()
     if(!iwad_dir.exists())
         iwad_dir = QDir::currentPath();
 
-    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == "false") //see comment in listfill.h
+    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == 0) //see comment in listfill.h
         path = iwad_dir.absolutePath() + "/";
 
     const QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files);
@@ -73,7 +73,7 @@ void listFill::getPWadList()
     if(!pwad_dir.exists())
         pwad_dir = QDir::currentPath();
 
-    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == "false") //see comment in listfill.h
+    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == 0) //see comment in listfill.h
         path = pwad_dir.absolutePath() + "/";
 
     const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);

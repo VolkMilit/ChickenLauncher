@@ -64,14 +64,14 @@ QString baseConfig::getDefaultProfileName()
 }
 
 //off_wad_path
-void baseConfig::setOffWadPath(QString file, QString value)
+void baseConfig::setOffWadPath(QString file, int value)
 {
     writeSettings(file, "settings", "off_wad_path", value);
 }
 
-QString baseConfig::getOffWadPath(QString file)
+int baseConfig::getOffWadPath(QString file)
 {
-    QString ret = readSettings(file, "settings", "off_wad_path");
+    int ret = readIntSettings(file, "settings", "off_wad_path");
     return ret;
 }
 
@@ -88,14 +88,14 @@ QString baseConfig::getForegroundColor(QString file)
 }
 
 //hide
-void baseConfig::setHide(QString file, QString value)
+void baseConfig::setHide(QString file, int value)
 {
     writeSettings(file, "settings", "hide", value);
 }
 
-QString baseConfig::getHide(QString file)
+int baseConfig::getHide(QString file)
 {
-    QString ret = readSettings(file, "settings", "hide");
+    int ret = readIntSettings(file, "settings", "hide");
     return ret;
 }
 
@@ -170,7 +170,7 @@ void baseConfig::setAdvExeParam(QString file, QString value)
 
 QString baseConfig::getAdvExeParam(QString file)
 {
-    QString ret = readSettings(file, "WAD", "additional_port_param");
+    QString ret = readSettings(file, "Port", "additional_port_param");
     return ret;
 }
 
@@ -182,7 +182,7 @@ void baseConfig::setAdvCmdParam(QString file, QString value)
 
 QString baseConfig::getAdvCmdParam(QString file)
 {
-    QString ret = readSettings(file, "WAD", "additional_cmd_param");
+    QString ret = readSettings(file, "Port", "additional_cmd_param");
     return ret;
 }
 
@@ -259,3 +259,28 @@ QString baseConfig::readSettings(QString file, QString group, QString value)
     return rv;
 }
 
+void baseConfig::writeSettings(QString file, QString group, QString value, int var)
+{
+    if (!fileExist(file))
+        return;
+
+    QSettings settings(file, QSettings::IniFormat);
+    settings.beginGroup(group);
+    settings.setValue(value, var);
+    settings.endGroup();
+}
+
+int baseConfig::readIntSettings(QString file, QString group, QString value)
+{
+    if (!fileExist(file))
+        return -1;
+
+    int rv;
+
+    QSettings settings(file, QSettings::IniFormat);
+    settings.beginGroup(group);
+    rv = settings.value(value).toInt();
+    settings.endGroup();
+
+    return rv;
+}

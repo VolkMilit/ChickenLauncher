@@ -19,14 +19,14 @@ public:
     void updateColors();
 
     void setOffPathWad(bool set);
-    QString getOffPathWad();
+    int getOffPathWad();
 
 private:
     Ui::MainWindow *myUi;
     baseConfig *VbaseConfig;
     colors *Vcolors;
 
-    QString offPathWad; //QVariant not work, hmm...
+    int offPathWad; //QVariant not work, hmm...
     QStringList pwad_list;
 };
 
