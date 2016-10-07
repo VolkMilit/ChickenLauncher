@@ -195,13 +195,35 @@ QString baseConfig::getAdvCmdParam(QString file)
 bool baseConfig::fileExist(QString file)
 {
     QFile f(file);
+
+    QFile settings(defaultSettings);
+    QString defaultProfileFile = getDefaultProfile();
+    QFile profile(defaultProfileFile);
+
     if (!f.exists())
     {
-        QMessageBox::critical(this, "", "Nobody, but us chicken! File does'n exist!");
+        QMessageBox::critical(this, "", "Seams to file " + file
+                              + " doesn't exist. Launcher create new settings.ini and new default.ini if they missig.");
 
-        //delete item, don't know, if it's ugly code, but working
-        QListWidgetItem *it = myUi->lw_profile->item(myUi->lw_profile->currentRow());
-        delete it;
+        //settings.ini
+        if (!settings.exists())
+        {
+            setForegroundColor(defaultSettings, "Blue");
+            setHide(defaultSettings, 1);
+            setOffWadPath(defaultSettings, 0);
+            setDefaultProfile("default.ini");
+        }
+
+        //default.ini
+        if (!profile.exists())
+        {
+            setAdvCmdParam(defaultProfileFile, "");
+            setAdvExeParam(defaultProfileFile, "");
+            setExePath(defaultProfileFile, "gzdoom");
+            setIwadDir(defaultProfileFile, "$HOME/games/DOOM/IWAD");
+            setPwadDir(defaultProfileFile, "$HOME/games/DOOM/PWAD");
+            setLastIwad(defaultProfileFile, "DOOM.WAD");
+        }
 
         return false;
     }
@@ -235,9 +257,6 @@ void baseConfig::readAllSettings(QString file)
 
 void baseConfig::writeSettings(QString file, QString group, QString value, QString var)
 {
-    if (!fileExist(file))
-        return;
-
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
     settings.setValue(value, var);
@@ -246,9 +265,6 @@ void baseConfig::writeSettings(QString file, QString group, QString value, QStri
 
 QString baseConfig::readSettings(QString file, QString group, QString value)
 {
-    if (!fileExist(file))
-        return "";
-
     QString rv;
 
     QSettings settings(file, QSettings::IniFormat);
@@ -261,9 +277,6 @@ QString baseConfig::readSettings(QString file, QString group, QString value)
 
 void baseConfig::writeSettings(QString file, QString group, QString value, int var)
 {
-    if (!fileExist(file))
-        return;
-
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
     settings.setValue(value, var);
@@ -272,9 +285,6 @@ void baseConfig::writeSettings(QString file, QString group, QString value, int v
 
 int baseConfig::readIntSettings(QString file, QString group, QString value)
 {
-    if (!fileExist(file))
-        return -1;
-
     int rv;
 
     QSettings settings(file, QSettings::IniFormat);

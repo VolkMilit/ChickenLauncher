@@ -15,6 +15,8 @@ public:
     baseConfig(Ui::MainWindow *ui);
     virtual ~baseConfig();
 
+    bool fileExist(QString file);
+
     QString getProfilesDir();
     QString getDefaultSettings();
 
@@ -82,7 +84,6 @@ private:
     QString defaultProfile;
 
     void getValues();
-    bool fileExist(QString file);
     void writeSettings(QString file, QString group, QString value, QString var);
     void writeSettings(QString file, QString group, QString value, int var);
     QString readSettings(QString file, QString group, QString value);

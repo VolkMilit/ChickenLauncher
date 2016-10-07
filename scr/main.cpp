@@ -1,10 +1,6 @@
 #include "mainwindow.h"
 
-// Qt 4 headers
-//#include <QApplication>
-
-// Qt 5 headers
-#include <QtGui>
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {

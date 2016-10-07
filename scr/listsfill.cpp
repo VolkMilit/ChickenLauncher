@@ -118,8 +118,3 @@ void listFill::getProfiles()
             myUi->lw_profile->item(i)->setForeground(color);
     }
 }
-
-void listFill::updateColors()
-{
-    // not inplemented yet
-}

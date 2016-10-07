@@ -34,9 +34,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public slots:
-    void updateColors();
-
 private slots:
 
 /*
@@ -54,6 +51,7 @@ private slots:
     void windowInit();
     void mainWindowShowHide();
     void setLastPwadFunc();
+    void updateColors();
 
 /*
     ___ _                _

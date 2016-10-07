@@ -45,9 +45,13 @@ void MainWindow::windowInit()
 {
     VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
 
-    VlistFill->getIWadList();
-    VlistFill->getPWadList();
-    VlistFill->getProfiles();
+    if (VbaseConfig->fileExist(VbaseConfig->getDefaultSettings())
+            || VbaseConfig->fileExist(VbaseConfig->getDefaultProfile()))
+    {
+            VlistFill->getIWadList();
+            VlistFill->getPWadList();
+            VlistFill->getProfiles();
+    }
 
     trayIcon();
 
