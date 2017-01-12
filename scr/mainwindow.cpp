@@ -503,11 +503,12 @@ void MainWindow::on_btn_clear_port_clicked()
 
 void MainWindow::on_btn_clear_selected_pwad_clicked()
 {
-    ui->lw_pwad->currentItem()->setSelected(false);
+    //ui->lw_pwad->currentItem()->setSelected(false);
 
     for(int i = 0; i < ui->lw_pwad->count(); i++)
     {
-        ui->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
+        if (ui->lw_pwad->item(i)->checkState() == Qt::Checked)
+            ui->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
         ui->lw_pwad->item(i)->setForeground(Qt::black);
     }
 }

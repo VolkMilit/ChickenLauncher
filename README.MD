@@ -3,8 +3,6 @@
 Damn small and powerful!																																																											
 ![Oh, I know how to call chicken](/scr/images/chicken.png)     	
 
-####Also:
-[Check my blog](https://javirrdar.tumblr.com/)																																																						
 
 ####NEW IN 1.3
 - Preference dialog
