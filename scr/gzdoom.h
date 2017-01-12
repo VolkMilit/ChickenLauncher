@@ -22,6 +22,9 @@
 #include <QDateTime>
 #include <QProcess>
 #include <QDebug>
+#include <QMessageBox>
+
+#include <cstdio>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"

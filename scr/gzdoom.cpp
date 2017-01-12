@@ -126,6 +126,8 @@ void gzdoom::startGzdoom()
         if (!myUi->le_loadgame->text().isEmpty())
             loadgame = " -loadgame " + myUi->le_loadgame->text();
 
+        process->setProcessChannelMode(QProcess::MergedChannels);
+
         process->start(
                        term +\
                        myUi->le_adv_cmd_param->text() + " " +\
@@ -144,5 +146,21 @@ void gzdoom::startGzdoom()
                        loadgame +\
                        myUi->le_adv_port_param->text()
                     );
+
+        process->waitForStarted();
+
+        QFile file ("log.txt");
+        if (file.open(QIODevice::ReadWrite))
+        {
+            QTextStream stream(&file);
+            stream << process->readAllStandardOutput() << endl;
+        }
+
+        //if (process->exitStatus() < 0)
+            /*QMessageBox::critical(this, "Error", "Seams like error in "
+                                  + exe
+                                  + " port. Application return error code "
+                                  + process->exitCode() + ".",
+                                  QMessageBox::Ok);*/
     }
 }

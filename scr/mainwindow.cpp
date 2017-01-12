@@ -551,7 +551,7 @@ void MainWindow::on_btn_refresh_clicked()
 void MainWindow::on_actionAbout_Chicken_Launcher_triggered()
 {
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText(tr("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.1</font></b></font>"));
+    msgBox->setText(tr("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.3.1</font></b></font>"));
     msgBox->setInformativeText(tr("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
  Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
 Licensed under the Apache License, Version 2.0 (the \"License\"). \
