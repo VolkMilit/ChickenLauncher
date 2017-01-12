@@ -45,6 +45,45 @@
       <string>Hide program instead of close</string>
      </property>
     </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>19</x>
+       <y>50</y>
+       <width>141</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Default tab:</string>
+     </property>
+     <widget class="QRadioButton" name="rb_default_tab_wads">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>50</y>
+        <width>106</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WADs</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="rb_default_tab_profiles">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>106</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Profiles</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_ls">
     <attribute name="title">

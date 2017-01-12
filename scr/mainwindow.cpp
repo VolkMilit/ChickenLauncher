@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,6 +53,9 @@ void MainWindow::windowInit()
             VlistFill->getPWadList();
             VlistFill->getProfiles();
     }
+
+    int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getDefaultSettings());
+    ui->tabWidget->setCurrentIndex(default_tab);
 
     trayIcon();
 
@@ -511,11 +515,6 @@ void MainWindow::on_btn_clear_selected_pwad_clicked()
             ui->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
         ui->lw_pwad->item(i)->setForeground(Qt::black);
     }
-}
-
-void MainWindow::on_btn_clear_selected_iwad_clicked()
-{
-    ui->lw_iwad->reset();
 }
 
 void MainWindow::on_actionExit_Ctrl_Q_triggered()

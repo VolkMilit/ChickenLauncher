@@ -23,6 +23,10 @@ private slots:
     void on_buttonBox_rejected();
     void settingsInit();
 
+    void on_rb_default_tab_profiles_clicked();
+
+    void on_rb_default_tab_wads_clicked();
+
 private:
     Ui::configDialog *ui;
     Ui::MainWindow *myUi;
@@ -32,8 +36,9 @@ private:
     colors *Vcolor;
 
     QString color;
-    QString offPathWad;
-    QString hide;
+    int offPathWad;
+    int hide;
+    int default_tab;
 };
 
 #endif // CONFIGDIALOG_H

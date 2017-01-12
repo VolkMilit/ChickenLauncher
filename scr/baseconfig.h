@@ -43,6 +43,10 @@ public:
     void setHide(QString file, int value);
     int getHide(QString file);
 
+    //default tab
+    void setDefaultTab(QString file, int value);
+    int getDefaultTab(QString file);
+
     /***[profile_name].ini***/
     /*[WAD]*/
 

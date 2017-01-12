@@ -71,7 +71,6 @@ private slots:
     void on_btn_clone_clicked();
 
     //WAD TAB
-    void on_btn_clear_selected_iwad_clicked();
     void on_btn_clear_selected_pwad_clicked();
     void on_btn_pwad_up_clicked();
     void on_btn_pwad_top_clicked();

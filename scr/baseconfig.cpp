@@ -99,6 +99,19 @@ int baseConfig::getHide(QString file)
     return ret;
 }
 
+//default tab
+// 0 - profiles, 1 - wads
+void baseConfig::setDefaultTab(QString file, int value)
+{
+    writeSettings(file, "settings", "default_tab", value);
+}
+
+int baseConfig::getDefaultTab(QString file)
+{
+    int ret = readIntSettings(file, "settings", "default_tab");
+    return ret;
+}
+
 /***[profile_name].ini***/
 /*[WAD]*/
 
