@@ -381,7 +381,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>91</width>
+        <width>111</width>
         <height>21</height>
        </rect>
       </property>
@@ -392,9 +392,9 @@
      <widget class="QLineEdit" name="le_iwad">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>120</x>
         <y>10</y>
-        <width>471</width>
+        <width>461</width>
         <height>21</height>
        </rect>
       </property>
@@ -418,9 +418,9 @@
      <widget class="QLineEdit" name="le_pwad">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>120</x>
         <y>40</y>
-        <width>471</width>
+        <width>461</width>
         <height>21</height>
        </rect>
       </property>
@@ -557,6 +557,32 @@
       </property>
       <property name="text">
        <string>&lt;</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="cb_config">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>601</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Empty same as default (port name) profilesettings</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Settings:</string>
       </property>
      </widget>
     </widget>

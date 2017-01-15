@@ -21,7 +21,7 @@ configDialog::~configDialog()
 
 void configDialog::settingsInit()
 {
-    QString profile = VbaseConfig->getDefaultSettings();
+    QString profile = VbaseConfig->getLauncherSettingsFile();
 
     //hide program instead of closing
     hide = VbaseConfig->getHide(profile);
@@ -65,7 +65,7 @@ void configDialog::settingsInit()
 
 void configDialog::on_buttonBox_accepted()
 {
-    QString profile = VbaseConfig->getDefaultSettings();
+    QString profile = VbaseConfig->getLauncherSettingsFile();
 
     if (ui->cb_hide->isChecked())
         VbaseConfig->setHide(profile, 1);

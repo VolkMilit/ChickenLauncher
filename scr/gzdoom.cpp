@@ -18,9 +18,20 @@ gzdoom::~gzdoom()
     delete myUi;
 }
 
+QString gzdoom::getGzdoomHomeDir()
+{
+    #ifdef Q_OS_WIN32
+        const QString home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
+    #else
+        const QString home = QDir::homePath() + "/.config/gzdoom/";
+    #endif
+
+    return home;
+}
+
 void gzdoom::parametrParser()
 {
-    QString profile = VbaseConfig->getDefaultProfile();
+    QString profile = VbaseConfig->getCurrentProfile();
 
     iwad = VbaseConfig->getLastIwad(profile);
     if (iwad.isEmpty())
@@ -40,6 +51,7 @@ void gzdoom::parametrParser()
     oldsprites = "";
     noautoload = "";
     nostartup = "";
+    config = "";
 
     //FILE
     if (!VbaseConfig->getLastPwad(profile).isEmpty())
@@ -91,6 +103,9 @@ void gzdoom::parametrParser()
     //NOSTARTUP
     if (myUi->cb_nostartup->isChecked())
         nostartup = " -nostartup ";
+
+    //CONFIG
+    config = " -config " + myUi->cb_config->currentText();
 }
 
 void gzdoom::startDemo()
@@ -111,7 +126,7 @@ void gzdoom::startGzdoom()
     parametrParser();
 
     if (myUi->lw_iwad->currentItem() == nullptr && \
-            VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile()).isEmpty())
+            VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()).isEmpty())
     {
         myUi->tabWidget->setCurrentIndex(1);
         QMessageBox::information(this, "", tr("Choose at least one IWAD."));
@@ -144,6 +159,7 @@ void gzdoom::startGzdoom()
                        noautoload +\
                        nostartup +\
                        loadgame +\
+                       config +\
                        myUi->le_adv_port_param->text()
                     );
 

@@ -5,6 +5,7 @@ listFill::listFill(Ui::MainWindow *ui)
     this->myUi = ui;
     VbaseConfig = new baseConfig(ui);
     Vcolors = new colors(ui);
+    Vgzdoom = new gzdoom(ui);
 }
 
 listFill::~listFill()
@@ -12,6 +13,7 @@ listFill::~listFill()
     delete VbaseConfig;
     delete Vcolors;
     delete myUi;
+    delete Vgzdoom;
 }
 
 void listFill::setOffPathWad(bool set)
@@ -21,7 +23,7 @@ void listFill::setOffPathWad(bool set)
     else
         offPathWad = 0;
 
-    VbaseConfig->setOffWadPath(VbaseConfig->getDefaultSettings(), offPathWad);
+    VbaseConfig->setOffWadPath(VbaseConfig->getLauncherSettingsFile(), offPathWad);
 }
 
 int listFill::getOffPathWad()
@@ -34,7 +36,7 @@ void listFill::getIWadList()
     myUi->lw_iwad->clear();
 
     QString path = "";
-    const QString profile = VbaseConfig->getDefaultProfile();
+    const QString profile = VbaseConfig->getCurrentProfile();
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
                                        << "*.7z" << "*.rar" << "*.tar.*";
@@ -44,7 +46,7 @@ void listFill::getIWadList()
     if(!iwad_dir.exists())
         iwad_dir = QDir::currentPath();
 
-    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == 0) //see comment in listfill.h
+    if (VbaseConfig->getOffWadPath(VbaseConfig->getLauncherSettingsFile()) == 0) //see comment in listfill.h
         path = iwad_dir.absolutePath() + "/";
 
     const QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files);
@@ -62,7 +64,7 @@ void listFill::getPWadList()
     myUi->lw_pwad->clear();
 
     QString path = "";
-    const QString profile = VbaseConfig->getDefaultProfile();
+    const QString profile = VbaseConfig->getCurrentProfile();
     pwad_list = VbaseConfig->getLastPwad(profile).split(" ");
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
@@ -73,7 +75,7 @@ void listFill::getPWadList()
     if(!pwad_dir.exists())
         pwad_dir = QDir::currentPath();
 
-    if (VbaseConfig->getOffWadPath(VbaseConfig->getDefaultSettings()) == 0) //see comment in listfill.h
+    if (VbaseConfig->getOffWadPath(VbaseConfig->getLauncherSettingsFile()) == 0) //see comment in listfill.h
         path = pwad_dir.absolutePath() + "/";
 
     const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
@@ -105,7 +107,7 @@ void listFill::getProfiles()
     QDir dir(VbaseConfig->getProfilesDir());
     const QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
     const QColor color = Vcolors->getColor();
-    const QString getDefaultProfileName = VbaseConfig->getDefaultProfileName();
+    const QString getCurrentProfileName = VbaseConfig->getDefaultProfileName();
 
     if (ini_files.isEmpty())
         VbaseConfig->readAllSettings(VbaseConfig->getProfilesDir() + "default.ini");
@@ -114,7 +116,35 @@ void listFill::getProfiles()
     {
         myUi->lw_profile->addItem(ini_files.at(i));
 
-        if (myUi->lw_profile->item(i)->text() == getDefaultProfileName)
+        if (myUi->lw_profile->item(i)->text() == getCurrentProfileName)
             myUi->lw_profile->item(i)->setForeground(color);
     }
+}
+
+void listFill::getPortConfigFile()
+{
+    myUi->cb_config->clear();
+
+    QString current_config = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
+    int index = 0;
+
+    QDir gzdoom_dir(Vgzdoom->getGzdoomHomeDir());
+    QDir local_dir("./");
+
+    const QStringList ini_files = local_dir.entryList(QStringList() << "*.ini", QDir::Files)
+            + gzdoom_dir.entryList(QStringList() << "*.ini", QDir::Files);
+
+    myUi->cb_config->addItem("");
+    for (int i = 0; i < ini_files.length(); i++)
+    {
+        myUi->cb_config->addItem(local_dir.absolutePath() + "/" + ini_files.at(i));
+
+        if (local_dir.absolutePath() + "/" + ini_files.at(i) == current_config)
+            index = i;
+    }
+
+    if (!current_config.isEmpty())
+        myUi->cb_config->setCurrentIndex(index + 1);
+    else
+        myUi->cb_config->setCurrentIndex(0);
 }

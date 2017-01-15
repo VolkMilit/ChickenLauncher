@@ -117,6 +117,8 @@ private slots:
     void on_actionExit_Ctrl_Q_triggered();
     void on_actionMinimize_to_tray_Ctrl_T_triggered();
 
+    void on_cb_settings_activated();
+
 private:
 
 /*

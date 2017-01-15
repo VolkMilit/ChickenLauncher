@@ -13,12 +13,12 @@ class baseConfig : public QWidget
 {
 public:
     baseConfig(Ui::MainWindow *ui);
-    virtual ~baseConfig();
+    virtual ~baseConfig();    
 
     bool fileExist(QString file);
 
     QString getProfilesDir();
-    QString getDefaultSettings();
+    QString getLauncherSettingsFile();
 
     void readAllSettings(QString file);
     void writeAllSettings(QString file);
@@ -27,8 +27,8 @@ public:
     /*[settings]*/
 
     //profile
-    void setDefaultProfile(QString profile);
-    QString getDefaultProfile();
+    void setCurrentProfile(QString profile);
+    QString getCurrentProfile();
     QString getDefaultProfileName();
 
     //off_wad_path
@@ -78,6 +78,10 @@ public:
     //adv_cmd_param
     void setAdvCmdParam(QString file, QString value);
     QString getAdvCmdParam(QString file);
+
+    //config
+    void setConfigFile(QString file, QString value);
+    QString getConfigFile(QString file);
 
 private:
     Ui::MainWindow *myUi;

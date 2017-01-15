@@ -16,7 +16,7 @@ QColor colors::getColor()
 {
     QColor ret;
 
-    color = VbaseConfig->getForegroundColor(VbaseConfig->getDefaultSettings());
+    color = VbaseConfig->getForegroundColor(VbaseConfig->getLauncherSettingsFile());
 
     if (color == "Red")
         ret = Qt::red;

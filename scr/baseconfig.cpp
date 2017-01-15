@@ -34,7 +34,7 @@ QString baseConfig::getProfilesDir()
     return profilesDir;
 }
 
-QString baseConfig::getDefaultSettings()
+QString baseConfig::getLauncherSettingsFile()
 {
     return defaultSettings;
 }
@@ -43,14 +43,14 @@ QString baseConfig::getDefaultSettings()
 /*[settings]*/
 
 //profile
-QString baseConfig::getDefaultProfile()
+QString baseConfig::getCurrentProfile()
 {
     getValues();
     defaultProfile = readSettings(defaultSettings, "settings", "profile");
     return profilesDir + defaultProfile;
 }
 
-void baseConfig::setDefaultProfile(QString profile)
+void baseConfig::setCurrentProfile(QString profile)
 {
     getValues();
     writeSettings(defaultSettings, "settings", "profile", profile);
@@ -199,6 +199,18 @@ QString baseConfig::getAdvCmdParam(QString file)
     return ret;
 }
 
+//config
+void baseConfig::setConfigFile(QString file, QString value)
+{
+    writeSettings(file, "Port", "config", value);
+}
+
+QString baseConfig::getConfigFile(QString file)
+{
+    QString ret = readSettings(file, "Port", "config");
+    return ret;
+}
+
 /* ___             _   _
   | __|  _ _ _  __| |_(_)___ _ _  ___
   | _| || | ' \/ _|  _| / _ \ ' \(_-<
@@ -210,7 +222,7 @@ bool baseConfig::fileExist(QString file)
     QFile f(file);
 
     QFile settings(defaultSettings);
-    QString defaultProfileFile = getDefaultProfile();
+    QString defaultProfileFile = getCurrentProfile();
     QFile profile(defaultProfileFile);
 
     if (!f.exists())
@@ -224,7 +236,7 @@ bool baseConfig::fileExist(QString file)
             setForegroundColor(defaultSettings, "Blue");
             setHide(defaultSettings, 1);
             setOffWadPath(defaultSettings, 0);
-            setDefaultProfile("default.ini");
+            setCurrentProfile("default.ini");
         }
 
         //default.ini

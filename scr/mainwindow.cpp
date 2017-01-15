@@ -38,23 +38,25 @@ MainWindow::~MainWindow()
 void MainWindow::updateColors()
 {
     for (int i = 0; i < ui->lw_iwad->count(); i++)
-        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getDefaultProfile()))
+        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()))
             ui->lw_iwad->item(i)->setForeground(Qt::black);
 }
 
 void MainWindow::windowInit()
 {
-    VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile());
+    VbaseConfig->readAllSettings(VbaseConfig->getCurrentProfile());
 
-    if (VbaseConfig->fileExist(VbaseConfig->getDefaultSettings())
-            || VbaseConfig->fileExist(VbaseConfig->getDefaultProfile()))
+    if (VbaseConfig->fileExist(VbaseConfig->getLauncherSettingsFile())
+            || VbaseConfig->fileExist(VbaseConfig->getCurrentProfile()))
     {
             VlistFill->getIWadList();
             VlistFill->getPWadList();
             VlistFill->getProfiles();
     }
 
-    int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getDefaultSettings());
+    VlistFill->getPortConfigFile();
+
+    int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getLauncherSettingsFile());
     ui->tabWidget->setCurrentIndex(default_tab);
 
     trayIcon();
@@ -142,7 +144,7 @@ void MainWindow::startApp()
 
 void MainWindow::on_lw_iwad_itemClicked()
 {       
-    VbaseConfig->setLastIwad(VbaseConfig->getDefaultProfile(), ui->lw_iwad->currentItem()->text());
+    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), ui->lw_iwad->currentItem()->text());
     Vcolors->clearColor(ui->lw_iwad);
     ui->lw_iwad->currentItem()->setForeground(Vcolors->getColor());
     ui->lw_iwad->currentItem()->setSelected(false);
@@ -152,36 +154,36 @@ void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
 {
     if (item->checkState())
     {
-        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile())\
+        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getCurrentProfile())\
                     + item->text() + " ";
         item->setForeground(Vcolors->getColor());
-        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+        VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
     }
     else
     {
-        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getDefaultProfile());
+        QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getCurrentProfile());
         item->setForeground(Qt::black);
         last_pwad.simplified();
         last_pwad.remove(item->text() + " ");\
-        VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad + " ");
+        VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad + " ");
     }
 }
 
 void MainWindow::on_btn_pick_demo_file_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo->setText(fileName);
 }
 
 void MainWindow::on_btn_pick_demo_file_2_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo_2->setText(fileName);
 }
 
 void MainWindow::on_btn_loadgame_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), QDir::currentPath());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), Vgzdoom->getGzdoomHomeDir());
     ui->le_loadgame->setText(fileName);
 }
 
@@ -190,14 +192,15 @@ void MainWindow::on_btn_load_clicked()
 {
     if (ui->lw_profile->currentItem() != nullptr)
     {
-        VbaseConfig->setDefaultProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+        VbaseConfig->setCurrentProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
 
         Vcolors->clearColor(ui->lw_profile);
-        VbaseConfig->readAllSettings(VbaseConfig->getDefaultProfile()); // this fill exe, iwad, pwad path's
+        VbaseConfig->readAllSettings(VbaseConfig->getCurrentProfile()); // this fill exe, iwad, pwad path's
         ui->lw_profile->currentItem()->setForeground(Vcolors->getColor());
 
         VlistFill->getIWadList();
         VlistFill->getPWadList();
+        VlistFill->getPortConfigFile();
     }
 }
 
@@ -227,24 +230,24 @@ void MainWindow::on_btn_new_clicked()
 
 void MainWindow::on_le_iwad_textChanged()
 {
-    VbaseConfig->setIwadDir(VbaseConfig->getDefaultProfile(), ui->le_iwad->text());
+    VbaseConfig->setIwadDir(VbaseConfig->getCurrentProfile(), ui->le_iwad->text());
     VlistFill->getIWadList();
 }
 
 void MainWindow::on_le_pwad_textChanged()
 {
-    VbaseConfig->setPwadDir(VbaseConfig->getDefaultProfile(), ui->le_pwad->text());
+    VbaseConfig->setPwadDir(VbaseConfig->getCurrentProfile(), ui->le_pwad->text());
     VlistFill->getPWadList();
 }
 
 void MainWindow::on_le_adv_cmd_param_textChanged()
 {
-    VbaseConfig->setAdvCmdParam(VbaseConfig->getDefaultProfile(), ui->le_adv_cmd_param->text());
+    VbaseConfig->setAdvCmdParam(VbaseConfig->getCurrentProfile(), ui->le_adv_cmd_param->text());
 }
 
 void MainWindow::on_le_adv_port_param_textChanged()
 {
-    VbaseConfig->setAdvExeParam(VbaseConfig->getDefaultProfile(), ui->le_adv_port_param->text());
+    VbaseConfig->setAdvExeParam(VbaseConfig->getCurrentProfile(), ui->le_adv_port_param->text());
 }
 
 void MainWindow::on_btn_start_clicked()
@@ -279,8 +282,8 @@ void MainWindow::on_btn_delete_clicked()
 
         VlistFill->getProfiles();
 
-        if (VbaseConfig->getDefaultProfile() == file)
-            VbaseConfig->setDefaultProfile(ui->lw_profile->item(0)->text());
+        if (VbaseConfig->getCurrentProfile() == file)
+            VbaseConfig->setCurrentProfile(ui->lw_profile->item(0)->text());
     }
     else
     {
@@ -322,7 +325,7 @@ void MainWindow::on_btn_clone_clicked()
 
 void MainWindow::on_le_exe_textChanged()
 {
-    VbaseConfig->setExePath(VbaseConfig->getDefaultProfile(),\
+    VbaseConfig->setExePath(VbaseConfig->getCurrentProfile(),\
                               ui->le_exe->text());
 }
 
@@ -331,7 +334,7 @@ void MainWindow::setLastPwadFunc()
     QString last_pwad;
     foreach(QListWidgetItem *item, ui->lw_pwad->selectedItems())
         last_pwad += item->text() + " ";
-    VbaseConfig->setLastPwad(VbaseConfig->getDefaultProfile(), last_pwad);
+    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
 }
 
 //moving item up and down, http://www.qtcentre.org/threads/17996-Move-items-up-and-down-in-QListWidget
@@ -519,7 +522,7 @@ void MainWindow::on_btn_clear_selected_pwad_clicked()
 
 void MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
-    int hide = VbaseConfig->getHide(VbaseConfig->getDefaultSettings());
+    int hide = VbaseConfig->getHide(VbaseConfig->getLauncherSettingsFile());
 
     if (hide == 1)
         mainWindowShowHide();
@@ -559,4 +562,9 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->setIconPixmap(QPixmap(":/chicken.png"));
     msgBox->exec();
+}
+
+void MainWindow::on_cb_settings_activated()
+{
+    VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), ui->cb_config->currentText());
 }
