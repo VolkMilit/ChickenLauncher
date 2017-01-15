@@ -107,6 +107,7 @@ private slots:
     void on_le_pwad_textChanged();
     void on_le_adv_cmd_param_textChanged();
     void on_le_adv_port_param_textChanged();
+    void on_cb_config_activated();
 
     //MENU
     void on_actionAbout_QT_triggered();
@@ -116,8 +117,6 @@ private slots:
     //SHORTCURTS
     void on_actionExit_Ctrl_Q_triggered();
     void on_actionMinimize_to_tray_Ctrl_T_triggered();
-
-    void on_cb_settings_activated();
 
 private:
 
