@@ -11,7 +11,6 @@ Damn small and powerful!
 - PWAD set priority
 - Now if join or demo checked - play button change label
 - Bug fixes
-
 - Clear code
 
 ####Screenshots:
@@ -34,13 +33,14 @@ See bug tracker
 
 ####REQUIREMENTS
 QT >= 4.8
+
 g++ >= 4.9 or clang >= 3.5
 
 ####INSTALLATION
 $ make && make clean																																																									
 Copy ChickenLauncher in any place.																																																										
 
-On debian\ubuntu:												
+Build debian\ubuntu package:												
 just run ./build.sh
 
 ####LICENSE
