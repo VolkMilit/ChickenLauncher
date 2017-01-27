@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     VlistFill = new listFill(ui);
     Vgzdoom = new gzdoom(ui);
     VconfigDialog = new configDialog();
-    Vcolors = new colors(ui);
+    Vcolors = new colors(ui);   
 
     windowInit();
 }
@@ -18,11 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete VbaseConfig;
-    delete VlistFill;
-    delete Vgzdoom;
-    delete VconfigDialog;
-    delete Vcolors;
 }
 
 /*
@@ -227,14 +222,34 @@ void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
 
 void MainWindow::on_btn_iwad_path_clicked()
 {
-    QString fileName = fileDialog->getExistingDirectory(this, tr("Open iwad folder"), QDir::currentPath());
-    ui->le_iwad->setText(fileName);
+    QString last = VbaseConfig->getLastIwadDir(VbaseConfig->getLauncherSettingsFile());
+
+    if (last.isEmpty())
+        last = QDir::currentPath();
+
+    QString fileName = fileDialog->getExistingDirectory(this, tr("Open iwad folder"), last);
+
+    if (!fileName.isEmpty())
+    {
+        ui->le_iwad->setText(fileName);
+        VbaseConfig->setLastIwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+    }
 }
 
 void MainWindow::on_btn_pwad_path_clicked()
 {
-    QString fileName = fileDialog->getExistingDirectory(this, tr("Open pwad folder"), QDir::currentPath());
-    ui->le_pwad->setText(fileName);
+    QString last = VbaseConfig->getLastPwadDir(VbaseConfig->getLauncherSettingsFile());
+
+    if (last.isEmpty())
+        last = QDir::currentPath();
+
+    QString fileName = fileDialog->getExistingDirectory(this, tr("Open pwad folder"), last);
+
+    if (!fileName.isEmpty())
+    {
+        ui->le_pwad->setText(fileName);
+        VbaseConfig->setLastPwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+    }
 }
 
 void MainWindow::on_le_iwad_textChanged()

@@ -112,7 +112,31 @@ int baseConfig::getDefaultTab(QString file)
     return ret;
 }
 
-/***[profile_name].ini***/
+//last iwad dir
+void baseConfig::setLastIwadDir(QString file, QString value)
+{
+    writeSettings(file, "settings", "last_iwad_dir", value);
+}
+
+QString baseConfig::getLastIwadDir(QString file)
+{
+    QString ret = readSettings(file, "settings", "last_iwad_dir");
+    return ret;
+}
+
+//last pwad dir
+void baseConfig::setLastPwadDir(QString file, QString value)
+{
+    writeSettings(file, "settings", "last_pwad_dir", value);
+}
+
+QString baseConfig::getLastPwadDir(QString file)
+{
+    QString ret = readSettings(file, "settings", "last_pwad_dir");
+    return ret;
+}
+
+/***${profile_name}.ini***/
 /*[WAD]*/
 
 //last_iwad

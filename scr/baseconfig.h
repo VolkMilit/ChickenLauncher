@@ -43,11 +43,19 @@ public:
     void setHide(QString file, int value);
     int getHide(QString file);
 
-    //default tab
+    //default_tab
     void setDefaultTab(QString file, int value);
     int getDefaultTab(QString file);
 
-    /***[profile_name].ini***/
+    //last_iwas_dir
+    void setLastIwadDir(QString file, QString value);
+    QString getLastIwadDir(QString file);
+
+    //last_pwad_dir
+    void setLastPwadDir(QString file, QString value);
+    QString getLastPwadDir(QString file);
+
+    /***${profile_name}.ini***/
     /*[WAD]*/
 
     //last_iwad
