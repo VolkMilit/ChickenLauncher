@@ -11,12 +11,18 @@ MainWindow::MainWindow(QWidget *parent) :
     Vgzdoom = new gzdoom(ui);
     VconfigDialog = new configDialog();
     Vcolors = new colors(ui);   
+    Varchives = new archives();
 
     windowInit();
 }
 
 MainWindow::~MainWindow()
 {
+    delete Vcolors;
+    delete Vgzdoom;
+    delete VlistFill;
+    delete VconfigDialog;
+    delete Varchives;
     delete ui;
 }
 

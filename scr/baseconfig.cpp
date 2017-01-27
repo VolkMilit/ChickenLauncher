@@ -8,7 +8,7 @@ baseConfig::baseConfig(Ui::MainWindow *ui)
 
 baseConfig::~baseConfig()
 {
-    delete myUi;
+    //delete myUi;
 }
 
 /* ___     _                            _

@@ -28,7 +28,7 @@ private slots:
     void on_rb_default_tab_wads_clicked();
 
 private:
-    Ui::configDialog *ui;
+    Ui::configDialog *configDialogUi;
     Ui::MainWindow *myUi;
 
     baseConfig *VbaseConfig;

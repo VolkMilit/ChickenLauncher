@@ -10,10 +10,10 @@ listFill::listFill(Ui::MainWindow *ui)
 
 listFill::~listFill()
 {
-    delete VbaseConfig;
+    /*delete VbaseConfig;
     delete Vcolors;
     delete myUi;
-    delete Vgzdoom;
+    delete Vgzdoom;*/
 }
 
 void listFill::setOffPathWad(bool set)

@@ -12,10 +12,10 @@ gzdoom::gzdoom(Ui::MainWindow *ui)
 
 gzdoom::~gzdoom()
 {
-    delete VbaseConfig;
-    delete Vfunctions;
     delete process;
-    delete myUi;
+    /*delete VbaseConfig;
+    delete Vfunctions;
+    delete myUi;*/
 }
 
 QString gzdoom::getGzdoomHomeDir()

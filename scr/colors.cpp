@@ -8,8 +8,8 @@ colors::colors(Ui::MainWindow *ui)
 
 colors::~colors()
 {
-    delete VbaseConfig;
-    delete myUi;
+    //delete VbaseConfig;
+    //delete myUi;
 }
 
 QColor colors::getColor()
