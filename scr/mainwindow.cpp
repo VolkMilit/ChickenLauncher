@@ -10,8 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     VlistFill = new listFill(ui);
     Vgzdoom = new gzdoom(ui);
     VconfigDialog = new configDialog();
-    Vcolors = new colors(ui);   
-    Varchives = new archives();
+    Vcolors = new colors(ui);
+    VdescriptionsHandler = new descriptionsHandler();
 
     windowInit();
 }
@@ -22,7 +22,6 @@ MainWindow::~MainWindow()
     delete Vgzdoom;
     delete VlistFill;
     delete VconfigDialog;
-    delete Varchives;
     delete ui;
 }
 
@@ -187,6 +186,11 @@ void MainWindow::on_btn_pwad_bottom_clicked()
 void MainWindow::on_btn_refresh_clicked()
 {
     VlistFill->getPWadList();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    VdescriptionsHandler->getFullDescriptionFromFile("/media/drive1/games/EphineaPSO/Readme.txt");
 }
 
 

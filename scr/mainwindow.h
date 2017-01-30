@@ -21,6 +21,7 @@
 #include "gzdoom.h"
 #include "configdialog.h"
 #include "colors.h"
+#include "descriptionshandler.h"
 
 namespace Ui {class MainWindow;}
 
@@ -79,6 +80,7 @@ private slots:
     void on_lw_iwad_itemClicked();
     void on_btn_refresh_clicked();
     void on_lw_pwad_itemChanged(QListWidgetItem *item);
+    void on_pushButton_clicked();
 
     //NETWORK TAB
     void on_gb_join_toggled();
@@ -134,6 +136,7 @@ private:
     gzdoom *Vgzdoom;
     configDialog *VconfigDialog;
     colors *Vcolors;
+    descriptionsHandler *VdescriptionsHandler;
 
     QListWidgetItem* item;
     QFileDialog *fileDialog;
