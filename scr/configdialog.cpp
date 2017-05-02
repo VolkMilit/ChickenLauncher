@@ -9,6 +9,14 @@ configDialog::configDialog(QWidget *parent) :
     VbaseConfig = new baseConfig(myUi);
     VlistFill = new listFill(myUi);
 
+    configDialogUi->comb_foreground_color->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(1, QBrush(QColor(255, 160, 0)), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(2, QBrush(Qt::yellow), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(3, QBrush(QColor(185, 214, 55)), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(4, QBrush(Qt::blue), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(5, QBrush(Qt::darkBlue), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(6, QBrush(QColor(173, 0, 255)), Qt::TextColorRole);
+
     settingsInit();
 }
 
@@ -27,6 +35,11 @@ void configDialog::settingsInit()
     hide = VbaseConfig->getHide(profile);
     if (hide == 1)
         configDialogUi->cb_hide->setChecked(true);
+
+    //hide program when game start
+    hide_game = VbaseConfig->getHideGame(profile);
+    if (hide_game == 1)
+        configDialogUi->cb_hide_game->setChecked(true);
 
     //hide IWAD\PWAD full path
     offPathWad = VbaseConfig->getOffWadPath(profile);
@@ -71,6 +84,11 @@ void configDialog::on_buttonBox_accepted()
         VbaseConfig->setHide(profile, 1);
     else
         VbaseConfig->setHide(profile, 0);
+
+    if (configDialogUi->cb_hide_game->isChecked())
+        VbaseConfig->setHideGame(profile, 1);
+    else
+        VbaseConfig->setHideGame(profile, 0);
 
     if (configDialogUi->cb_hide_iwad_pwad_full_path->isChecked())
         VbaseConfig->setOffWadPath(profile, 1);

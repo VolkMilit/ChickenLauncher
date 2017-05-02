@@ -25,7 +25,6 @@
 
 namespace Ui {class MainWindow;}
 
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -33,7 +32,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    virtual ~MainWindow();
 
 private slots:
 
@@ -47,12 +46,12 @@ private slots:
 
     void trayIcon();
     void exitApp();
-    void startApp(); //Todo other doom ports. I mean prboom works, anyway, but WTF guyzz, -files not working ;(
+    void startApp();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void windowInit();
-    void mainWindowShowHide();
     void setLastPwadFunc();
     void updateColors();
+    void mainWindowShowHide();
 
 /*
     ___ _                _
@@ -109,12 +108,13 @@ private slots:
     void on_le_pwad_textChanged();
     void on_le_adv_cmd_param_textChanged();
     void on_le_adv_port_param_textChanged();
-    void on_cb_config_activated();
+    void on_lw_port_configs_files_activated();
 
     //MENU
     void on_actionAbout_QT_triggered();
     void on_actionAbout_Chicken_Launcher_triggered();
     void on_actionPreferences_triggered();
+    void on_actionSearch_PWAD_triggered();
 
     //SHORTCURTS
     void on_actionExit_Ctrl_Q_triggered();
@@ -138,7 +138,7 @@ private:
     colors *Vcolors;
     descriptionsHandler *VdescriptionsHandler;
 
-    QListWidgetItem* item;
+    QListWidgetItem *item;
     QFileDialog *fileDialog;
 };
 

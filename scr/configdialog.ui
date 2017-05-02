@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Settings</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -37,7 +37,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>201</width>
+       <width>291</width>
        <height>19</height>
       </rect>
      </property>
@@ -48,8 +48,8 @@
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
-       <x>19</x>
-       <y>50</y>
+       <x>20</x>
+       <y>80</y>
        <width>141</width>
        <height>80</height>
       </rect>
@@ -83,6 +83,19 @@
        <string>Profiles</string>
       </property>
      </widget>
+    </widget>
+    <widget class="QCheckBox" name="cb_hide_game">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>241</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Hide program when game start</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_ls">

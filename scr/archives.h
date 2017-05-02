@@ -2,7 +2,7 @@
 #define ARCHIVES_H
 
 #include <QString>
-#include <libzppp/libzippp.h>
+#include <quazip/quazipfile.h>
 
 class archives
 {
@@ -10,7 +10,7 @@ public:
     archives();
     virtual ~archives();
 
-    void open(QString archivePath, QString file);
+    int open(QString archivePath, QString file);
     QString returnText();
 
 private:

@@ -1,8 +1,7 @@
 #include "functions.h"
 
-functions::functions()
-{
-}
+functions::functions(){}
+functions::~functions(){}
 
 bool functions::isNT()
 {

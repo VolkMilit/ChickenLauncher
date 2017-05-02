@@ -87,7 +87,7 @@ QString baseConfig::getForegroundColor(QString file)
     return ret;
 }
 
-//hide
+//hide program instead of close
 void baseConfig::setHide(QString file, int value)
 {
     writeSettings(file, "settings", "hide", value);
@@ -96,6 +96,18 @@ void baseConfig::setHide(QString file, int value)
 int baseConfig::getHide(QString file)
 {
     int ret = readIntSettings(file, "settings", "hide");
+    return ret;
+}
+
+//hide program when game start
+void baseConfig::setHideGame(QString file, int value)
+{
+    writeSettings(file, "settings", "hide_game", value);
+}
+
+int baseConfig::getHideGame(QString file)
+{
+    int ret = readIntSettings(file, "settings", "hide_game");
     return ret;
 }
 

@@ -22,6 +22,7 @@ MainWindow::~MainWindow()
     delete Vgzdoom;
     delete VlistFill;
     delete VconfigDialog;
+    delete VdescriptionsHandler;
     delete ui;
 }
 
@@ -47,6 +48,11 @@ void MainWindow::on_btn_new_clicked()
         f.open(QIODevice::WriteOnly);
         ui->lw_profile->addItem(text + ".ini");
         VbaseConfig->writeAllSettings(VbaseConfig->getProfilesDir() + text + ".ini");
+        VbaseConfig->setCurrentProfile(text + ".ini");
+        Vcolors->clearColor(ui->lw_profile);
+
+        //tmp ducktape, but I, actually, too lazy to fix this
+        ui->lw_profile->item(ui->lw_profile->count() - 1)->setForeground(Vcolors->getColor());
     }
 }
 
@@ -190,7 +196,11 @@ void MainWindow::on_btn_refresh_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    VdescriptionsHandler->getFullDescriptionFromFile("/media/drive1/games/EphineaPSO/Readme.txt");
+    if (ui->lw_pwad->currentItem() != nullptr)
+        //VdescriptionsHandler->getFullDescriptionFromFile(ui->lw_pwad->currentItem()->text() + ".txt");
+        VdescriptionsHandler->readFromArchive(ui->lw_pwad->currentItem()->text());
+    else
+        QMessageBox::information(this, "Chicken Launcher", "You must select at least one pWAD.", QMessageBox::Ok);
 }
 
 
@@ -277,9 +287,10 @@ void MainWindow::on_le_pwad_textChanged()
 void MainWindow::on_btn_exe_clicked()
 {
     QString fileName = fileDialog->getOpenFileName(this, tr("Open Port Exe"),
-                        QDir::currentPath(),
+                        ui->le_exe->text(),
                         "Any file *.* (*)");
-    ui->le_exe->setText(fileName);
+
+    if (!fileName.isNull()) ui->le_exe->setText(fileName);
 }
 
 void MainWindow::on_le_exe_textChanged()
@@ -298,9 +309,15 @@ void MainWindow::on_le_adv_port_param_textChanged()
     VbaseConfig->setAdvExeParam(VbaseConfig->getCurrentProfile(), ui->le_adv_port_param->text());
 }
 
-void MainWindow::on_cb_config_activated()
+
+void MainWindow::on_lw_port_configs_files_activated()
 {
-    VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), ui->cb_config->currentText());
+    const QString item = ui->lw_port_configs_files->currentItem()->text();
+
+    if (item == "default")
+        VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), nullptr);
+    else
+        VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item);
 }
 
 void MainWindow::on_btn_clear_advancedparam_clicked()
@@ -503,6 +520,53 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
     msgBox->exec();
 }
 
+void MainWindow::on_actionSearch_PWAD_triggered()
+{
+    const int currentTab = ui->tabWidget->currentIndex();
+    QString headerText = "";
+
+    if (currentTab == 0)
+    {
+        headerText = "Search for profile...";
+    }
+    else
+    {
+        headerText = "Search for PWAD...";
+        ui->tabWidget->setCurrentIndex(1);
+    }
+
+    bool ok;
+    QString text = QInputDialog::getText(this, "Chicken Launcher",
+                                            headerText, QLineEdit::Normal,
+                                            "", &ok);
+
+    if (ok && !text.isEmpty())
+    {
+        if (currentTab == 0)
+        {
+            for (int i = 0; i < ui->lw_profile->count(); ++i)
+            {
+                if (ui->lw_profile->item(i)->text().contains(text))
+                {
+                     ui->lw_profile->item(i)->setSelected(true);
+                     ui->lw_profile->scrollToItem(ui->lw_pwad->item(i));
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ui->lw_pwad->count(); ++i)
+            {
+                if (ui->lw_pwad->item(i)->text().contains(text))
+                {
+                     ui->lw_pwad->item(i)->setSelected(true);
+                     ui->lw_pwad->scrollToItem(ui->lw_pwad->item(i));
+                }
+            }
+        }
+    }
+}
+
 /*
  ___             _   _
 | __|  _ _ _  __| |_(_)___ _ _  ___
@@ -523,23 +587,23 @@ void MainWindow::windowInit()
     VbaseConfig->readAllSettings(VbaseConfig->getCurrentProfile());
 
     if (VbaseConfig->fileExist(VbaseConfig->getLauncherSettingsFile())
-            || VbaseConfig->fileExist(VbaseConfig->getCurrentProfile()))
+            && VbaseConfig->fileExist(VbaseConfig->getCurrentProfile()))
     {
             VlistFill->getIWadList();
             VlistFill->getPWadList();
             VlistFill->getProfiles();
+            VlistFill->getPortConfigFile();
+
+            int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getLauncherSettingsFile());
+            ui->tabWidget->setCurrentIndex(default_tab);
     }
-
-    VlistFill->getPortConfigFile();
-
-    int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getLauncherSettingsFile());
-    ui->tabWidget->setCurrentIndex(default_tab);
 
     trayIcon();
 
     //shortcurts
     ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
     ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
+    ui->actionSearch_PWAD->setShortcut(tr("CTRL+F"));
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -601,6 +665,12 @@ void MainWindow::startApp()
                                                  |_|
     */
 
+    if (VbaseConfig->getHideGame(VbaseConfig->getLauncherSettingsFile()) == 1)
+    {
+        connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
+        connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
+    }
+
     if (!ui->le_playdemo->text().isEmpty())
         Vgzdoom->startDemo();
     else if (ui->gb_join->isChecked())
@@ -636,5 +706,3 @@ void MainWindow::on_actionMinimize_to_tray_Ctrl_T_triggered()
 {
     mainWindowShowHide();
 }
-
-

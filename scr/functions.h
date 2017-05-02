@@ -9,6 +9,7 @@ class functions
 {
 public:
     functions();
+    virtual ~functions();
 
     bool isNT();
 };

@@ -1,18 +1,26 @@
 #include "descriptionshandler.h"
 
-descriptionsHandler::descriptionsHandler()
+descriptionsHandler::descriptionsHandler() : descriptionpopup()
 {
-    VdescriptionPopUp = new descriptionpopup();
+    Varchives = new archives();
 }
 
 descriptionsHandler::~descriptionsHandler()
 {
-    delete VdescriptionPopUp;
+    delete Varchives;
 }
 
-void descriptionsHandler::readFromArchive()
+void descriptionsHandler::readFromArchive(QString filePath)
 {
-
+    //if (Varchives->open(filePath, filePath))
+    //{
+        showFullDescription(filePath, Varchives->returnText());
+        show();
+    /*}
+    else
+    {
+        QMessageBox::information(this, "Chicken Launcher", "There is a problem opening archive file.", QMessageBox::Ok);
+    }*/
 }
 
 void descriptionsHandler::getFullDescriptionFromFile(QString filePath)
@@ -28,8 +36,8 @@ void descriptionsHandler::getFullDescriptionFromFile(QString filePath)
 
     QTextStream in(&file);
 
-    VdescriptionPopUp->showFullDescription(filePath, in.readAll());
-    VdescriptionPopUp->show();
+    showFullDescription(filePath, in.readAll());
+    show();
 
     file.close();
 }

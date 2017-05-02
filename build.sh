@@ -2,10 +2,19 @@
 
 mkdir -p package/DEBIAN
 mkdir -p package/usr/local/games
+mkdir -p package/usr/local/share/icons/hicolor/32x32/apps
+mkdir -p package/usr/local/share/applications
 
 make -j2
 chmod 0755 ./ChickenLauncher
+chown root:root ./ChickenLauncher
 mv ChickenLauncher package/usr/local/games/chickenlauncher
+
+cp package_data/chicken.png package/usr/local/share/icons/hicolor/32x32/apps
+cp package_data/Doom.desktop package/usr/local/share/applications
+chown root:root package/usr/local/share/icons/hicolor/32x32/apps/chicken.png
+chown root:root package/usr/local/share/applications/Doom.desktop
+
 make clean
 
 cat > package/DEBIAN/control << EOF
@@ -22,6 +31,6 @@ EOF
 md5sum package/usr/local/games/chickenlauncher | sed 's/package\///g' > package/DEBIAN/md5sums
 
 dpkg --build package
-mv package.deb chichenlauncher-1.3_amd64.deb
+mv package.deb chichenlauncher-1.3.1_amd64.deb
 
 rm -rf package

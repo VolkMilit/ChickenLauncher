@@ -28,7 +28,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="Profile_tab">
      <attribute name="title">
@@ -572,19 +572,6 @@
        <string>&lt;</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="cb_config">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>250</y>
-        <width>601</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Empty same as default (port name) profilesettings</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_10">
       <property name="geometry">
        <rect>
@@ -597,6 +584,58 @@
       <property name="text">
        <string>Port config file:</string>
       </property>
+     </widget>
+     <widget class="QFrame" name="frame">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>601</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>150</y>
+         <width>89</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>new</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>150</y>
+         <width>89</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>delete</string>
+       </property>
+      </widget>
+      <widget class="QListWidget" name="lw_port_configs_files">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>10</y>
+         <width>591</width>
+         <height>131</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -1099,6 +1138,21 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Output</string>
+     </attribute>
+     <widget class="QTextBrowser" name="teb_proc_output">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>601</width>
+        <height>471</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QPushButton" name="btn_start">
     <property name="geometry">
@@ -1141,6 +1195,7 @@
      <string>FIle</string>
     </property>
     <addaction name="actionMinimize_to_tray_Ctrl_T"/>
+    <addaction name="actionSearch_PWAD"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionExit_Ctrl_Q"/>
@@ -1177,7 +1232,18 @@
   </action>
   <action name="actionPreferences">
    <property name="text">
-    <string>Preferences</string>
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionSearch_PWAD">
+   <property name="text">
+    <string>Search PWAD (in list) (Ctrl+F)</string>
+   </property>
+   <property name="toolTip">
+    <string>Search PWAD (in list) (Ctrl+F)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

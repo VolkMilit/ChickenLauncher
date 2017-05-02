@@ -25,7 +25,7 @@ QColor colors::getColor()
     else if (color == "Yellow")
         ret = Qt::yellow;
     else if (color == "Green")
-        ret = Qt::green;
+        ret = QColor(185, 214, 55);
     else if (color == "Blue")
         ret = Qt::blue;
     else if (color == "Dark blue")

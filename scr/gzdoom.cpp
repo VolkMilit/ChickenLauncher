@@ -1,4 +1,5 @@
 #include "gzdoom.h"
+#include <QDebug>
 
 gzdoom::gzdoom(Ui::MainWindow *ui)
 {
@@ -13,6 +14,7 @@ gzdoom::gzdoom(Ui::MainWindow *ui)
 gzdoom::~gzdoom()
 {
     delete process;
+    delete Vfunctions;
     /*delete VbaseConfig;
     delete Vfunctions;
     delete myUi;*/
@@ -20,11 +22,10 @@ gzdoom::~gzdoom()
 
 QString gzdoom::getGzdoomHomeDir()
 {
-    #ifdef Q_OS_WIN32
-        const QString home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
-    #else
-        const QString home = QDir::homePath() + "/.config/gzdoom/";
-    #endif
+    if (Vfunctions->isNT())
+        home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
+    else
+        home = QDir::homePath() + "/.config/gzdoom/";
 
     return home;
 }
@@ -105,7 +106,8 @@ void gzdoom::parametrParser()
         nostartup = " -nostartup ";
 
     //CONFIG
-    config = " -config " + myUi->cb_config->currentText();
+    //config = " -config " + myUi->lw_port_configs_files->currentItem()->text();
+    config = " -config ";
 }
 
 void gzdoom::startDemo()
@@ -141,7 +143,7 @@ void gzdoom::startGzdoom()
         if (!myUi->le_loadgame->text().isEmpty())
             loadgame = " -loadgame " + myUi->le_loadgame->text();
 
-        process->setProcessChannelMode(QProcess::MergedChannels);
+        myUi->teb_proc_output->clear();
 
         process->start(
                        term +\
@@ -159,17 +161,8 @@ void gzdoom::startGzdoom()
                        noautoload +\
                        nostartup +\
                        loadgame +\
-                       config +\
+                       /*config +\*/
                        myUi->le_adv_port_param->text()
                     );
-
-        //process->waitForStarted();
-
-        //if (process->exitStatus() < 0)
-            /*QMessageBox::critical(this, "Error", "Seams like error in "
-                                  + exe
-                                  + " port. Application return error code "
-                                  + process->exitCode() + ".",
-                                  QMessageBox::Ok);*/
     }
 }

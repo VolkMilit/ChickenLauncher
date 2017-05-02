@@ -39,9 +39,13 @@ public:
     void setForegroundColor(QString file, QString value);
     QString getForegroundColor(QString file);
 
-    //hide
+    //hide program instead of close
     void setHide(QString file, int value);
     int getHide(QString file);
+
+    //hide program when game start
+    void setHideGame(QString file, int value);
+    int getHideGame(QString file);
 
     //default_tab
     void setDefaultTab(QString file, int value);
@@ -55,12 +59,18 @@ public:
     void setLastPwadDir(QString file, QString value);
     QString getLastPwadDir(QString file);
 
+
     /***${profile_name}.ini***/
     /*[WAD]*/
 
     //last_iwad
     void setLastIwad(QString file, QString value);
     QString getLastIwad(QString file);
+
+    //last_pwad_num
+    //little tmp (no) ducktape
+    void setLastPwadNum(QString file, int value);
+    int getLastPwadNum(QString file);
 
     //last_pwad
     void setLastPwad(QString file, QString value);

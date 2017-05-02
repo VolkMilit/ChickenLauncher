@@ -23,12 +23,14 @@
 #include <QProcess>
 #include <QDebug>
 #include <QMessageBox>
+#include <QThread>
 
 #include <cstdio>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"
 #include "functions.h"
+#include "outputreader.h"
 
 class gzdoom : public QWidget
 {
@@ -40,6 +42,7 @@ public:
     void startDemo();
     void networkGame();
     QString getGzdoomHomeDir();
+    QProcess *process;
 
 private:
     Ui::MainWindow *myUi;
@@ -48,7 +51,6 @@ private:
     functions *Vfunctions;
 
     QListWidgetItem *item;
-    QProcess *process;
 
     void parametrParser();
 
@@ -78,6 +80,8 @@ private:
     QString term;           //(Linux specific) run in terminal to see output, like in Windows version
     QString log;  //todo          //(Linux specific) recording log from terminal
     QString config;         //launch with specific settings\profile\config port file
+
+    QString home;           //gzdoom home dir
 };
 
 #endif // GZDOOM_H

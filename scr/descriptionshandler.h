@@ -6,15 +6,16 @@
 #include <QMessageBox>
 #include <QTextStream>
 
+#include "archives.h"
 #include "descriptionpopup.h"
 
-class descriptionsHandler
+class descriptionsHandler : private descriptionpopup
 {
 public:
     explicit descriptionsHandler();
     virtual ~descriptionsHandler();
 
-    void readFromArchive();
+    void readFromArchive(QString filePath);
     void getFullDescriptionFromFile(QString filePath);
 
 private:
@@ -45,7 +46,7 @@ private:
     QString getOtherGamesStyles();
     QString getDifficultySettings();
 
-    descriptionpopup *VdescriptionPopUp;
+    archives *Varchives;
 };
 
 #endif // DESCRIPTIONSHANDLER_H

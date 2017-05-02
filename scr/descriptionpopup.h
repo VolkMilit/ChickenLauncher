@@ -11,12 +11,14 @@ class descriptionpopup : public QDialog
     Q_OBJECT
 public:
     explicit descriptionpopup(QWidget* parent = nullptr);
+    virtual ~descriptionpopup();
 
-//protected:
+protected:
     void showFullDescription(QString wadName, QString text);
 
-private slots:
-    void on_close_button_clicked();
+private:
+    QPlainTextEdit *pte;
+    QPushButton *button;
 };
 
 #endif // DESCRIPTIONPOPUP_H

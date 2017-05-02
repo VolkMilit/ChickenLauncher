@@ -3,15 +3,17 @@
 archives::archives(){}
 archives::~archives(){}
 
-void archives::open(QString archivePath, QString file)
+int archives::open(QString archivePath, QString file)
 {
-    libzippp::ZipArchive zf(archivePath.toStdString());
-    zf.open(libzippp::ZipArchive::READ_ONLY);
-
-    libzippp::ZipEntry entry = zf.getEntry(file.toStdString());
-    str = QString::fromUtf8(entry.readAsText().c_str());
-
-    zf.close();
+    QFile infile(archivePath);
+    QFile outfile(file);
+    infile.open(QIODevice::ReadOnly);
+    outfile.open(QIODevice::WriteOnly);
+    QByteArray uncompressed_data = infile.readAll();
+    QByteArray compressed_data = qUncompress(uncompressed_data);
+    outfile.write(compressed_data);
+    infile.close();
+    outfile.close();
 }
 
 QString archives::returnText()

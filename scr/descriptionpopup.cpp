@@ -4,29 +4,30 @@ descriptionpopup::descriptionpopup(QWidget *parent)
     : QDialog(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
-    this->setLayout(layout);
+    setLayout(layout);
 
-    this->setModal(true);
-    this->resize(500, 600);
+    setModal(true);
+    resize(500, 600);
+
+    pte = new QPlainTextEdit();
+    pte->setReadOnly(true);
+
+    button = new QPushButton();
+    button->setText("Close dialog");
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(hide()));
+
+    layout->addWidget(pte);
+    layout->addWidget(button);
+}
+
+descriptionpopup::~descriptionpopup()
+{
+    delete pte;
+    delete button;
 }
 
 void descriptionpopup::showFullDescription(QString wadName, QString text)
 {
-    this->setWindowTitle(wadName);
-
-    QPlainTextEdit *pte = new QPlainTextEdit();
-    pte->setReadOnly(true);
+    setWindowTitle(wadName);
     pte->appendPlainText(text);
-
-    QPushButton *button = new QPushButton();
-    button->setText("Close dialog");
-    connect(button, SIGNAL(click()), this, SLOT(on_close_button_clicked()));
-
-    this->layout()->addWidget(pte);
-    this->layout()->addWidget(button);
-}
-
-void descriptionpopup::on_close_button_clicked()
-{
-    this->hide();
 }

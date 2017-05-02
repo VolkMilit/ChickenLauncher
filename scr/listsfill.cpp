@@ -80,6 +80,7 @@ void listFill::getPWadList()
 
     const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
     QListWidgetItem *temp;
+
     for (int i = 0; i < PWAD_files.length(); i++)
     {
         myUi->lw_pwad->addItem(path + PWAD_files.at(i));
@@ -110,7 +111,7 @@ void listFill::getProfiles()
     const QString getCurrentProfileName = VbaseConfig->getDefaultProfileName();
 
     if (ini_files.isEmpty())
-        VbaseConfig->readAllSettings(VbaseConfig->getProfilesDir() + "default.ini");
+        VbaseConfig->readAllSettings(dir.absolutePath() + "/default.ini");
 
     for (int i = 0; i < ini_files.length(); i++)
     {
@@ -123,28 +124,24 @@ void listFill::getProfiles()
 
 void listFill::getPortConfigFile()
 {
-    myUi->cb_config->clear();
+    myUi->lw_port_configs_files->clear();
+    myUi->lw_port_configs_files->addItem("default");
 
-    QString current_config = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
-    int index = 0;
+    QDir dir(Vgzdoom->getGzdoomHomeDir());
+    QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
+    ini_files.removeOne("gzdoom.ini");
+    ini_files.removeOne("zdoom.ini");
 
-    QDir gzdoom_dir(Vgzdoom->getGzdoomHomeDir());
-    QDir local_dir("./");
+    const QColor color = Vcolors->getColor();
+    const QString getCurrentConfigFile = VbaseConfig->getConfigFile(VbaseConfig->getDefaultProfileName());
 
-    const QStringList ini_files = local_dir.entryList(QStringList() << "*.ini", QDir::Files)
-            + gzdoom_dir.entryList(QStringList() << "*.ini", QDir::Files);
-
-    myUi->cb_config->addItem("");
     for (int i = 0; i < ini_files.length(); i++)
     {
-        myUi->cb_config->addItem(local_dir.absolutePath() + "/" + ini_files.at(i));
+        myUi->lw_port_configs_files->addItem(ini_files.at(i));
 
-        if (local_dir.absolutePath() + "/" + ini_files.at(i) == current_config)
-            index = i;
+        if (myUi->lw_port_configs_files->item(i)->text() == " " || myUi->lw_port_configs_files->item(i)->text().isEmpty())
+            myUi->lw_port_configs_files->item(0)->setForeground(color);
+        else if (myUi->lw_port_configs_files->item(i)->text() == getCurrentConfigFile)
+            myUi->lw_port_configs_files->item(i)->setForeground(color);
     }
-
-    if (!current_config.isEmpty())
-        myUi->cb_config->setCurrentIndex(index + 1);
-    else
-        myUi->cb_config->setCurrentIndex(0);
 }
