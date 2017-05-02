@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QSettings>
 
+#include "functions.h"
 #include "ui_mainwindow.h"
 
 class baseConfig : public QWidget
@@ -103,6 +104,7 @@ public:
 
 private:
     Ui::MainWindow *myUi;
+    functions *Vfunctions;
 
     QString home;
     QString defaultSettings;

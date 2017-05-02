@@ -106,8 +106,10 @@ void gzdoom::parametrParser()
         nostartup = " -nostartup ";
 
     //CONFIG
-    //config = " -config " + myUi->lw_port_configs_files->currentItem()->text();
-    config = " -config ";
+    if (VbaseConfig->getConfigFile(profile) == "default")
+        config = "";
+    else
+        config = " -config " + VbaseConfig->getConfigFile(profile);
 }
 
 void gzdoom::startDemo()
@@ -128,7 +130,8 @@ void gzdoom::startGzdoom()
     parametrParser();
 
     if (myUi->lw_iwad->currentItem() == nullptr && \
-            VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()).isEmpty())
+            VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()).isEmpty()
+       )
     {
         myUi->tabWidget->setCurrentIndex(1);
         QMessageBox::information(this, "", tr("Choose at least one IWAD."));
@@ -142,8 +145,6 @@ void gzdoom::startGzdoom()
         loadgame = "";
         if (!myUi->le_loadgame->text().isEmpty())
             loadgame = " -loadgame " + myUi->le_loadgame->text();
-
-        myUi->teb_proc_output->clear();
 
         process->start(
                        term +\
@@ -161,7 +162,7 @@ void gzdoom::startGzdoom()
                        noautoload +\
                        nostartup +\
                        loadgame +\
-                       /*config +\*/
+                       config +\
                        myUi->le_adv_port_param->text()
                     );
     }

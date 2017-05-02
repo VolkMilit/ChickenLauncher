@@ -585,57 +585,41 @@
        <string>Port config file:</string>
       </property>
      </widget>
-     <widget class="QFrame" name="frame">
+     <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>250</y>
-        <width>601</width>
-        <height>191</height>
+        <x>310</x>
+        <y>390</y>
+        <width>89</width>
+        <height>26</height>
        </rect>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+      <property name="text">
+       <string>delete</string>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+     </widget>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>390</y>
+        <width>89</width>
+        <height>26</height>
+       </rect>
       </property>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="geometry">
-        <rect>
-         <x>190</x>
-         <y>150</y>
-         <width>89</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>new</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="geometry">
-        <rect>
-         <x>290</x>
-         <y>150</y>
-         <width>89</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>delete</string>
-       </property>
-      </widget>
-      <widget class="QListWidget" name="lw_port_configs_files">
-       <property name="geometry">
-        <rect>
-         <x>5</x>
-         <y>10</y>
-         <width>591</width>
-         <height>131</height>
-        </rect>
-       </property>
-      </widget>
+      <property name="text">
+       <string>new</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="lw_port_configs_files">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>250</y>
+        <width>591</width>
+        <height>131</height>
+       </rect>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">

@@ -203,6 +203,14 @@ void MainWindow::on_pushButton_clicked()
         QMessageBox::information(this, "Chicken Launcher", "You must select at least one pWAD.", QMessageBox::Ok);
 }
 
+void MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
+{
+    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), item->text());
+    Vcolors->clearColor(ui->lw_iwad);
+    item->setForeground(Vcolors->getColor());
+    item->setSelected(false);
+}
+
 
 /*
           _   _   _
@@ -213,12 +221,12 @@ void MainWindow::on_pushButton_clicked()
                           |___/
 */
 
-void MainWindow::on_lw_iwad_itemClicked()
+void MainWindow::on_lw_port_configs_files_itemClicked(QListWidgetItem *item)
 {
-    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), ui->lw_iwad->currentItem()->text());
-    Vcolors->clearColor(ui->lw_iwad);
-    ui->lw_iwad->currentItem()->setForeground(Vcolors->getColor());
-    ui->lw_iwad->currentItem()->setSelected(false);
+    VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item->text());
+    Vcolors->clearColor(ui->lw_port_configs_files);
+    item->setForeground(Vcolors->getColor());
+    item->setSelected(false);
 }
 
 void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
@@ -307,17 +315,6 @@ void MainWindow::on_le_adv_cmd_param_textChanged()
 void MainWindow::on_le_adv_port_param_textChanged()
 {
     VbaseConfig->setAdvExeParam(VbaseConfig->getCurrentProfile(), ui->le_adv_port_param->text());
-}
-
-
-void MainWindow::on_lw_port_configs_files_activated()
-{
-    const QString item = ui->lw_port_configs_files->currentItem()->text();
-
-    if (item == "default")
-        VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), nullptr);
-    else
-        VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item);
 }
 
 void MainWindow::on_btn_clear_advancedparam_clicked()
@@ -598,6 +595,12 @@ void MainWindow::windowInit()
             ui->tabWidget->setCurrentIndex(default_tab);
     }
 
+    if (VbaseConfig->getHideGame(VbaseConfig->getLauncherSettingsFile()) == 1)
+    {
+        connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
+        connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
+    }
+
     trayIcon();
 
     //shortcurts
@@ -664,12 +667,6 @@ void MainWindow::startApp()
      |_|\___/\__,_\___(_) \___/\__|_||_\___|_|   | .__/\___/_|  \__/__/
                                                  |_|
     */
-
-    if (VbaseConfig->getHideGame(VbaseConfig->getLauncherSettingsFile()) == 1)
-    {
-        connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
-        connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
-    }
 
     if (!ui->le_playdemo->text().isEmpty())
         Vgzdoom->startDemo();

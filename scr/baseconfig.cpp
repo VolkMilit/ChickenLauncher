@@ -3,6 +3,8 @@
 baseConfig::baseConfig(Ui::MainWindow *ui)
 {
     this->myUi = ui;
+    Vfunctions = new functions();
+
     getValues();
 }
 
@@ -19,11 +21,10 @@ baseConfig::~baseConfig()
 
 void baseConfig::getValues()
 {
-    #ifdef Q_OS_WIN32
+    if (Vfunctions->isNT())
         home = QDir::homePath() + "\\ApplicationData\\ChickenLauncher\\";
-    #else
+    else
         home = QDir::homePath() + "/.config/ChickenLauncher/";
-    #endif
 
     defaultSettings = home + "settings.ini";
     profilesDir = home + "profiles/";

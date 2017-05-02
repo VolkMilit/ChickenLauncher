@@ -133,15 +133,13 @@ void listFill::getPortConfigFile()
     ini_files.removeOne("zdoom.ini");
 
     const QColor color = Vcolors->getColor();
-    const QString getCurrentConfigFile = VbaseConfig->getConfigFile(VbaseConfig->getDefaultProfileName());
+    const QString getCurrentConfigFile = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
 
     for (int i = 0; i < ini_files.length(); i++)
     {
         myUi->lw_port_configs_files->addItem(ini_files.at(i));
 
-        if (myUi->lw_port_configs_files->item(i)->text() == " " || myUi->lw_port_configs_files->item(i)->text().isEmpty())
-            myUi->lw_port_configs_files->item(0)->setForeground(color);
-        else if (myUi->lw_port_configs_files->item(i)->text() == getCurrentConfigFile)
+        if (myUi->lw_port_configs_files->item(i)->text() == getCurrentConfigFile)
             myUi->lw_port_configs_files->item(i)->setForeground(color);
     }
 }

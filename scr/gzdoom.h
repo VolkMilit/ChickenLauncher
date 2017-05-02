@@ -42,7 +42,7 @@ public:
     void startDemo();
     void networkGame();
     QString getGzdoomHomeDir();
-    QProcess *process;
+    QProcess *process;    
 
 private:
     Ui::MainWindow *myUi;

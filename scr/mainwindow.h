@@ -76,7 +76,7 @@ private slots:
     void on_btn_pwad_top_clicked();
     void on_btn_pwad_bottom_clicked();
     void on_btn_pwad_down_clicked();
-    void on_lw_iwad_itemClicked();
+    void on_lw_iwad_itemClicked(QListWidgetItem *item);
     void on_btn_refresh_clicked();
     void on_lw_pwad_itemChanged(QListWidgetItem *item);
     void on_pushButton_clicked();
@@ -108,7 +108,7 @@ private slots:
     void on_le_pwad_textChanged();
     void on_le_adv_cmd_param_textChanged();
     void on_le_adv_port_param_textChanged();
-    void on_lw_port_configs_files_activated();
+    void on_lw_port_configs_files_itemClicked(QListWidgetItem *item);
 
     //MENU
     void on_actionAbout_QT_triggered();
