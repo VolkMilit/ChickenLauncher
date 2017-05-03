@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtAlgorithms>
+#include <QShortcut>
 
 // std headers
 #include <algorithm>

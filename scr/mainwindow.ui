@@ -28,7 +28,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Profile_tab">
      <attribute name="title">
@@ -1221,7 +1221,7 @@
   </action>
   <action name="actionSearch_PWAD">
    <property name="text">
-    <string>Search PWAD (in list) (Ctrl+F)</string>
+    <string>Search... (Ctrl+F)</string>
    </property>
    <property name="toolTip">
     <string>Search PWAD (in list) (Ctrl+F)</string>

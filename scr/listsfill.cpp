@@ -65,7 +65,8 @@ void listFill::getPWadList()
 
     QString path = "";
     const QString profile = VbaseConfig->getCurrentProfile();
-    pwad_list = VbaseConfig->getLastPwad(profile).split(" ");
+    const QString pwad_list_get = VbaseConfig->getLastPwad(profile);
+    const QStringList pwad_list = pwad_list_get.split(" ");
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
                                        << "*.7z" << "*.rar" << "*.tar.*";

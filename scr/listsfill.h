@@ -30,7 +30,6 @@ private:
     gzdoom *Vgzdoom;
 
     int offPathWad; //QVariant not work, hmm...
-    QStringList pwad_list;
 };
 
 #endif // LISTSFILL_H
