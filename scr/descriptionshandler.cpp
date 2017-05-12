@@ -26,6 +26,8 @@ void descriptionsHandler::readFromArchive(QString filePath)
 void descriptionsHandler::getFullDescriptionFromFile(QString filePath)
 {
     QFile file(filePath);
+    QString fileName = QFileInfo(file).dir().absolutePath() + "/" + QFileInfo(file).baseName() + ".txt";
+    QFile descr(fileName);
 
     if(!file.open(QIODevice::ReadOnly))
     {
@@ -34,15 +36,45 @@ void descriptionsHandler::getFullDescriptionFromFile(QString filePath)
         return;
     }
 
-    QTextStream in(&file);
+    descr.open(QIODevice::ReadOnly);
+    QTextStream stream(&descr);
 
-    showFullDescription(filePath, in.readAll());
+    showFullDescription(filePath, stream.readAll());
     show();
 
     file.close();
+    descr.close();
 }
 
-QString descriptionsHandler::getPrimaryPurpose()
+QString descriptionsHandler::readString(QString filePath, QString str)
+{
+    QFile file(filePath);
+    QString fileName = QFileInfo(file).dir().absolutePath() + "/" + QFileInfo(file).baseName() + ".txt";
+    QFile descr(fileName);
+    descr.open(QIODevice::ReadOnly);
+    QTextStream stream(&descr);
+
+    QString flines = stream.readAll();
+    QStringList line = flines.split("\n");
+
+    QString ret;
+
+    foreach (QString s, line)
+    {
+       if (s.contains(str))
+       {
+            ret = s;
+            break;
+       }
+    }
+
+    file.close();
+    descr.close();
+
+    return ret;
+}
+
+/*QString descriptionsHandler::getPrimaryPurpose()
 {
 
 }
@@ -112,7 +144,7 @@ QString descriptionsHandler::getOtherFileRequired()
 
 }
 
-QString descriptionsHandler::getGame()
+QString descriptionsHandler::getGame(QString filePath)
 {
 
 }
@@ -145,6 +177,6 @@ QString descriptionsHandler::getOtherGamesStyles()
 QString descriptionsHandler::getDifficultySettings()
 {
 
-}
+}*/
 
 

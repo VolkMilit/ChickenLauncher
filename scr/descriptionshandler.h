@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QFileInfo>
+#include <QDebug>
+#include <QDir>
 
 #include "archives.h"
 #include "descriptionpopup.h"
@@ -18,34 +21,36 @@ public:
     void readFromArchive(QString filePath);
     void getFullDescriptionFromFile(QString filePath);
 
-private:
-    QString getPrimaryPurpose();
+    /*QString getPrimaryPurpose();
 
     QString getTitle();
     QString getRealiseDate();
     QString getVersion();
     QString getAuthor();
-    QString getDiscription();
+    QString getDiscription();*/
 
     //* What is included *
-    QString getLevelsNumber();
+    /*QString getLevelsNumber();
     QString getNewSounds();
     QString getNewMusic();
     QString getNewGraphics();
     QString getDehackedBEXPatch();
     QString getDemos();
     QString getOther();
-    QString getOtherFileRequired();
+    QString getOtherFileRequired();*/
 
     //* Play Information *
-    QString getGame();
+    /*QString getGame(QString filePath);
     QString getMap();
     QString getSinglePlayer();
     QString getCooperative();
     QString getDeathmatch();
     QString getOtherGamesStyles();
-    QString getDifficultySettings();
+    QString getDifficultySettings();*/
 
+    QString readString(QString filePath, QString str);
+
+private:
     archives *Varchives;
 };
 

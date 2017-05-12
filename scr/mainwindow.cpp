@@ -198,7 +198,7 @@ void MainWindow::on_pushButton_clicked()
 {
     if (ui->lw_pwad->currentItem() != nullptr)
         //VdescriptionsHandler->getFullDescriptionFromFile(ui->lw_pwad->currentItem()->text() + ".txt");
-        VdescriptionsHandler->readFromArchive(ui->lw_pwad->currentItem()->text());
+        VdescriptionsHandler->getFullDescriptionFromFile(ui->lw_pwad->currentItem()->text());
     else
         QMessageBox::information(this, "Chicken Launcher", "You must select at least one pWAD.", QMessageBox::Ok);
 }
@@ -229,7 +229,7 @@ void MainWindow::on_lw_port_configs_files_itemClicked(QListWidgetItem *item)
     item->setSelected(false);
 }
 
-void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
+void MainWindow::on_lw_pwad_itemChanged(QEvent *event, QListWidgetItem *item)
 {
     QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getCurrentProfile());
 
@@ -245,7 +245,8 @@ void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
         last_pwad.remove(item->text() + " ");
     }
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
+    if (event->type() == QEvent::MouseButtonPress)
+        VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
 }
 
 void MainWindow::on_btn_iwad_path_clicked()
@@ -483,6 +484,25 @@ void MainWindow::on_btn_loadgame_clicked()
 {
     QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), Vgzdoom->getGzdoomHomeDir());
     ui->le_loadgame->setText(fileName);
+}
+
+void MainWindow::on_le_map_textChanged(const QString &arg1)
+{
+    const QString last_iwad = VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile());
+    if (last_iwad.contains("DOOM.WAD", Qt::CaseSensitive) \
+            || last_iwad.contains("heretic", Qt::CaseInsensitive) \
+            || last_iwad.contains("wolf", Qt::CaseInsensitive))
+    {
+        if (!arg1.isEmpty())
+        {
+            if (arg1.at(0).isDigit())
+                ui->le_map->setText("E" + QString(arg1.at(0)).toUtf8());
+
+            if (arg1.length() >= 3)
+                if (arg1.at(2).isDigit())
+                    ui->le_map->setText("E" + QString(arg1.at(1)).toUtf8() + "M" + QString(arg1.at(2)).toUtf8());
+        }
+    }
 }
 
 /*

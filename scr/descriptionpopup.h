@@ -5,6 +5,7 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QPlainTextEdit>
+#include <QTextStream>
 
 class descriptionpopup : public QDialog
 {
