@@ -79,7 +79,7 @@ private slots:
     void on_btn_pwad_down_clicked();
     void on_lw_iwad_itemClicked(QListWidgetItem *item);
     void on_btn_refresh_clicked();
-    void on_lw_pwad_itemChanged(QEvent *event, QListWidgetItem *item);
+    void on_lw_pwad_itemChanged(QListWidgetItem *item);
     void on_pushButton_clicked();
 
     //NETWORK TAB

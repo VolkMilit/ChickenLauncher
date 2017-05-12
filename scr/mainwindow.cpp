@@ -211,6 +211,25 @@ void MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
     item->setSelected(false);
 }
 
+void MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
+{
+    QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getCurrentProfile());
+
+    if (item->checkState())
+    {
+        last_pwad += item->text() + " ";
+        item->setForeground(Vcolors->getColor());
+    }
+    else
+    {
+        item->setForeground(Qt::black);
+        last_pwad.simplified();
+        last_pwad.remove(item->text() + " ");
+    }
+
+    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
+}
+
 
 /*
           _   _   _
@@ -227,26 +246,6 @@ void MainWindow::on_lw_port_configs_files_itemClicked(QListWidgetItem *item)
     Vcolors->clearColor(ui->lw_port_configs_files);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
-}
-
-void MainWindow::on_lw_pwad_itemChanged(QEvent *event, QListWidgetItem *item)
-{
-    QString last_pwad = VbaseConfig->getLastPwad(VbaseConfig->getCurrentProfile());
-
-    if (item->checkState())
-    {
-        last_pwad += item->text() + " ";
-        item->setForeground(Vcolors->getColor());
-    }
-    else
-    {
-        item->setForeground(Qt::black);
-        last_pwad.simplified();
-        last_pwad.remove(item->text() + " ");
-    }
-
-    if (event->type() == QEvent::MouseButtonPress)
-        VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), last_pwad);
 }
 
 void MainWindow::on_btn_iwad_path_clicked()
