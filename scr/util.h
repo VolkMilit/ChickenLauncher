@@ -16,7 +16,7 @@ namespace utils
         void moveItem(bool backward);
         void moveItemTo(bool top);
 
-        private:
+    private:
         Ui::MainWindow *myUi;
         config::baseConfig *baseconfig;
     };

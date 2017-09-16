@@ -112,8 +112,10 @@ namespace Launcher
         void on_le_pwad_textChanged();
         void on_le_adv_cmd_param_textChanged();
         void on_le_adv_port_param_textChanged();
-        void on_new_config_clicked();
-        void on_load_config_clicked();
+        void on_btn_new_config_clicked();
+        void on_btn_load_config_clicked();
+        void on_btn_delete_config_clicked();
+        void on_lw_port_configs_files_itemSelectionChanged();
 
         //MENU
         void on_actionAbout_QT_triggered();

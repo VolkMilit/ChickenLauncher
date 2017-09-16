@@ -62,50 +62,64 @@ void Launcher::MainWindow::on_btn_new_clicked()
 
 void Launcher::MainWindow::on_btn_load_clicked()
 {
-    if (ui->lw_profile->currentItem() != nullptr)
-    {
-        VbaseConfig->setCurrentProfile(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+    QListWidgetItem *item = ui->lw_profile->currentItem();
 
-        Vcolors->clearColor(ui->lw_profile);
-        VbaseConfig->readAllSettings(VbaseConfig->getCurrentProfile()); // this fill exe, iwad, pwad path's
-        ui->lw_profile->currentItem()->setForeground(Vcolors->getColor());
+    if (!item)
+        return;
 
-        VlistFill->getIWadList();
-        VlistFill->getPWadList();
-        VlistFill->getPortConfigFile();
-    }
+    VbaseConfig->setCurrentProfile(item->text());
+
+    Vcolors->clearColor(ui->lw_profile);
+    VbaseConfig->readAllSettings(VbaseConfig->getCurrentProfile()); // this fill exe, iwad, pwad path's
+    ui->lw_profile->currentItem()->setForeground(Vcolors->getColor());
+
+    VlistFill->getIWadList();
+    VlistFill->getPWadList();
+    VlistFill->getPortConfigFile();
 }
 
 void Launcher::MainWindow::on_btn_rename_clicked()
 {
+    QListWidgetItem *item = ui->lw_profile->currentItem();
+
+    if (!item)
+        return;
+
     bool ok;
     QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
                                             tr("Rename profile"), QLineEdit::Normal,
-                                            "", &ok);
+                                            item->text().remove(".ini"), &ok);
 
-    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+    QFile f(item->text());
 
     if (ok && !text.isEmpty())
-        f.rename(VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text(),\
+    {
+        f.rename(VbaseConfig->getProfilesDir() + item->text(),\
                  VbaseConfig->getProfilesDir() + text + ".ini");
 
-    VlistFill->getProfiles();
+        item->setText(text + ".ini");
+    }
 }
 
 void Launcher::MainWindow::on_btn_delete_clicked()
 {
+    QListWidgetItem *item = ui->lw_profile->currentItem();
+
+    if (!item)
+        return;
+
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Chicken Launcher", tr("Are you shure you want delete this profile?"),
             QMessageBox::Yes|QMessageBox::No);
 
     if (reply == QMessageBox::Yes && ui->lw_profile->count() != 0)
     {
-        QString file = VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text();
+        QString file = VbaseConfig->getProfilesDir() + item->text();
 
         QFile f(file);
         f.remove();
 
-        VlistFill->getProfiles();
+        delete ui->lw_profile->takeItem(ui->lw_profile->currentRow());
 
         if (VbaseConfig->getCurrentProfile() == file)
             VbaseConfig->setCurrentProfile(ui->lw_profile->item(0)->text());
@@ -118,15 +132,20 @@ void Launcher::MainWindow::on_btn_delete_clicked()
 
 void Launcher::MainWindow::on_btn_clone_clicked()
 {
+    QListWidgetItem *item = ui->lw_profile->currentItem();
+
+    if (!item)
+        return;
+
     bool ok;
     QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
                                             tr("Clone profile"), QLineEdit::Normal,
                                             "", &ok);
 
-    QFile f(ui->lw_profile->item(ui->lw_profile->currentRow())->text());
+    QFile f(item->text());
 
     if (ok && !text.isEmpty())
-        f.copy(VbaseConfig->getProfilesDir() + ui->lw_profile->item(ui->lw_profile->currentRow())->text(),\
+        f.copy(VbaseConfig->getProfilesDir() + item->text(), \
                VbaseConfig->getProfilesDir() + text + ".ini");
 
     VlistFill->getProfiles();
@@ -301,7 +320,7 @@ void Launcher::MainWindow::on_btn_clear_advancedparam_clicked()
     ui->le_adv_port_param->setFocus();
 }
 
-void Launcher::MainWindow::on_new_config_clicked()
+void Launcher::MainWindow::on_btn_new_config_clicked()
 {
     bool ok;
     QString text = QInputDialog::getText(this, tr("Chicken Launcher"),
@@ -316,7 +335,17 @@ void Launcher::MainWindow::on_new_config_clicked()
     }
 }
 
-void Launcher::MainWindow::on_load_config_clicked()
+void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
+{
+    ui->btn_delete_config->setDisabled(false);
+
+    QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
+
+    if (item->text() == "default")
+        ui->btn_delete_config->setDisabled(true);
+}
+
+void Launcher::MainWindow::on_btn_load_config_clicked()
 {
     QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
     VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item->text());
@@ -324,6 +353,30 @@ void Launcher::MainWindow::on_load_config_clicked()
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
 }
+
+void Launcher::MainWindow::on_btn_delete_config_clicked()
+{
+    QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Chicken Launcher", tr("Are you shure you want delete this profile?"),
+            QMessageBox::Yes|QMessageBox::No);
+
+    if (reply == QMessageBox::Yes && ui->lw_port_configs_files->count() != 1)
+    {
+        QString file = Vgzdoom->getGzdoomHomeDir() + item->text();
+
+        QFile f(file);
+        f.remove();
+
+        delete ui->lw_port_configs_files->takeItem(ui->lw_port_configs_files->row(item));
+    }
+    else
+    {
+        return;
+    }
+}
+
 
 
 /*
