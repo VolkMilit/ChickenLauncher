@@ -1,7 +1,8 @@
 #include "descriptionshandler.h"
 
-descriptionsHandler::descriptionsHandler() : descriptionpopup()
+descriptionsHandler::descriptionsHandler(Ui::MainWindow *ui)
 {
+    this->myUi = ui;
     Varchives = new archives();
 }
 
@@ -12,37 +13,32 @@ descriptionsHandler::~descriptionsHandler()
 
 void descriptionsHandler::readFromArchive(QString filePath)
 {
-    //if (Varchives->open(filePath, filePath))
-    //{
-        showFullDescription(filePath, Varchives->returnText());
-        show();
-    /*}
-    else
-    {
-        QMessageBox::information(this, "Chicken Launcher", "There is a problem opening archive file.", QMessageBox::Ok);
-    }*/
 }
 
 void descriptionsHandler::getFullDescriptionFromFile(QString filePath)
 {
-    QFile file(filePath);
-    QString fileName = QFileInfo(file).dir().absolutePath() + "/" + QFileInfo(file).baseName() + ".txt";
-    QFile descr(fileName);
+    myUi->pt_description->clear();
 
-    if(!file.open(QIODevice::ReadOnly))
+    const QStringList filter = QStringList() << ".zip" << ".wad" << ".pk7" << ".pk3"\
+                                       << ".7z" << ".rar" << ".tar.*";
+
+    for (auto i = 0; i < filter.length(); i++)
+        filePath.remove(filter.at(i));
+
+    QFile descr(filePath + ".txt");
+
+    if(!descr.open(QIODevice::ReadOnly))
     {
-        QMessageBox::information(0, "Error reading description. File doesn't\
-                exist or you don't have permitions to read.", file.errorString());
+        if (descr.errorString() == "No such file or directory")
+            myUi->pt_description->appendPlainText("No description found for this wad, sorry about that :( *snob*");
         return;
     }
 
-    descr.open(QIODevice::ReadOnly);
     QTextStream stream(&descr);
 
-    showFullDescription(filePath, stream.readAll());
-    show();
+    myUi->pt_description->appendPlainText(stream.readAll());
+    myUi->pt_description->moveCursor(QTextCursor::Start);
 
-    file.close();
     descr.close();
 }
 

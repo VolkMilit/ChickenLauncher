@@ -1,36 +1,32 @@
 #include "gzdoom.h"
 #include <QDebug>
 
-gzdoom::gzdoom(Ui::MainWindow *ui)
+Launcher::gzdoom::gzdoom(Ui::MainWindow *ui)
 {
     this->myUi = ui;
 
-    VbaseConfig = new baseConfig(ui);
-    Vfunctions = new functions();
+    VbaseConfig = new config::baseConfig(ui);
 
     process = new QProcess(this);
 }
 
-gzdoom::~gzdoom()
+Launcher::gzdoom::~gzdoom()
 {
     delete process;
-    delete Vfunctions;
-    /*delete VbaseConfig;
-    delete Vfunctions;
-    delete myUi;*/
 }
 
-QString gzdoom::getGzdoomHomeDir()
+QString Launcher::gzdoom::getGzdoomHomeDir()
 {
-    if (Vfunctions->isNT())
+    #ifdef _WIN32
         home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
-    else
+    #else
         home = QDir::homePath() + "/.config/gzdoom/";
+    #endif
 
     return home;
 }
 
-void gzdoom::parametrParser()
+void Launcher::gzdoom::parametrParser()
 {
     QString profile = VbaseConfig->getCurrentProfile();
 
@@ -56,7 +52,12 @@ void gzdoom::parametrParser()
 
     //FILE
     if (!VbaseConfig->getLastPwad(profile).isEmpty())
-         pwad = " -file " + VbaseConfig->getLastPwad(profile);
+    {
+        const QStringList pfile = VbaseConfig->getLastPwad(profile).split("#");
+
+        for(int i = 0; i < pfile.length()-1; i++)
+            pwad = pwad + " -file " + VbaseConfig->getPwadDir(profile) + "/" + pfile.at(i);
+    }
 
     //SKILL
     if (myUi->cb_skill->isChecked())
@@ -109,10 +110,10 @@ void gzdoom::parametrParser()
     if (VbaseConfig->getConfigFile(profile) == "default")
         config = "";
     else
-        config = " -config " + VbaseConfig->getConfigFile(profile);
+        config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile(profile);
 }
 
-void gzdoom::startDemo()
+void Launcher::gzdoom::startDemo()
 {
     if (!myUi->le_playdemo->text().isEmpty())
         process->start(exe + " -playdemo " + myUi->le_playdemo->text());
@@ -120,12 +121,12 @@ void gzdoom::startDemo()
         process->start(exe + " -timedemo " + myUi->le_playdemo_2->text());
 }
 
-void gzdoom::networkGame()
+void Launcher::gzdoom::networkGame()
 {
     process->start(exe + " -join " + myUi->le_ip->text() + ":" + myUi->le_port->text());
 }
 
-void gzdoom::startGzdoom()
+void Launcher::gzdoom::startGzdoom()
 {
     parametrParser();
 
@@ -139,8 +140,11 @@ void gzdoom::startGzdoom()
     else
     {
         term = "";
-        if (!Vfunctions->isNT())
+        #ifdef _WIN32
+            term = "";
+        #else
             term = "x-terminal-emulator -e ";
+        #endif
 
         loadgame = "";
         if (!myUi->le_loadgame->text().isEmpty())

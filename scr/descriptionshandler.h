@@ -10,12 +10,12 @@
 #include <QDir>
 
 #include "archives.h"
-#include "descriptionpopup.h"
+#include "ui_mainwindow.h"
 
-class descriptionsHandler : private descriptionpopup
+class descriptionsHandler
 {
 public:
-    explicit descriptionsHandler();
+    explicit descriptionsHandler(Ui::MainWindow *ui);
     virtual ~descriptionsHandler();
 
     void readFromArchive(QString filePath);
@@ -52,6 +52,7 @@ public:
 
 private:
     archives *Varchives;
+    Ui::MainWindow *myUi;
 };
 
 #endif // DESCRIPTIONSHANDLER_H

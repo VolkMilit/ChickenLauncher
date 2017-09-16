@@ -3,22 +3,25 @@
 
 #include <QListWidgetItem>
 
-#include "ui_mainwindow.h"
 #include "baseconfig.h"
 
-class colors : public QWidget
+namespace utils
 {
-public:
-    colors(Ui::MainWindow *ui);
-    virtual ~colors();
+    class colors
+    {
+        public:
+        colors();
+        virtual ~colors();
 
-    QColor getColor();
-    void clearColor(QListWidget *widget);
+        QColor getColor();
+        void clearColor(QListWidget *widget);
 
-private:
-    Ui::MainWindow *myUi;
-    baseConfig *VbaseConfig;
-    QString color;
-};
+        private:
+        config::baseConfig *VbaseConfig;
+        Ui::MainWindow *ui;
+        QString color;
+    };
+}
+
 
 #endif // COLORS_H

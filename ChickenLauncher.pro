@@ -20,26 +20,24 @@ SOURCES += ./scr/main.cpp\
     scr/gzdoom.cpp \
     scr/prboom.cpp \
     scr/listsfill.cpp \
-    scr/functions.cpp \
     scr/configdialog.cpp \
     scr/colors.cpp \
     scr/archives.cpp \
     scr/descriptionshandler.cpp \
-    scr/descriptionpopup.cpp \
-    scr/outputreader.cpp
+    scr/outputreader.cpp \
+    scr/util.cpp
 
 HEADERS  += ./scr/mainwindow.h \
     scr/baseconfig.h \
     scr/gzdoom.h \
     scr/prboom.h \
     scr/listsfill.h \
-    scr/functions.h \
     scr/configdialog.h \
     scr/colors.h \
     scr/archives.h \
     scr/descriptionshandler.h \
-    scr/descriptionpopup.h \
-    scr/outputreader.h
+    scr/outputreader.h \
+    scr/util.h
 
 FORMS    += ./scr/mainwindow.ui \
     scr/configdialog.ui

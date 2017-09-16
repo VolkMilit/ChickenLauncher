@@ -1,11 +1,7 @@
 #include "outputreader.h"
 #include <QDebug>
 
-outputReader::outputReader(Ui::MainWindow *ui)
-{
-    this->myUi = ui;
-}
-
+outputReader::outputReader(Ui::MainWindow *ui){}
 outputReader::~outputReader(){}
 
 void outputReader::run()
