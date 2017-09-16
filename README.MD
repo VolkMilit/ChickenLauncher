@@ -38,7 +38,7 @@ Build debian\ubuntu package:
 just run ./build.sh
 
 ####LICENSE
-Licensed under Apache License Ver 2.0. See LICENSE file in root directory.
+Licensed under WTFPL V2.0. See LICENSE file in root directory.
 
 Scootaloo Chicken (c) Speedingturtle (http://speedingturtle.deviantart.com/art/Scootaloo-257329851)                                                                                                                                
 
