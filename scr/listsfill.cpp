@@ -1,22 +1,17 @@
 #include "listsfill.h"
+#include <QDebug>
 
-listFill::listFill(Ui::MainWindow *ui)
+utils::listFill::listFill(Ui::MainWindow *ui)
 {
     this->myUi = ui;
-    VbaseConfig = new baseConfig(ui);
-    Vcolors = new colors(ui);
-    Vgzdoom = new gzdoom(ui);
+    VbaseConfig = new config::baseConfig(ui);
+    Vcolors = new utils::colors();
+    Vgzdoom = new Launcher::gzdoom(ui);
 }
 
-listFill::~listFill()
-{
-    /*delete VbaseConfig;
-    delete Vcolors;
-    delete myUi;
-    delete Vgzdoom;*/
-}
+utils::listFill::~listFill(){}
 
-void listFill::setOffPathWad(bool set)
+void utils::listFill::setOffPathWad(bool set)
 {
     if (set)
         offPathWad = 1;
@@ -26,12 +21,12 @@ void listFill::setOffPathWad(bool set)
     VbaseConfig->setOffWadPath(VbaseConfig->getLauncherSettingsFile(), offPathWad);
 }
 
-int listFill::getOffPathWad()
+int utils::listFill::getOffPathWad()
 {
     return offPathWad;
 }
 
-void listFill::getIWadList()
+void utils::listFill::getIWadList()
 {
     myUi->lw_iwad->clear();
 
@@ -59,17 +54,16 @@ void listFill::getIWadList()
     }
 }
 
-void listFill::getPWadList()
+void utils::listFill::getPWadList()
 {
     myUi->lw_pwad->clear();
 
     QString path = "";
     const QString profile = VbaseConfig->getCurrentProfile();
-    pwad_list = VbaseConfig->getLastPwad(profile).split(" ");
+    QStringList pwad_list = VbaseConfig->getLastPwad(profile).split("#");
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
                                        << "*.7z" << "*.rar" << "*.tar.*";
-    int index = -1;
 
     QDir pwad_dir(VbaseConfig->getPwadDir(profile));
     if(!pwad_dir.exists())
@@ -79,28 +73,33 @@ void listFill::getPWadList()
         path = pwad_dir.absolutePath() + "/";
 
     const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
-    QListWidgetItem *temp;
-    for (int i = 0; i < PWAD_files.length(); i++)
+
+    for (auto i = 0; i < PWAD_files.length(); i++)
     {
-        myUi->lw_pwad->addItem(path + PWAD_files.at(i));
+        myUi->lw_pwad->addItem(PWAD_files.at(i));
         myUi->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
+    }
 
-        for (int j = 0; j < pwad_list.length(); j++)
+    for (auto i = 0; i < myUi->lw_pwad->count(); i++)
+    {
+        for (auto j = 0; j < pwad_list.length()-1; j++)
         {
-            if (myUi->lw_pwad->item(i)->text() == pwad_list.at(j))
-            {
-                myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
-                myUi->lw_pwad->item(i)->setForeground(color);
+            QListWidgetItem *item = myUi->lw_pwad->item(i);
 
-                // sort, all item from pwad_list on top
-                temp = myUi->lw_pwad->takeItem(i);
-                myUi->lw_pwad->insertItem(index++, temp);
-            }
+            if (item->text() == pwad_list.at(j))
+                delete myUi->lw_pwad->takeItem(i);
         }
+    }
+
+    for (auto i = 0; i < pwad_list.length()-1; i++)
+    {
+        myUi->lw_pwad->insertItem(i, pwad_list.at(i));
+        myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
+        myUi->lw_pwad->item(i)->setForeground(color);
     }
 }
 
-void listFill::getProfiles()
+void utils::listFill::getProfiles()
 {
     myUi->lw_profile->clear();
 
@@ -110,7 +109,7 @@ void listFill::getProfiles()
     const QString getCurrentProfileName = VbaseConfig->getDefaultProfileName();
 
     if (ini_files.isEmpty())
-        VbaseConfig->readAllSettings(VbaseConfig->getProfilesDir() + "default.ini");
+        VbaseConfig->readAllSettings(dir.absolutePath() + "/default.ini");
 
     for (int i = 0; i < ini_files.length(); i++)
     {
@@ -121,30 +120,24 @@ void listFill::getProfiles()
     }
 }
 
-void listFill::getPortConfigFile()
+void utils::listFill::getPortConfigFile()
 {
-    myUi->cb_config->clear();
+    myUi->lw_port_configs_files->clear();
+    myUi->lw_port_configs_files->addItem("default");
 
-    QString current_config = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
-    int index = 0;
+    QDir dir(Vgzdoom->getGzdoomHomeDir());
+    QStringList ini_files = dir.entryList(QStringList() << "*.ini", QDir::Files);
+    ini_files.removeOne("gzdoom.ini");
+    ini_files.removeOne("zdoom.ini");
 
-    QDir gzdoom_dir(Vgzdoom->getGzdoomHomeDir());
-    QDir local_dir("./");
+    const QColor color = Vcolors->getColor();
+    const QString getCurrentConfigFile = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
 
-    const QStringList ini_files = local_dir.entryList(QStringList() << "*.ini", QDir::Files)
-            + gzdoom_dir.entryList(QStringList() << "*.ini", QDir::Files);
-
-    myUi->cb_config->addItem("");
     for (int i = 0; i < ini_files.length(); i++)
     {
-        myUi->cb_config->addItem(local_dir.absolutePath() + "/" + ini_files.at(i));
+        myUi->lw_port_configs_files->addItem(ini_files.at(i));
 
-        if (local_dir.absolutePath() + "/" + ini_files.at(i) == current_config)
-            index = i;
+        if (myUi->lw_port_configs_files->item(i)->text() == getCurrentConfigFile)
+            myUi->lw_port_configs_files->item(i)->setForeground(color);
     }
-
-    if (!current_config.isEmpty())
-        myUi->cb_config->setCurrentIndex(index + 1);
-    else
-        myUi->cb_config->setCurrentIndex(0);
 }

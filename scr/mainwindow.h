@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtAlgorithms>
+#include <QShortcut>
 
 // std headers
 #include <algorithm>
@@ -21,20 +22,23 @@
 #include "gzdoom.h"
 #include "configdialog.h"
 #include "colors.h"
+#include "descriptionshandler.h"
+#include "util.h"
 
-namespace Ui {class MainWindow;}
+//namespace Ui {class MainWindow;}
 
-
-class MainWindow : public QMainWindow
+namespace Launcher
 {
-    Q_OBJECT
+    class MainWindow : public QMainWindow
+    {
+        Q_OBJECT
 
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    public:
+        explicit MainWindow(QWidget *parent = 0);
+        virtual ~MainWindow();
 
-private slots:
+    private slots:
 
 /*
     ___             _   _
@@ -44,14 +48,13 @@ private slots:
 
 */
 
-    void trayIcon();
-    void exitApp();
-    void startApp(); //Todo other doom ports. I mean prboom works, anyway, but WTF guyzz, -files not working ;(
-    void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void windowInit();
-    void mainWindowShowHide();
-    void setLastPwadFunc();
-    void updateColors();
+        void trayIcon();
+        void exitApp();
+        void startApp();
+        void iconActivated(QSystemTrayIcon::ActivationReason reason);
+        void windowInit();
+        void updateColors();
+        void mainWindowShowHide();
 
 /*
     ___ _                _
@@ -61,64 +64,70 @@ private slots:
          |___/
 */
 
-    void on_btn_start_clicked();
+        void on_btn_start_clicked();
 
-    //PROFILE TAB
-    void on_btn_new_clicked();
-    void on_btn_load_clicked();
-    void on_btn_delete_clicked();
-    void on_btn_rename_clicked();
-    void on_btn_clone_clicked();
+        //PROFILE TAB
+        void on_btn_new_clicked();
+        void on_btn_load_clicked();
+        void on_btn_delete_clicked();
+        void on_btn_rename_clicked();
+        void on_btn_clone_clicked();
 
-    //WAD TAB
-    void on_btn_clear_selected_pwad_clicked();
-    void on_btn_pwad_up_clicked();
-    void on_btn_pwad_top_clicked();
-    void on_btn_pwad_bottom_clicked();
-    void on_btn_pwad_down_clicked();
-    void on_lw_iwad_itemClicked();
-    void on_btn_refresh_clicked();
-    void on_lw_pwad_itemChanged(QListWidgetItem *item);
+        //WAD TAB
+        void on_btn_clear_selected_pwad_clicked();
+        void on_btn_pwad_up_clicked();
+        void on_btn_pwad_top_clicked();
+        void on_btn_pwad_bottom_clicked();
+        void on_btn_pwad_down_clicked();
+        void on_lw_iwad_itemClicked(QListWidgetItem *item);
+        void on_btn_refresh_clicked();
+        void on_lw_pwad_itemChanged(QListWidgetItem *item);
+        void on_lw_pwad_itemSelectionChanged();
 
-    //NETWORK TAB
-    void on_gb_join_toggled();
-    void on_btn_clear_ip_clicked();
-    void on_btn_clear_port_clicked();
+        //NETWORK TAB
+        void on_gb_join_toggled();
+        void on_btn_clear_ip_clicked();
+        void on_btn_clear_port_clicked();
 
-    //ADVANCED TAB
-    void on_le_playdemo_textChanged();
-    void on_le_playdemo_2_textChanged();
-    void on_le_loadgame_textChanged();
-    void on_btn_loadgame_clicked();
-    void on_btn_clear_loadgame_clicked();
-    void on_btn_clear_playdemo_clicked();
-    void on_btn_clear_playdemo2_clicked();
-    void on_btn_pick_demo_file_clicked();
-    void on_btn_pick_demo_file_2_clicked();
-    void on_cb_recorddemo_clicked();
+        //ADVANCED TAB
+        void on_le_playdemo_textChanged();
+        void on_le_playdemo_2_textChanged();
+        void on_le_loadgame_textChanged();
+        void on_btn_loadgame_clicked();
+        void on_btn_clear_loadgame_clicked();
+        void on_btn_clear_playdemo_clicked();
+        void on_btn_clear_playdemo2_clicked();
+        void on_btn_pick_demo_file_clicked();
+        void on_btn_pick_demo_file_2_clicked();
+        void on_cb_recorddemo_clicked();
+        void on_le_map_textChanged(const QString &arg1);
 
-    //SETTINGS TAB
-    void on_btn_clear_advancedparam_clicked();
-    void on_btn_exe_clicked();
-    void on_btn_iwad_path_clicked();
-    void on_btn_pwad_path_clicked();
-    void on_le_exe_textChanged();
-    void on_le_iwad_textChanged();
-    void on_le_pwad_textChanged();
-    void on_le_adv_cmd_param_textChanged();
-    void on_le_adv_port_param_textChanged();
-    void on_cb_config_activated();
+        //SETTINGS TAB
+        void on_btn_clear_advancedparam_clicked();
+        void on_btn_exe_clicked();
+        void on_btn_iwad_path_clicked();
+        void on_btn_pwad_path_clicked();
+        void on_le_exe_textChanged();
+        void on_le_iwad_textChanged();
+        void on_le_pwad_textChanged();
+        void on_le_adv_cmd_param_textChanged();
+        void on_le_adv_port_param_textChanged();
+        void on_btn_new_config_clicked();
+        void on_btn_load_config_clicked();
+        void on_btn_delete_config_clicked();
+        void on_lw_port_configs_files_itemSelectionChanged();
 
-    //MENU
-    void on_actionAbout_QT_triggered();
-    void on_actionAbout_Chicken_Launcher_triggered();
-    void on_actionPreferences_triggered();
+        //MENU
+        void on_actionAbout_QT_triggered();
+        void on_actionAbout_Chicken_Launcher_triggered();
+        void on_actionPreferences_triggered();
+        void on_actionSearch_PWAD_triggered();
 
-    //SHORTCURTS
-    void on_actionExit_Ctrl_Q_triggered();
-    void on_actionMinimize_to_tray_Ctrl_T_triggered();
+        //SHORTCURTS
+        void on_actionExit_Ctrl_Q_triggered();
+        void on_actionMinimize_to_tray_Ctrl_T_triggered();
 
-private:
+    private:
 
 /*
     ___ _
@@ -127,16 +136,19 @@ private:
    \___|_\__,_/__/__/\___/__/
 */
 
-    Ui::MainWindow *ui;
+        Ui::MainWindow *ui;
+        utils::util *util;
 
-    baseConfig *VbaseConfig;
-    listFill *VlistFill;
-    gzdoom *Vgzdoom;
-    configDialog *VconfigDialog;
-    colors *Vcolors;
+        config::baseConfig *VbaseConfig;
+        config::configDialog *VconfigDialog;
+        Launcher::gzdoom *Vgzdoom;
+        utils::listFill *VlistFill;
+        utils::colors *Vcolors;
+        descriptionsHandler *VdescriptionsHandler;
 
-    QListWidgetItem* item;
-    QFileDialog *fileDialog;
-};
+        QListWidgetItem *item;
+        QFileDialog *fileDialog;
+    };
+}
 
 #endif // MAINWINDOW_H

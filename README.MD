@@ -4,12 +4,9 @@ Damn small and powerful!
 ![Oh, I know how to call chicken](/scr/images/chicken.png)     	
 
 
-####NEW IN 1.3
-- Preference dialog
-- Hide full pwad\iwad path
-- Foreground color now customizable
-- PWAD set priority
-- Now if join or demo checked - play button change label
+####NEW IN 1.4
+- Now priority pwad working as expected
+- Add pwad descriptions window, if wad_name.txt is available
 - Bug fixes
 - Clear code
 
@@ -20,9 +17,6 @@ See ./screenshots/
 See bug tracker
 
 ####TODO:
-#####v 1.4
-- ~~Sort colored items~~																															
-- ~~Debian\Ubuntu packaging script~~																																																
 
 #####v 1.5
 - Add PrBoom+ and Chocolate Doom																					
@@ -44,7 +38,7 @@ Build debian\ubuntu package:
 just run ./build.sh
 
 ####LICENSE
-Licensed under Apache License Ver 2.0. See LICENSE file in root directory.
+Licensed under WTFPL V2.0. See LICENSE file in root directory.
 
 Scootaloo Chicken (c) Speedingturtle (http://speedingturtle.deviantart.com/art/Scootaloo-257329851)                                                                                                                                
 

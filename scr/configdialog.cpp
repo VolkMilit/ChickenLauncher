@@ -1,25 +1,31 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
-configDialog::configDialog(QWidget *parent) :
+config::configDialog::configDialog(QWidget *parent) :
     QDialog(parent),
     configDialogUi(new Ui::configDialog)
 {
     configDialogUi->setupUi(this);
-    VbaseConfig = new baseConfig(myUi);
-    VlistFill = new listFill(myUi);
+    VbaseConfig = new config::baseConfig(myUi);
+    VlistFill = new utils::listFill(myUi);
+
+    configDialogUi->comb_foreground_color->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(1, QBrush(QColor(255, 160, 0)), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(2, QBrush(Qt::yellow), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(3, QBrush(QColor(185, 214, 55)), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(4, QBrush(Qt::blue), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(5, QBrush(Qt::darkBlue), Qt::TextColorRole);
+    configDialogUi->comb_foreground_color->setItemData(6, QBrush(QColor(173, 0, 255)), Qt::TextColorRole);
 
     settingsInit();
 }
 
-configDialog::~configDialog()
+config::configDialog::~configDialog()
 {
     delete configDialogUi;
-    /*delete VbaseConfig;
-    delete VlistFill;*/
 }
 
-void configDialog::settingsInit()
+void config::configDialog::settingsInit()
 {
     QString profile = VbaseConfig->getLauncherSettingsFile();
 
@@ -27,6 +33,11 @@ void configDialog::settingsInit()
     hide = VbaseConfig->getHide(profile);
     if (hide == 1)
         configDialogUi->cb_hide->setChecked(true);
+
+    //hide program when game start
+    hide_game = VbaseConfig->getHideGame(profile);
+    if (hide_game == 1)
+        configDialogUi->cb_hide_game->setChecked(true);
 
     //hide IWAD\PWAD full path
     offPathWad = VbaseConfig->getOffWadPath(profile);
@@ -63,7 +74,7 @@ void configDialog::settingsInit()
         configDialogUi->comb_foreground_color->setCurrentIndex(7);
 }
 
-void configDialog::on_buttonBox_accepted()
+void config::configDialog::on_buttonBox_accepted()
 {
     QString profile = VbaseConfig->getLauncherSettingsFile();
 
@@ -71,6 +82,11 @@ void configDialog::on_buttonBox_accepted()
         VbaseConfig->setHide(profile, 1);
     else
         VbaseConfig->setHide(profile, 0);
+
+    if (configDialogUi->cb_hide_game->isChecked())
+        VbaseConfig->setHideGame(profile, 1);
+    else
+        VbaseConfig->setHideGame(profile, 0);
 
     if (configDialogUi->cb_hide_iwad_pwad_full_path->isChecked())
         VbaseConfig->setOffWadPath(profile, 1);
@@ -85,17 +101,17 @@ void configDialog::on_buttonBox_accepted()
         VbaseConfig->setDefaultTab(profile, 1);
 }
 
-void configDialog::on_buttonBox_rejected()
+void config::configDialog::on_buttonBox_rejected()
 {
     return;
 }
 
-void configDialog::on_rb_default_tab_profiles_clicked()
+void config::configDialog::on_rb_default_tab_profiles_clicked()
 {
     configDialogUi->rb_default_tab_wads->setChecked(false);
 }
 
-void configDialog::on_rb_default_tab_wads_clicked()
+void config::configDialog::on_rb_default_tab_wads_clicked()
 {
     configDialogUi->rb_default_tab_profiles->setChecked(false);
 }

@@ -1,18 +1,14 @@
 #include "colors.h"
 
-colors::colors(Ui::MainWindow *ui)
+utils::colors::colors()
 {
-    this->myUi = ui;
-    VbaseConfig = new baseConfig(ui);
+    ui = new Ui::MainWindow;
+    VbaseConfig = new config::baseConfig(ui);
 }
 
-colors::~colors()
-{
-    //delete VbaseConfig;
-    //delete myUi;
-}
+utils::colors::~colors(){}
 
-QColor colors::getColor()
+QColor utils::colors::getColor()
 {
     QColor ret;
 
@@ -25,7 +21,7 @@ QColor colors::getColor()
     else if (color == "Yellow")
         ret = Qt::yellow;
     else if (color == "Green")
-        ret = Qt::green;
+        ret = QColor(185, 214, 55);
     else if (color == "Blue")
         ret = Qt::blue;
     else if (color == "Dark blue")
@@ -38,7 +34,7 @@ QColor colors::getColor()
     return ret;
 }
 
-void colors::clearColor(QListWidget *widget)
+void utils::colors::clearColor(QListWidget *widget)
 {
     for (int i = 0; i < widget->count(); i++)
         widget->item(i)->setForeground(Qt::black);

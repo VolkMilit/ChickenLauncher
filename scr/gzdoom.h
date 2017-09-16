@@ -23,61 +23,66 @@
 #include <QProcess>
 #include <QDebug>
 #include <QMessageBox>
+#include <QThread>
 
 #include <cstdio>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"
-#include "functions.h"
+#include "outputreader.h"
 
-class gzdoom : public QWidget
+namespace Launcher
 {
-public:
-    gzdoom(Ui::MainWindow *ui);
-    virtual ~gzdoom();
+    class gzdoom : public QWidget
+    {
+    public:
+        explicit gzdoom(Ui::MainWindow *ui);
+        virtual ~gzdoom();
 
-    void startGzdoom();
-    void startDemo();
-    void networkGame();
-    QString getGzdoomHomeDir();
+        void startGzdoom();
+        void startDemo();
+        void networkGame();
+        QString getGzdoomHomeDir();
+        QProcess *process;
 
-private:
-    Ui::MainWindow *myUi;
+    private:
+        Ui::MainWindow *myUi;
 
-    baseConfig *VbaseConfig;
-    functions *Vfunctions;
+        config::baseConfig *VbaseConfig;
 
-    QListWidgetItem *item;
-    QProcess *process;
+        QListWidgetItem *item;
 
-    void parametrParser();
+        void parametrParser();
 
-    /*
-        ___ _       _
-       / __| |_ _ _(_)_ _  __ _ ___
-       \__ \  _| '_| | ' \/ _` (_-<
-       |___/\__|_| |_|_||_\__, /__/
-                          |___/
-    */
+        /*
+         ___ _       _
+        / __| |_ _ _(_)_ _  __ _ ___
+        \__ \  _| '_| | ' \/ _` (_-<
+        |___/\__|_| |_|_||_\__, /__/
+                           |___/
+        */
 
-    QString map;            //specify map, launch game with THIS map
-    QString skill;          //specify skill, launch game with THIS skill (if map not specify, load first map)
-    QString nomusic;        //Prevents the playback of music.
-    QString nosound;        //play no sound
-    QString nosfx;          //Prevents the playback of sound effects.
-    QString demo;           //record demo file in specific directory as yyyy-MM-dd_H:mm:s.lmp
-    QString oldsprites;     //Disables sprite renaming. Unless you are playing a mod for Heretic, Hexen or Strife that replaced a few select sprites, you do not need this.
-    QString noautoload;     //Prevents files from being autoloaded based on the “AutoLoad” sections in the user's configuration file.
-    QString nostartup;      //Disables the startup screens used by Heretic, Hexen and Strife, and use the Doom text-mode startup instead.
-    QString loadgame;       //load games files, but need -iwad and -file =/
+        QString map;            //specify map, launch game with THIS map
+        QString skill;          //specify skill, launch game with THIS skill (if map not specify, load first map)
+        QString nomusic;        //Prevents the playback of music.
+        QString nosound;        //play no sound
+        QString nosfx;          //Prevents the playback of sound effects.
+        QString demo;           //record demo file in specific directory as yyyy-MM-dd_H:mm:s.lmp
+        QString oldsprites;     //Disables sprite renaming. Unless you are playing a mod for Heretic, Hexen or Strife that replaced a few select sprites, you do not need this.
+        QString noautoload;     //Prevents files from being autoloaded based on the “AutoLoad” sections in the user's configuration file.
+        QString nostartup;      //Disables the startup screens used by Heretic, Hexen and Strife, and use the Doom text-mode startup instead.
+        QString loadgame;       //load games files, but need -iwad and -file =/
 
-    QString iwad;
-    QString pwad;
+        QString iwad;
+        QString pwad;
 
-    QString exe;            //specify executable file (I use my own gzdoom installation)
-    QString term;           //(Linux specific) run in terminal to see output, like in Windows version
-    QString log;  //todo          //(Linux specific) recording log from terminal
-    QString config;         //launch with specific settings\profile\config port file
-};
+        QString exe;            //specify executable file (I use my own gzdoom installation)
+        QString term;           //(Linux specific) run in terminal to see output, like in Windows version
+        QString log;  //todo          //(Linux specific) recording log from terminal
+        QString config;         //launch with specific settings\profile\config port file
+
+        QString home;           //gzdoom home dir
+    };
+}
 
 #endif // GZDOOM_H
