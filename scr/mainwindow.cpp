@@ -335,19 +335,13 @@ void Launcher::MainWindow::on_btn_new_config_clicked()
     }
 }
 
-void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
-{
-    ui->btn_delete_config->setDisabled(false);
-
-    QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
-
-    if (item->text() == "default")
-        ui->btn_delete_config->setDisabled(true);
-}
-
 void Launcher::MainWindow::on_btn_load_config_clicked()
 {
     QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
+
+    if (!item)
+        return;
+
     VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item->text());
     Vcolors->clearColor(ui->lw_port_configs_files);
     item->setForeground(Vcolors->getColor());
@@ -358,8 +352,11 @@ void Launcher::MainWindow::on_btn_delete_config_clicked()
 {
     QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
 
+    if (!item)
+        return;
+
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Chicken Launcher", tr("Are you shure you want delete this profile?"),
+    reply = QMessageBox::question(this, "Chicken Launcher", tr("Are you shure you want delete this config?"),
             QMessageBox::Yes|QMessageBox::No);
 
     if (reply == QMessageBox::Yes && ui->lw_port_configs_files->count() != 1)
@@ -377,6 +374,15 @@ void Launcher::MainWindow::on_btn_delete_config_clicked()
     }
 }
 
+void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
+{
+    ui->btn_delete_config->setDisabled(false);
+
+    QListWidgetItem *item = ui->lw_port_configs_files->currentItem();
+
+    if (item->text() == "default")
+        ui->btn_delete_config->setDisabled(true);
+}
 
 
 /*
