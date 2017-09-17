@@ -212,7 +212,7 @@ void Launcher::MainWindow::on_btn_refresh_clicked()
 
 void Launcher::MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
 {
-    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), item->text());
+    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), item->text().remove(ui->le_iwad->text()));
     Vcolors->clearColor(ui->lw_iwad);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
@@ -232,6 +232,10 @@ void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
 void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
 {
     QListWidgetItem *item = ui->lw_pwad->currentItem();
+
+    if (!item)
+        return;
+
     VdescriptionsHandler->getFullDescriptionFromFile(ui->le_pwad->text() + "/" + item->text());
 }
 

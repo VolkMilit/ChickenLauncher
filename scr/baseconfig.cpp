@@ -61,14 +61,14 @@ QString config::baseConfig::getDefaultProfileName()
 }
 
 //off_wad_path
-void config::baseConfig::setOffWadPath(QString file, int value)
+void config::baseConfig::setOffWadPath(int value)
 {
-    writeSettings(file, "settings", "off_wad_path", value);
+    writeSettings(defaultSettings, "settings", "off_wad_path", value);
 }
 
-int config::baseConfig::getOffWadPath(QString file)
+int config::baseConfig::getOffWadPath()
 {
-    int ret = readIntSettings(file, "settings", "off_wad_path");
+    int ret = readIntSettings(defaultSettings, "settings", "off_wad_path");
     return ret;
 }
 
@@ -268,7 +268,7 @@ bool config::baseConfig::fileExist(QString file)
         {
             setForegroundColor(defaultSettings, "Blue");
             setHide(defaultSettings, 1);
-            setOffWadPath(defaultSettings, 0);
+            setOffWadPath(0);
             setCurrentProfile("default.ini");
         }
 

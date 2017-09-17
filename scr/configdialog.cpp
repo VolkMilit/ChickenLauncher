@@ -40,7 +40,7 @@ void config::configDialog::settingsInit()
         configDialogUi->cb_hide_game->setChecked(true);
 
     //hide IWAD\PWAD full path
-    offPathWad = VbaseConfig->getOffWadPath(profile);
+    offPathWad = VbaseConfig->getOffWadPath();
     if (offPathWad == 1)
         configDialogUi->cb_hide_iwad_pwad_full_path->setChecked(true);
 
@@ -89,9 +89,9 @@ void config::configDialog::on_buttonBox_accepted()
         VbaseConfig->setHideGame(profile, 0);
 
     if (configDialogUi->cb_hide_iwad_pwad_full_path->isChecked())
-        VbaseConfig->setOffWadPath(profile, 1);
+        VbaseConfig->setOffWadPath(1);
     else
-        VbaseConfig->setOffWadPath(profile, 0);
+        VbaseConfig->setOffWadPath(0);
 
     VbaseConfig->setForegroundColor(profile, configDialogUi->comb_foreground_color->currentText().remove(" (off)"));
 
@@ -99,6 +99,9 @@ void config::configDialog::on_buttonBox_accepted()
         VbaseConfig->setDefaultTab(profile, 0);
     else
         VbaseConfig->setDefaultTab(profile, 1);
+
+    //VlistFill->getIWadList();
+    //VlistFill->getPWadList();
 }
 
 void config::configDialog::on_buttonBox_rejected()

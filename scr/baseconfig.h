@@ -34,8 +34,8 @@ namespace config
         QString getDefaultProfileName();
 
         //off_wad_path
-        void setOffWadPath(QString file, int value);
-        int getOffWadPath(QString file);
+        void setOffWadPath(int value);
+        int getOffWadPath();
 
         //foreground_color
         void setForegroundColor(QString file, QString value);

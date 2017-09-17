@@ -18,7 +18,11 @@ QString utils::util::getPwadChecked()
         QListWidgetItem *item = myUi->lw_pwad->item(i);
 
         if (item->checkState())
-            files.push_back(item->text());
+            files.push_back(item->text().remove(myUi->le_pwad->text())); //instead of using basename function
+                                                                         //better to remove path, cuz if file
+                                                                         //name will be somethin like wad_name.v1.2.wad
+                                                                         //basename will be something like:
+                                                                         //2.wad
     }
 
     for (auto i = 0; i < files.count(); i++)
