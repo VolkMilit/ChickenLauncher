@@ -88,6 +88,8 @@ namespace Launcher
         void on_gb_join_toggled();
         void on_btn_clear_ip_clicked();
         void on_btn_clear_port_clicked();
+        void on_le_ip_textChanged(const QString &arg1);
+        void on_le_port_textChanged(const QString &arg1);
 
         //ADVANCED TAB
         void on_le_playdemo_textChanged();

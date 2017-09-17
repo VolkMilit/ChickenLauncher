@@ -98,6 +98,19 @@ namespace config
         void setConfigFile(QString value);
         QString getConfigFile();
 
+        /*[Network]*/
+        //enabled
+        void setNetworkEnabled(int value);
+        int getNetworkEnabled();
+
+        //ip
+        void setIpAdress(QString value);
+        QString getIpAdress();
+
+        //port
+        void setIpPort(QString value);
+        QString getIpPort();
+
     private:
         Ui::MainWindow *myUi;
 

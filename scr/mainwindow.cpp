@@ -407,19 +407,18 @@ void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
 
 void Launcher::MainWindow::on_gb_join_toggled()
 {
-    QVector<int> vec;
-    vec << 1 << 2;
-
-    const QString label = util->getLabel();
-
     bool off = true;
     if (ui->gb_join->isChecked())
         off = false;
 
-    ui->btn_start->setText(label);
+    ui->btn_start->setText(util->getLabel());
 
-    for (int i = 0; i < vec.size(); i++)
-        ui->tabWidget->setTabEnabled(vec.at(i), off);
+    ui->gb_game->setDisabled(!off);
+
+    if (off)
+        VbaseConfig->setNetworkEnabled(0);
+    else
+        VbaseConfig->setNetworkEnabled(1);
 }
 
 void Launcher::MainWindow::on_btn_clear_ip_clicked()
@@ -433,6 +432,18 @@ void Launcher::MainWindow::on_btn_clear_port_clicked()
     ui->le_port->clear();
     ui->le_port->setFocus();
 }
+
+
+void Launcher::MainWindow::on_le_ip_textChanged(const QString &arg1)
+{
+    VbaseConfig->setIpAdress(arg1);
+}
+
+void Launcher::MainWindow::on_le_port_textChanged(const QString &arg1)
+{
+    VbaseConfig->setIpPort(arg1);
+}
+
 
 /*
            _                               _
@@ -682,7 +693,11 @@ void Launcher::MainWindow::windowInit()
             VlistFill->getPortConfigFile();
 
             int default_tab = VbaseConfig->getDefaultTab();
-            ui->tabWidget->setCurrentIndex(default_tab);
+
+            if (VbaseConfig->getNetworkEnabled())
+                ui->tabWidget->setCurrentIndex(3);
+            else
+                ui->tabWidget->setCurrentIndex(default_tab);
     }
 
     if (VbaseConfig->getHideGame() == 1)

@@ -244,6 +244,43 @@ QString config::baseConfig::getConfigFile()
     return ret;
 }
 
+/*[Network]*/
+//enabled
+void config::baseConfig::setNetworkEnabled(int value)
+{
+    writeSettings(getCurrentProfile(), "Network", "enabled", value);
+}
+
+int config::baseConfig::getNetworkEnabled()
+{
+    int ret = readIntSettings(getCurrentProfile(), "Network", "enabled");
+    return ret;
+}
+
+//ip
+void config::baseConfig::setIpAdress(QString value)
+{
+    writeSettings(getCurrentProfile(), "Network", "ip", value);
+}
+
+QString config::baseConfig::getIpAdress()
+{
+    QString ret = readSettings(getCurrentProfile(), "Network", "ip");
+    return ret;
+}
+
+//ip_port
+void config::baseConfig::setIpPort(QString value)
+{
+    writeSettings(getCurrentProfile(), "Network", "ip_port", value);
+}
+
+QString config::baseConfig::getIpPort()
+{
+    QString ret = readSettings(getCurrentProfile(), "Network", "ip_port");
+    return ret;
+}
+
 /* ___             _   _
   | __|  _ _ _  __| |_(_)___ _ _  ___
   | _| || | ' \/ _|  _| / _ \ ' \(_-<
@@ -311,6 +348,13 @@ void config::baseConfig::readAllSettings(QString file)
     myUi->le_exe->setText(readSettings(file, "Port", "port_exe"));
     myUi->le_adv_port_param->setText(readSettings(file, "Port", "additional_port_param"));
     myUi->le_adv_cmd_param->setText(readSettings(file, "Port", "additional_cmd_param"));
+
+    //[Network]
+    if (readIntSettings(file, "Network", "enabled") == 1)
+        myUi->gb_join->setChecked(true);
+
+    myUi->le_ip->setText(readSettings(file, "Network", "ip"));
+    myUi->le_port->setText(readSettings(file, "Network", "ip_port"));
 }
 
 void config::baseConfig::writeSettings(QString file, QString group, QString value, QString var)
