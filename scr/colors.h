@@ -19,7 +19,6 @@ namespace utils
         private:
         config::baseConfig *VbaseConfig;
         Ui::MainWindow *ui;
-        QString color;
     };
 }
 

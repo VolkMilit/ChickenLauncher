@@ -177,32 +177,32 @@ void Launcher::MainWindow::on_btn_pwad_up_clicked()
 {
     util->moveItem(true);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(util->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_down_clicked()
 {
     util->moveItem(false);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(util->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_top_clicked()
 {
     util->moveItemTo(true);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(util->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_bottom_clicked()
 {
     util->moveItemTo(false);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(util->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_refresh_clicked()
@@ -212,7 +212,7 @@ void Launcher::MainWindow::on_btn_refresh_clicked()
 
 void Launcher::MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
 {
-    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), item->text().remove(ui->le_iwad->text()));
+    VbaseConfig->setLastIwad(item->text().remove(ui->le_iwad->text()));
     Vcolors->clearColor(ui->lw_iwad);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
@@ -225,8 +225,8 @@ void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
     else
         item->setForeground(Qt::black);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(util->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
@@ -251,7 +251,7 @@ void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
 
 void Launcher::MainWindow::on_btn_iwad_path_clicked()
 {
-    QString last = VbaseConfig->getLastIwadDir(VbaseConfig->getLauncherSettingsFile());
+    QString last = VbaseConfig->getLastIwadDir();
 
     if (last.isEmpty())
         last = QDir::currentPath();
@@ -261,13 +261,13 @@ void Launcher::MainWindow::on_btn_iwad_path_clicked()
     if (!fileName.isEmpty())
     {
         ui->le_iwad->setText(fileName);
-        VbaseConfig->setLastIwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+        VbaseConfig->setLastIwadDir(fileName);
     }
 }
 
 void Launcher::MainWindow::on_btn_pwad_path_clicked()
 {
-    QString last = VbaseConfig->getLastPwadDir(VbaseConfig->getLauncherSettingsFile());
+    QString last = VbaseConfig->getLastPwadDir();
 
     if (last.isEmpty())
         last = QDir::currentPath();
@@ -277,19 +277,19 @@ void Launcher::MainWindow::on_btn_pwad_path_clicked()
     if (!fileName.isEmpty())
     {
         ui->le_pwad->setText(fileName);
-        VbaseConfig->setLastPwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+        VbaseConfig->setLastPwadDir(fileName);
     }
 }
 
 void Launcher::MainWindow::on_le_iwad_textChanged()
 {
-    VbaseConfig->setIwadDir(VbaseConfig->getCurrentProfile(), ui->le_iwad->text());
+    VbaseConfig->setIwadDir(ui->le_iwad->text());
     VlistFill->getIWadList();
 }
 
 void Launcher::MainWindow::on_le_pwad_textChanged()
 {
-    VbaseConfig->setPwadDir(VbaseConfig->getCurrentProfile(), ui->le_pwad->text());
+    VbaseConfig->setPwadDir(ui->le_pwad->text());
     VlistFill->getPWadList();
 }
 
@@ -304,18 +304,17 @@ void Launcher::MainWindow::on_btn_exe_clicked()
 
 void Launcher::MainWindow::on_le_exe_textChanged()
 {
-    VbaseConfig->setExePath(VbaseConfig->getCurrentProfile(),\
-                              ui->le_exe->text());
+    VbaseConfig->setExePath(ui->le_exe->text());
 }
 
 void Launcher::MainWindow::on_le_adv_cmd_param_textChanged()
 {
-    VbaseConfig->setAdvCmdParam(VbaseConfig->getCurrentProfile(), ui->le_adv_cmd_param->text());
+    VbaseConfig->setAdvCmdParam(ui->le_adv_cmd_param->text());
 }
 
 void Launcher::MainWindow::on_le_adv_port_param_textChanged()
 {
-    VbaseConfig->setAdvExeParam(VbaseConfig->getCurrentProfile(), ui->le_adv_port_param->text());
+    VbaseConfig->setAdvExeParam(ui->le_adv_port_param->text());
 }
 
 void Launcher::MainWindow::on_btn_clear_advancedparam_clicked()
@@ -346,7 +345,7 @@ void Launcher::MainWindow::on_btn_load_config_clicked()
     if (!item)
         return;
 
-    VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item->text());
+    VbaseConfig->setConfigFile(item->text());
     Vcolors->clearColor(ui->lw_port_configs_files);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
@@ -552,7 +551,7 @@ void Launcher::MainWindow::on_btn_loadgame_clicked()
 
 void Launcher::MainWindow::on_le_map_textChanged(const QString &arg1)
 {
-    const QString last_iwad = VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile());
+    const QString last_iwad = VbaseConfig->getLastIwad();
     if (last_iwad.contains("DOOM.WAD", Qt::CaseSensitive) \
             || last_iwad.contains("heretic", Qt::CaseInsensitive) \
             || last_iwad.contains("wolf", Qt::CaseInsensitive))
@@ -659,7 +658,7 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
 void Launcher::MainWindow::updateColors()
 {
     for (int i = 0; i < ui->lw_iwad->count(); i++)
-        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()))
+        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad())
             ui->lw_iwad->item(i)->setForeground(Qt::black);
 }
 
@@ -675,11 +674,11 @@ void Launcher::MainWindow::windowInit()
             VlistFill->getProfiles();
             VlistFill->getPortConfigFile();
 
-            int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getLauncherSettingsFile());
+            int default_tab = VbaseConfig->getDefaultTab();
             ui->tabWidget->setCurrentIndex(default_tab);
     }
 
-    if (VbaseConfig->getHideGame(VbaseConfig->getLauncherSettingsFile()) == 1)
+    if (VbaseConfig->getHideGame() == 1)
     {
         connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
         connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
@@ -767,7 +766,7 @@ void Launcher::MainWindow::on_btn_start_clicked()
 
 void Launcher::MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
-    int hide = VbaseConfig->getHide(VbaseConfig->getLauncherSettingsFile());
+    int hide = VbaseConfig->getHide();
 
     if (hide == 1)
         mainWindowShowHide();

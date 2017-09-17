@@ -28,9 +28,7 @@ QString Launcher::gzdoom::getGzdoomHomeDir()
 
 void Launcher::gzdoom::parametrParser()
 {
-    QString profile = VbaseConfig->getCurrentProfile();
-
-    iwad = VbaseConfig->getLastIwad(profile);
+    iwad = VbaseConfig->getLastIwad();
     if (iwad.isEmpty())
     {
         QMessageBox::critical(this, "Chicken Launcher", "IWad is not set!", QMessageBox::Ok);
@@ -51,12 +49,12 @@ void Launcher::gzdoom::parametrParser()
     config = "";
 
     //FILE
-    if (!VbaseConfig->getLastPwad(profile).isEmpty())
+    if (!VbaseConfig->getLastPwad().isEmpty())
     {
-        const QStringList pfile = VbaseConfig->getLastPwad(profile).split("#");
+        const QStringList pfile = VbaseConfig->getLastPwad().split("#");
 
         for(int i = 0; i < pfile.length()-1; i++)
-            pwad = pwad + " -file " + VbaseConfig->getPwadDir(profile) + "/" + pfile.at(i);
+            pwad = pwad + " -file " + VbaseConfig->getPwadDir() + "/" + pfile.at(i);
     }
 
     //SKILL
@@ -107,10 +105,10 @@ void Launcher::gzdoom::parametrParser()
         nostartup = " -nostartup ";
 
     //CONFIG
-    if (VbaseConfig->getConfigFile(profile) == "default")
+    if (VbaseConfig->getConfigFile() == "default")
         config = "";
     else
-        config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile(profile);
+        config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile();
 }
 
 void Launcher::gzdoom::startDemo()
@@ -131,7 +129,7 @@ void Launcher::gzdoom::startGzdoom()
     parametrParser();
 
     if (myUi->lw_iwad->currentItem() == nullptr && \
-            VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()).isEmpty()
+            VbaseConfig->getLastIwad().isEmpty()
        )
     {
         myUi->tabWidget->setCurrentIndex(1);

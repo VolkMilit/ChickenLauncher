@@ -27,15 +27,13 @@ config::configDialog::~configDialog()
 
 void config::configDialog::settingsInit()
 {
-    QString profile = VbaseConfig->getLauncherSettingsFile();
-
     //hide program instead of closing
-    hide = VbaseConfig->getHide(profile);
+    hide = VbaseConfig->getHide();
     if (hide == 1)
         configDialogUi->cb_hide->setChecked(true);
 
     //hide program when game start
-    hide_game = VbaseConfig->getHideGame(profile);
+    hide_game = VbaseConfig->getHideGame();
     if (hide_game == 1)
         configDialogUi->cb_hide_game->setChecked(true);
 
@@ -45,14 +43,14 @@ void config::configDialog::settingsInit()
         configDialogUi->cb_hide_iwad_pwad_full_path->setChecked(true);
 
     //default tab
-    default_tab = VbaseConfig->getDefaultTab(profile);
+    default_tab = VbaseConfig->getDefaultTab();
     if (default_tab == 1)
         configDialogUi->rb_default_tab_wads->setChecked(true);
     else
         configDialogUi->rb_default_tab_profiles->setChecked(true);
 
     //foreground color
-    color = VbaseConfig->getForegroundColor(profile);
+    color = VbaseConfig->getForegroundColor();
 
     if (color == "Red")
         configDialogUi->comb_foreground_color->setCurrentIndex(0);
@@ -76,29 +74,27 @@ void config::configDialog::settingsInit()
 
 void config::configDialog::on_buttonBox_accepted()
 {
-    QString profile = VbaseConfig->getLauncherSettingsFile();
-
     if (configDialogUi->cb_hide->isChecked())
-        VbaseConfig->setHide(profile, 1);
+        VbaseConfig->setHide(1);
     else
-        VbaseConfig->setHide(profile, 0);
+        VbaseConfig->setHide(0);
 
     if (configDialogUi->cb_hide_game->isChecked())
-        VbaseConfig->setHideGame(profile, 1);
+        VbaseConfig->setHideGame(1);
     else
-        VbaseConfig->setHideGame(profile, 0);
+        VbaseConfig->setHideGame(0);
 
     if (configDialogUi->cb_hide_iwad_pwad_full_path->isChecked())
         VbaseConfig->setOffWadPath(1);
     else
         VbaseConfig->setOffWadPath(0);
 
-    VbaseConfig->setForegroundColor(profile, configDialogUi->comb_foreground_color->currentText().remove(" (off)"));
+    VbaseConfig->setForegroundColor(configDialogUi->comb_foreground_color->currentText().remove(" (off)"));
 
     if (configDialogUi->rb_default_tab_profiles->isChecked())
-        VbaseConfig->setDefaultTab(profile, 0);
+        VbaseConfig->setDefaultTab(0);
     else
-        VbaseConfig->setDefaultTab(profile, 1);
+        VbaseConfig->setDefaultTab(1);
 
     //VlistFill->getIWadList();
     //VlistFill->getPWadList();

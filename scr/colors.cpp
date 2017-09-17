@@ -12,7 +12,7 @@ QColor utils::colors::getColor()
 {
     QColor ret;
 
-    color = VbaseConfig->getForegroundColor(VbaseConfig->getLauncherSettingsFile());
+    QString color = VbaseConfig->getForegroundColor();
 
     if (color == "Red")
         ret = Qt::red;

@@ -16,13 +16,12 @@ void utils::listFill::getIWadList()
     myUi->lw_iwad->clear();
 
     const QString path = myUi->le_iwad->text();
-    const QString profile = VbaseConfig->getCurrentProfile();
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
                                        << "*.7z" << "*.rar" << "*.tar.*";
-    const QString lastIwad = VbaseConfig->getLastIwad(profile);
+    const QString lastIwad = VbaseConfig->getLastIwad();
 
-    QDir iwad_dir(VbaseConfig->getIwadDir(profile));
+    QDir iwad_dir(VbaseConfig->getIwadDir());
     if(!iwad_dir.exists())
         iwad_dir = QDir::currentPath();
 
@@ -51,15 +50,14 @@ void utils::listFill::getPWadList()
     myUi->lw_pwad->clear();
 
     const QString path = myUi->le_pwad->text();
-    const QString profile = VbaseConfig->getCurrentProfile();
-    QStringList pwad_list = VbaseConfig->getLastPwad(profile).split("#");
+    QStringList pwad_list = VbaseConfig->getLastPwad().split("#");
     const QColor color = Vcolors->getColor();
     const QStringList filter = QStringList() << "*.zip" << "*.wad" << "*.pk7" << "*.pk3"\
                                        << "*.7z" << "*.rar" << "*.tar.*";
 
     const auto path_off = VbaseConfig->getOffWadPath();
 
-    QDir pwad_dir(VbaseConfig->getPwadDir(profile));
+    QDir pwad_dir(VbaseConfig->getPwadDir());
     if(!pwad_dir.exists())
         pwad_dir = QDir::currentPath();
 
@@ -130,7 +128,7 @@ void utils::listFill::getPortConfigFile()
     ini_files.removeOne("zdoom.ini");
 
     const QColor color = Vcolors->getColor();
-    const QString getCurrentConfigFile = VbaseConfig->getConfigFile(VbaseConfig->getCurrentProfile());
+    const QString getCurrentConfigFile = VbaseConfig->getConfigFile();
 
     for (int i = 0; i < ini_files.length(); i++)
     {

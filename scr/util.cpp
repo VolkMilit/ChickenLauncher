@@ -69,7 +69,7 @@ void utils::util::moveItemTo(bool top)
         return;
 
     config::baseConfig *conf = new config::baseConfig(myUi);
-    QString str = conf->getLastPwad(conf->getCurrentProfile());
+    QString str = conf->getLastPwad();
     QStringList pwad_list = str.split("#");
 
     int index = myUi->lw_pwad->row(current);
