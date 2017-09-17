@@ -15,10 +15,11 @@ namespace utils
         QString getPwadChecked();
         void moveItem(bool backward);
         void moveItemTo(bool top);
+        QString getLabel();
 
     private:
         Ui::MainWindow *myUi;
-        config::baseConfig *baseconfig;
+        config::baseConfig *vbaseconfig;
     };
 }
 

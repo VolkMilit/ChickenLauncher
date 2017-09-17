@@ -6,14 +6,14 @@
 Launcher::MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    util(new utils::util(ui))
+    util(new utils::util(ui)),
+    vgzdoom(new gzdoom(ui))
 {
     ui->setupUi(this);
     VbaseConfig = new config::baseConfig(ui);
     VconfigDialog = new config::configDialog();
     VlistFill = new utils::listFill(ui);
     Vcolors = new utils::colors();
-    Vgzdoom = new Launcher::gzdoom(ui);
     VdescriptionsHandler = new descriptionsHandler(ui);
 
     windowInit();
@@ -22,11 +22,13 @@ Launcher::MainWindow::MainWindow(QWidget *parent) :
 Launcher::MainWindow::~MainWindow()
 {
     delete Vcolors;
-    //delete Vgzdoom;
     delete VlistFill;
     delete VconfigDialog;
     delete VdescriptionsHandler;
     delete VbaseConfig;
+
+    delete vgzdoom;
+    delete util;
     delete ui;
 }
 
@@ -76,6 +78,9 @@ void Launcher::MainWindow::on_btn_load_clicked()
     VlistFill->getIWadList();
     VlistFill->getPWadList();
     VlistFill->getPortConfigFile();
+
+    const QString label = util->getLabel();
+    ui->btn_start->setText(label);
 }
 
 void Launcher::MainWindow::on_btn_rename_clicked()
@@ -216,6 +221,9 @@ void Launcher::MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
     Vcolors->clearColor(ui->lw_iwad);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
+
+    const QString label = util->getLabel();
+    ui->btn_start->setText(label);
 }
 
 void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
@@ -332,7 +340,7 @@ void Launcher::MainWindow::on_btn_new_config_clicked()
 
     if (ok && !text.isEmpty())
     {
-        QFile f(Vgzdoom->getGzdoomHomeDir() + text + ".ini");
+        QFile f(vgzdoom->getGzdoomHomeDir() + text + ".ini");
         f.open(QIODevice::WriteOnly);
         ui->lw_port_configs_files->addItem(text + ".ini");
     }
@@ -364,7 +372,7 @@ void Launcher::MainWindow::on_btn_delete_config_clicked()
 
     if (reply == QMessageBox::Yes && ui->lw_port_configs_files->count() != 1)
     {
-        QString file = Vgzdoom->getGzdoomHomeDir() + item->text();
+        QString file = vgzdoom->getGzdoomHomeDir() + item->text();
 
         QFile f(file);
         f.remove();
@@ -400,16 +408,15 @@ void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
 void Launcher::MainWindow::on_gb_join_toggled()
 {
     QVector<int> vec;
-    vec << 1 << 2 << 4;
+    vec << 1 << 2;
+
+    const QString label = util->getLabel();
 
     bool off = true;
-    ui->btn_start->setText(tr("PLAY DOOM!"));
-
     if (ui->gb_join->isChecked())
-    {
         off = false;
-        ui->btn_start->setText(tr("Join game"));
-    }
+
+    ui->btn_start->setText(label);
 
     for (int i = 0; i < vec.size(); i++)
         ui->tabWidget->setTabEnabled(vec.at(i), off);
@@ -533,19 +540,19 @@ void Launcher::MainWindow::on_le_loadgame_textChanged()
 
 void Launcher::MainWindow::on_btn_pick_demo_file_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo->setText(fileName);
 }
 
 void Launcher::MainWindow::on_btn_pick_demo_file_2_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo_2->setText(fileName);
 }
 
 void Launcher::MainWindow::on_btn_loadgame_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), vgzdoom->getGzdoomHomeDir());
     ui->le_loadgame->setText(fileName);
 }
 
@@ -680,8 +687,8 @@ void Launcher::MainWindow::windowInit()
 
     if (VbaseConfig->getHideGame() == 1)
     {
-        connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
-        connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
+        connect(vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
+        connect(vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
     }
 
     trayIcon();
@@ -752,11 +759,11 @@ void Launcher::MainWindow::startApp()
     */
 
     if (!ui->le_playdemo->text().isEmpty())
-        Vgzdoom->startDemo();
+        vgzdoom->startDemo();
     else if (ui->gb_join->isChecked())
-        Vgzdoom->networkGame();
+        vgzdoom->networkGame();
     else
-        Vgzdoom->startGzdoom();
+        vgzdoom->startGzdoom();
 }
 
 void Launcher::MainWindow::on_btn_start_clicked()

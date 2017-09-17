@@ -137,13 +137,15 @@ namespace Launcher
 */
 
         Ui::MainWindow *ui;
-        utils::util *util;
+        gzdoom *vgzdoom;
 
         config::baseConfig *VbaseConfig;
         config::configDialog *VconfigDialog;
-        Launcher::gzdoom *Vgzdoom;
+
+        utils::util *util;
         utils::listFill *VlistFill;
         utils::colors *Vcolors;
+
         descriptionsHandler *VdescriptionsHandler;
 
         QListWidgetItem *item;

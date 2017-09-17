@@ -1,12 +1,15 @@
 #include "util.h"
-#include <QDebug>
 
-utils::util::util(Ui::MainWindow *ui)
+utils::util::util(Ui::MainWindow *ui) :
+    vbaseconfig(new config::baseConfig(myUi))
 {
     this->myUi = ui;
 }
 
-utils::util::~util(){}
+utils::util::~util()
+{
+    delete vbaseconfig;
+}
 
 QString utils::util::getPwadChecked()
 {
@@ -68,8 +71,7 @@ void utils::util::moveItemTo(bool top)
     if (current->checkState() == Qt::Unchecked)
         return;
 
-    config::baseConfig *conf = new config::baseConfig(myUi);
-    QString str = conf->getLastPwad();
+    QString str = vbaseconfig->getLastPwad();
     QStringList pwad_list = str.split("#");
 
     int index = myUi->lw_pwad->row(current);
@@ -82,7 +84,38 @@ void utils::util::moveItemTo(bool top)
     if (top)
         myUi->lw_pwad->insertItem(0, current);
     else
-        myUi->lw_pwad->insertItem(pwad_list.length() - 2, current); // i dunno why this is working, srsly
+        myUi->lw_pwad->insertItem(pwad_list.length() - 2, current); // i dunno why this is working, srsly    
+}
 
-    delete conf;
+QString utils::util::getLabel()
+{
+    QVector<QString> label_vec;
+    label_vec << "RIP AND TEAR!" << "JOIN GAME AND RIP THEM ALL!" << "RIP UND TEAR!" <<\
+             "GIVE ME YOUR SOUL!" << "THE TREND IS DEAD!";
+
+    QRegExp doom("*doom*", Qt::CaseInsensitive, QRegExp::Wildcard);
+    QRegExp wolf("*wolf*", Qt::CaseInsensitive, QRegExp::Wildcard);
+    QRegExp heretic("*heretic*", Qt::CaseInsensitive, QRegExp::Wildcard);
+    QRegExp hexen("*hexen*", Qt::CaseInsensitive, QRegExp::Wildcard);
+
+    QString label = "";
+
+    if (myUi->gb_join->isChecked())
+    {
+        label = label_vec.at(1);
+        return label;
+    }
+
+    QString item_text = vbaseconfig->getLastIwad().remove(myUi->le_iwad->text());
+
+    if (doom.exactMatch(item_text))
+        label = label_vec.at(0);
+    else if (wolf.exactMatch(item_text))
+        label = label_vec.at(2);
+    else if (heretic.exactMatch(item_text) || hexen.exactMatch(item_text))
+        label = label_vec.at(3);
+    else
+        label = label_vec.at(4);
+
+    return label;
 }
