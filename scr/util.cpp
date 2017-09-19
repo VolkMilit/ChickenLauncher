@@ -93,11 +93,6 @@ QString utils::util::getLabel()
     label_vec << "RIP AND TEAR!" << "JOIN GAME AND RIP THEM ALL!" << "RIP UND TEAR!" <<\
              "GIVE ME YOUR SOUL!" << "THE TREND IS DEAD!";
 
-    QRegExp doom("*doom*", Qt::CaseInsensitive, QRegExp::Wildcard);
-    QRegExp wolf("*wolf*", Qt::CaseInsensitive, QRegExp::Wildcard);
-    QRegExp heretic("*heretic*", Qt::CaseInsensitive, QRegExp::Wildcard);
-    QRegExp hexen("*hexen*", Qt::CaseInsensitive, QRegExp::Wildcard);
-
     QString label = "";
 
     if (myUi->gb_join->isChecked())
@@ -108,11 +103,11 @@ QString utils::util::getLabel()
 
     QString item_text = vbaseconfig->getLastIwad().remove(myUi->le_iwad->text());
 
-    if (doom.exactMatch(item_text))
+    if (item_text.contains("doom", Qt::CaseInsensitive))
         label = label_vec.at(0);
-    else if (wolf.exactMatch(item_text))
+    else if (item_text.contains("wolf", Qt::CaseInsensitive))
         label = label_vec.at(2);
-    else if (heretic.exactMatch(item_text) || hexen.exactMatch(item_text))
+    else if (item_text.contains("heretic", Qt::CaseInsensitive) || item_text.contains("hexen", Qt::CaseInsensitive))
         label = label_vec.at(3);
     else
         label = label_vec.at(4);

@@ -1,12 +1,12 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
-#include <QVector>
+
+#include "archive.h"
 
 Launcher::MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    util(new utils::util(ui)),
+    vutil(new utils::util(ui)),
     vgzdoom(new gzdoom(ui))
 {
     ui->setupUi(this);
@@ -28,7 +28,7 @@ Launcher::MainWindow::~MainWindow()
     delete VbaseConfig;
 
     delete vgzdoom;
-    delete util;
+    delete vutil;
     delete ui;
 }
 
@@ -79,7 +79,7 @@ void Launcher::MainWindow::on_btn_load_clicked()
     VlistFill->getPWadList();
     VlistFill->getPortConfigFile();
 
-    const QString label = util->getLabel();
+    const QString label = vutil->getLabel();
     ui->btn_start->setText(label);
 }
 
@@ -180,34 +180,34 @@ __      ____ _  __| |___
 
 void Launcher::MainWindow::on_btn_pwad_up_clicked()
 {
-    util->moveItem(true);
+    vutil->moveItem(true);
 
     VbaseConfig->setLastPwad("");
-    VbaseConfig->setLastPwad(util->getPwadChecked());
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_down_clicked()
 {
-    util->moveItem(false);
+    vutil->moveItem(false);
 
     VbaseConfig->setLastPwad("");
-    VbaseConfig->setLastPwad(util->getPwadChecked());
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_top_clicked()
 {
-    util->moveItemTo(true);
+    vutil->moveItemTo(true);
 
     VbaseConfig->setLastPwad("");
-    VbaseConfig->setLastPwad(util->getPwadChecked());
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_bottom_clicked()
 {
-    util->moveItemTo(false);
+    vutil->moveItemTo(false);
 
     VbaseConfig->setLastPwad("");
-    VbaseConfig->setLastPwad(util->getPwadChecked());
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_refresh_clicked()
@@ -222,7 +222,7 @@ void Launcher::MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
 
-    const QString label = util->getLabel();
+    const QString label = vutil->getLabel();
     ui->btn_start->setText(label);
 }
 
@@ -234,7 +234,7 @@ void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
         item->setForeground(Qt::black);
 
     VbaseConfig->setLastPwad("");
-    VbaseConfig->setLastPwad(util->getPwadChecked());
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
@@ -411,7 +411,7 @@ void Launcher::MainWindow::on_gb_join_toggled()
     if (ui->gb_join->isChecked())
         off = false;
 
-    ui->btn_start->setText(util->getLabel());
+    ui->btn_start->setText(vutil->getLabel());
 
     ui->gb_game->setDisabled(!off);
 
@@ -570,7 +570,7 @@ void Launcher::MainWindow::on_btn_loadgame_clicked()
 void Launcher::MainWindow::on_le_map_textChanged(const QString &arg1)
 {
     const QString last_iwad = VbaseConfig->getLastIwad();
-    if (last_iwad.contains("DOOM.WAD", Qt::CaseSensitive) \
+    if (last_iwad.contains("DOOM.WAD", Qt::CaseInsensitive) \
             || last_iwad.contains("heretic", Qt::CaseInsensitive) \
             || last_iwad.contains("wolf", Qt::CaseInsensitive))
     {
