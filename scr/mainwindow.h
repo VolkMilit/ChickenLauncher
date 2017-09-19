@@ -3,18 +3,13 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QListWidgetItem>
 #include <QSystemTrayIcon>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QDir>
 #include <QFile>
-#include <QTextStream>
-#include <QtAlgorithms>
 #include <QShortcut>
-
-// std headers
-#include <algorithm>
+#include <QVector>
 
 // libraries
 #include "baseconfig.h"
@@ -131,26 +126,18 @@ namespace Launcher
 
     private:
 
-/*
-    ___ _
-   / __| |__ _ ______ ___ ___
-  | (__| / _` (_-<_-</ -_|_-<
-   \___|_\__,_/__/__/\___/__/
-*/
-
         Ui::MainWindow *ui;
+        utils::util *vutil;
         gzdoom *vgzdoom;
 
         config::baseConfig *VbaseConfig;
         config::configDialog *VconfigDialog;
 
-        utils::util *util;
         utils::listFill *VlistFill;
         utils::colors *Vcolors;
 
         descriptionsHandler *VdescriptionsHandler;
 
-        QListWidgetItem *item;
         QFileDialog *fileDialog;
     };
 }
