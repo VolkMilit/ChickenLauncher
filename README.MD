@@ -1,43 +1,43 @@
-#Chicken Launcher. A crossplatrom doom launcher.
+# Chicken Launcher. A crossplatrom doom launcher.
 
 Damn small and powerful!																																																											
 ![Oh, I know how to call chicken](/scr/images/chicken.png)     	
 
 
-####NEW IN 1.4
+#### NEW IN 1.4
 - Now priority pwad working as expected
 - Add pwad descriptions window, if wad_name.txt is available
 - Bug fixes
 - Clear code
 
-####Screenshots:
+#### Screenshots:
 See ./screenshots/
 
-####KNOW ISSUES
+#### KNOW ISSUES
 See bug tracker
 
-####TODO:
+#### TODO:
 
-#####v 1.5
+### v 1.5
 - Add PrBoom+ and Chocolate Doom																					
 - Translations																		
 
-#####v 1.x
+### v 1.x
 - Migrate to Qt5 (have problems with png on version 5.3.x in Debian)									
 
-####REQUIREMENTS
+#### REQUIREMENTS
 QT >= 4.8
 
 g++ >= 4.9 or clang >= 3.5
 
-####INSTALLATION
+#### INSTALLATION
 $ make && make clean																																																									
 Copy ChickenLauncher in any place.																																																										
 
 Build debian\ubuntu package:												
 just run ./build.sh
 
-####LICENSE
+#### LICENSE
 Licensed under WTFPL V2.0. See LICENSE file in root directory.
 
 Scootaloo Chicken (c) Speedingturtle (http://speedingturtle.deviantart.com/art/Scootaloo-257329851)                                                                                                                                
