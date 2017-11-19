@@ -15,6 +15,7 @@
 #include "baseconfig.h"
 #include "listsfill.h"
 #include "gzdoom.h"
+#include "darkplaces.h"
 #include "configdialog.h"
 #include "colors.h"
 #include "descriptionshandler.h"
@@ -134,6 +135,7 @@ namespace Launcher
         Ui::MainWindow *ui;
         utils::util *vutil;
         gzdoom *vgzdoom;
+        darkplaces *vdarkplaces;
 
         baseConfig *VbaseConfig;
 

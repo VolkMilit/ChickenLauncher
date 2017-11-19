@@ -6,6 +6,7 @@ Launcher::MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     vutil(new utils::util(ui)),
     vgzdoom(new gzdoom(ui)),
+    vdarkplaces(new darkplaces(ui)),
     VbaseConfig(new baseConfig(ui)),
     VlistFill(new utils::listFill(ui)),
     Vcolors(new utils::colors()),
@@ -13,8 +14,6 @@ Launcher::MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     windowInit();
-
-    setGameGzdoom();
 }
 
 Launcher::MainWindow::~MainWindow()
@@ -59,7 +58,7 @@ void Launcher::MainWindow::on_btn_new_clicked()
 }
 
 void Launcher::MainWindow::on_btn_load_clicked()
-{
+{    
     QListWidgetItem *item = ui->lw_profile->currentItem();
 
     if (!item)
@@ -80,6 +79,13 @@ void Launcher::MainWindow::on_btn_load_clicked()
 
     QFileInfo title(VbaseConfig->getCurrentProfile());
     setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
+
+    if (VbaseConfig->getGamePort() == "gzdoom")
+        setGameGzdoom();
+    else if (VbaseConfig->getGamePort() == "darkplaces")
+        setGameDarkplaces();
+    else
+        setGameGzdoom();
 }
 
 void Launcher::MainWindow::on_btn_rename_clicked()
@@ -675,11 +681,15 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
 void Launcher::MainWindow::on_actionGZDoom_triggered()
 {
     setGameGzdoom();
+    if (ui->actionDarkPlaces->isChecked())
+        ui->actionDarkPlaces->setChecked(false);
 }
 
 void Launcher::MainWindow::on_actionDarkPlaces_triggered()
 {
     setGameDarkplaces();
+    if (ui->actionGZDoom->isChecked())
+        ui->actionGZDoom->setChecked(false);
 }
 
 /*
@@ -692,6 +702,7 @@ void Launcher::MainWindow::on_actionDarkPlaces_triggered()
 
 void Launcher::MainWindow::setGameGzdoom()
 {
+    // yes, I know, this is pretty bad, need to rewrite
     ui->gb_game_darkplaces->hide();
     ui->pt_description->show();
     ui->lw_port_configs_files->show();
@@ -708,6 +719,9 @@ void Launcher::MainWindow::setGameGzdoom()
     ui->lw_iwad->show();
     ui->label_2->setText("IWAD:");
     ui->label_3->setText("Path to IWADs dir:");
+
+    if (ui->actionDarkPlaces->isChecked())
+        VbaseConfig->setGamePort("gzdoom");
 }
 
 void Launcher::MainWindow::setGameDarkplaces()
@@ -728,6 +742,9 @@ void Launcher::MainWindow::setGameDarkplaces()
     ui->lw_iwad->hide();
     ui->label_2->setText("Game:");
     ui->label_3->setText("Path to basedir:");
+
+    if (ui->actionDarkPlaces->isChecked())
+        VbaseConfig->setGamePort("darkplaces");
 }
 
 void Launcher::MainWindow::windowInit()
@@ -767,6 +784,20 @@ void Launcher::MainWindow::windowInit()
 
     QFileInfo title(VbaseConfig->getCurrentProfile());
     setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
+
+
+    if (VbaseConfig->getGamePort() == "gzdoom")
+    {
+        setGameGzdoom();
+        ui->actionGZDoom->setChecked(true);
+    }
+    else if (VbaseConfig->getGamePort() == "darkplaces")
+    {
+        setGameDarkplaces();
+        ui->actionDarkPlaces->setChecked(true);
+    }
+    else // fallback to default
+        setGameGzdoom();
 }
 
 void Launcher::MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -820,20 +851,23 @@ void Launcher::MainWindow::mainWindowShowHide()
 
 void Launcher::MainWindow::startApp()
 {
-    /*
-    _____        _     _       _   _                            _
-   |_   _|__  __| |___(_)  ___| |_| |_  ___ _ _   _ __  ___ _ _| |_ ___
-     | |/ _ \/ _` / _ \_  / _ \  _| ' \/ -_) '_| | '_ \/ _ \ '_|  _(_-<
-     |_|\___/\__,_\___(_) \___/\__|_||_\___|_|   | .__/\___/_|  \__/__/
-                                                 |_|
-    */
-
-    if (!ui->le_playdemo->text().isEmpty())
-        vgzdoom->startDemo();
-    else if (ui->gb_join->isChecked())
-        vgzdoom->networkGame();
+    if (ui->actionGZDoom->isChecked())
+    {
+        if (!ui->le_playdemo->text().isEmpty())
+            vgzdoom->startDemo();
+        else if (ui->gb_join->isChecked())
+            vgzdoom->networkGame();
+        else
+            vgzdoom->startGzdoom();
+    }
+    else if (ui->actionDarkPlaces->isChecked())
+    {
+        vdarkplaces->startDarkplaces();
+    }
     else
-        vgzdoom->startGzdoom();
+    {
+        QMessageBox::information(this, "ChickenLauncher", "Set game first.", QMessageBox::Ok);
+    }
 }
 
 void Launcher::MainWindow::on_btn_start_clicked()

@@ -80,6 +80,10 @@ class baseConfig : public QWidget
         QString getPwadDir();
 
         /*[Port]*/
+        //game_port
+        void setGamePort(QString value);
+        QString getGamePort();
+
         //port_exe
         void setExePath(QString value);
         QString getExePath();

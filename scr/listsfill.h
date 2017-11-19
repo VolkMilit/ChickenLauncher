@@ -2,6 +2,7 @@
 #define LISTSFILL_H
 
 #include <QStandardItemModel>
+#include <QDir>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"

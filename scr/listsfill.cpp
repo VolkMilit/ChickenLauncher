@@ -47,6 +47,7 @@ void utils::listFill::getIWadList()
 void utils::listFill::getPWadList()
 {
     myUi->lw_pwad->clear();
+    QStringList PWAD_files;
 
     const QString path = myUi->le_pwad->text();
     QStringList pwad_list = VbaseConfig->getLastPwad().split("#");
@@ -60,7 +61,10 @@ void utils::listFill::getPWadList()
     if(!pwad_dir.exists())
         pwad_dir = QDir::currentPath();
 
-    const QStringList PWAD_files = pwad_dir.entryList(filter, QDir::Files);
+    if (VbaseConfig->getGamePort() == "gzdoom")
+        PWAD_files = pwad_dir.entryList(filter, QDir::Files);
+    else
+        PWAD_files = pwad_dir.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot);
 
     for (auto i = 0; i < PWAD_files.length(); i++)
     {
@@ -93,11 +97,6 @@ void utils::listFill::getPWadList()
         myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
         myUi->lw_pwad->item(i)->setForeground(color);
     }
-}
-
-void utils::listFill::getGames()
-{
-
 }
 
 void utils::listFill::getProfiles()

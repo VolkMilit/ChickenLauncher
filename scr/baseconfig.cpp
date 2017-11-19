@@ -244,6 +244,18 @@ QString baseConfig::getConfigFile()
     return ret;
 }
 
+//game_port
+void baseConfig::setGamePort(QString value)
+{
+    writeSettings(getCurrentProfile(), "Port", "game_port", value);
+}
+
+QString baseConfig::getGamePort()
+{
+    QString ret = readSettings(getCurrentProfile(), "Port", "game_port");
+    return ret;
+}
+
 /*[Network]*/
 //enabled
 void baseConfig::setNetworkEnabled(int value)
