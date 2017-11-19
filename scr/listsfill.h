@@ -24,7 +24,7 @@ namespace utils
 
         private:
         Ui::MainWindow *myUi;
-        config::baseConfig *VbaseConfig;
+        baseConfig *VbaseConfig;
         colors *Vcolors;
         Launcher::gzdoom *Vgzdoom;
 

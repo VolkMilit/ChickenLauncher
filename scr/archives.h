@@ -4,17 +4,16 @@
 #include <QString>
 #include <quazip/quazipfile.h>
 
-class archives
+namespace utils
 {
-public:
-    archives();
-    virtual ~archives();
+    class archives
+    {
+        protected:
+        archives();
+        virtual ~archives();
 
-    int open(QString archivePath, QString file);
-    QString returnText();
-
-private:
-    QString str;
-};
+        QString findTxt(QString file);
+    };
+}
 
 #endif // ARCHIVES_H

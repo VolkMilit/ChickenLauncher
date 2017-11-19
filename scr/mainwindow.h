@@ -20,6 +20,7 @@
 #include "descriptionshandler.h"
 #include "util.h"
 
+
 //namespace Ui {class MainWindow;}
 
 namespace Launcher
@@ -48,8 +49,10 @@ namespace Launcher
         void startApp();
         void iconActivated(QSystemTrayIcon::ActivationReason reason);
         void windowInit();
-        void updateColors();
         void mainWindowShowHide();
+
+        void setGameGzdoom();
+        void setGameDarkplaces();
 
 /*
     ___ _                _
@@ -119,6 +122,8 @@ namespace Launcher
         void on_actionAbout_Chicken_Launcher_triggered();
         void on_actionPreferences_triggered();
         void on_actionSearch_PWAD_triggered();
+        void on_actionGZDoom_triggered();
+        void on_actionDarkPlaces_triggered();
 
         //SHORTCURTS
         void on_actionExit_Ctrl_Q_triggered();
@@ -130,8 +135,7 @@ namespace Launcher
         utils::util *vutil;
         gzdoom *vgzdoom;
 
-        config::baseConfig *VbaseConfig;
-        config::configDialog *VconfigDialog;
+        baseConfig *VbaseConfig;
 
         utils::listFill *VlistFill;
         utils::colors *Vcolors;

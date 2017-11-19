@@ -1,10 +1,8 @@
 #include "colors.h"
 
-utils::colors::colors()
-{
-    ui = new Ui::MainWindow;
-    VbaseConfig = new config::baseConfig(ui);
-}
+utils::colors::colors() :
+    VbaseConfig(new baseConfig(ui))
+{}
 
 utils::colors::~colors(){}
 
@@ -38,4 +36,9 @@ void utils::colors::clearColor(QListWidget *widget)
 {
     for (int i = 0; i < widget->count(); i++)
         widget->item(i)->setForeground(Qt::black);
+}
+
+void utils::colors::updateColors()
+{
+
 }

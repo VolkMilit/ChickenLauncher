@@ -9,10 +9,8 @@
 
 #include "ui_mainwindow.h"
 
-namespace config
+class baseConfig : public QWidget
 {
-    class baseConfig : public QWidget
-    {
     public:
         baseConfig(Ui::MainWindow *ui);
         virtual ~baseConfig();
@@ -124,7 +122,6 @@ namespace config
         void writeSettings(QString file, QString group, QString value, int var);
         QString readSettings(QString file, QString group, QString value);
         int readIntSettings(QString file, QString group, QString value);
-    };
-}
+};
 
 #endif // BASECONFIG_H

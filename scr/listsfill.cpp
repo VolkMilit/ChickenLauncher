@@ -1,12 +1,11 @@
 #include "listsfill.h"
-#include <QDebug>
 
-utils::listFill::listFill(Ui::MainWindow *ui)
+utils::listFill::listFill(Ui::MainWindow *ui) :
+    VbaseConfig(new baseConfig(ui)),
+    Vcolors(new utils::colors()),
+    Vgzdoom(new Launcher::gzdoom(ui))
 {
     this->myUi = ui;
-    VbaseConfig = new config::baseConfig(ui);
-    Vcolors = new utils::colors();
-    Vgzdoom = new Launcher::gzdoom(ui);
 }
 
 utils::listFill::~listFill(){}
@@ -94,6 +93,11 @@ void utils::listFill::getPWadList()
         myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
         myUi->lw_pwad->item(i)->setForeground(color);
     }
+}
+
+void utils::listFill::getGames()
+{
+
 }
 
 void utils::listFill::getProfiles()

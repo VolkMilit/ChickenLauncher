@@ -12,7 +12,7 @@
 #include "archives.h"
 #include "ui_mainwindow.h"
 
-class descriptionsHandler
+class descriptionsHandler : protected utils::archives
 {
 public:
     explicit descriptionsHandler(Ui::MainWindow *ui);
@@ -51,7 +51,6 @@ public:
     QString readString(QString filePath, QString str);
 
 private:
-    archives *Varchives;
     Ui::MainWindow *myUi;
 };
 

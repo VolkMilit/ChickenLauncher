@@ -8,7 +8,7 @@
 
 namespace Ui {class configDialog;}
 
-namespace config
+namespace Launcher
 {
     class configDialog : public QDialog
     {
@@ -28,10 +28,10 @@ namespace config
         void on_rb_default_tab_wads_clicked();
 
     private:
-        Ui::configDialog *configDialogUi;
-        Ui::MainWindow *myUi;
+        Ui::configDialog *cdUi;
+        Ui::MainWindow *ui;
 
-        config::baseConfig *VbaseConfig;
+        baseConfig *VbaseConfig;
         utils::listFill *VlistFill;
         utils::colors *Vcolor;
 

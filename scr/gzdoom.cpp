@@ -1,12 +1,10 @@
 #include "gzdoom.h"
 #include <QDebug>
 
-Launcher::gzdoom::gzdoom(Ui::MainWindow *ui)
+Launcher::gzdoom::gzdoom(Ui::MainWindow *ui) :
+    VbaseConfig(new baseConfig(myUi))
 {
     this->myUi = ui;
-
-    VbaseConfig = new config::baseConfig(ui);
-
     process = new QProcess(this);
 }
 
@@ -17,6 +15,8 @@ Launcher::gzdoom::~gzdoom()
 
 QString Launcher::gzdoom::getGzdoomHomeDir()
 {
+    QString home = "";
+
     #ifdef _WIN32
         home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
     #else
@@ -47,6 +47,8 @@ void Launcher::gzdoom::parametrParser()
     noautoload = "";
     nostartup = "";
     config = "";
+    advport = "";
+    advcmd = "";
 
     //FILE
     if (!VbaseConfig->getLastPwad().isEmpty())
@@ -109,6 +111,10 @@ void Launcher::gzdoom::parametrParser()
         config = "";
     else
         config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile();
+
+    //
+    advcmd = myUi->le_adv_cmd_param->text() + " ";
+    advport = myUi->le_adv_port_param->text();
 }
 
 void Launcher::gzdoom::startDemo()
@@ -126,6 +132,8 @@ void Launcher::gzdoom::networkGame()
 
 void Launcher::gzdoom::startGzdoom()
 {
+    QString app = "";
+
     parametrParser();
 
     if (myUi->lw_iwad->currentItem() == nullptr && \
@@ -133,7 +141,7 @@ void Launcher::gzdoom::startGzdoom()
        )
     {
         myUi->tabWidget->setCurrentIndex(1);
-        QMessageBox::information(this, "", tr("Choose at least one IWAD."));
+        QMessageBox::information(this, "", "Choose at least one IWAD.");
     }
     else
     {
@@ -148,24 +156,11 @@ void Launcher::gzdoom::startGzdoom()
         if (!myUi->le_loadgame->text().isEmpty())
             loadgame = " -loadgame " + myUi->le_loadgame->text();
 
-        process->start(
-                       term +\
-                       myUi->le_adv_cmd_param->text() + " " +\
-                       exe +\
-                       " -iwad " + iwad +\
-                       pwad +\
-                       skill +\
-                       map + " " +\
-                       nomusic +\
-                       nosound +\
-                       nosfx +\
-                       demo +\
-                       oldsprites +\
-                       noautoload +\
-                       nostartup +\
-                       loadgame +\
-                       config +\
-                       myUi->le_adv_port_param->text()
-                    );
+        app = term + advcmd + exe + " -iwad " + iwad + " "\
+                + pwad + skill + map + nomusic + nosfx\
+                + demo + oldsprites + noautoload + nostartup\
+                + loadgame + config + advport;
+
+        process->start(app);
     }
 }

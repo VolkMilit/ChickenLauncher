@@ -1,32 +1,28 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "archive.h"
-
 Launcher::MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     vutil(new utils::util(ui)),
-    vgzdoom(new gzdoom(ui))
+    vgzdoom(new gzdoom(ui)),
+    VbaseConfig(new baseConfig(ui)),
+    VlistFill(new utils::listFill(ui)),
+    Vcolors(new utils::colors()),
+    VdescriptionsHandler(new descriptionsHandler(ui))
 {
     ui->setupUi(this);
-    VbaseConfig = new config::baseConfig(ui);
-    VconfigDialog = new config::configDialog();
-    VlistFill = new utils::listFill(ui);
-    Vcolors = new utils::colors();
-    VdescriptionsHandler = new descriptionsHandler(ui);
-
     windowInit();
+
+    setGameGzdoom();
 }
 
 Launcher::MainWindow::~MainWindow()
 {
     delete Vcolors;
     delete VlistFill;
-    delete VconfigDialog;
     delete VdescriptionsHandler;
     delete VbaseConfig;
-
     delete vgzdoom;
     delete vutil;
     delete ui;
@@ -81,6 +77,9 @@ void Launcher::MainWindow::on_btn_load_clicked()
 
     const QString label = vutil->getLabel();
     ui->btn_start->setText(label);
+
+    QFileInfo title(VbaseConfig->getCurrentProfile());
+    setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
 }
 
 void Launcher::MainWindow::on_btn_rename_clicked()
@@ -180,7 +179,7 @@ __      ____ _  __| |___
 
 void Launcher::MainWindow::on_btn_pwad_up_clicked()
 {
-    vutil->moveItem(true);
+    vutil->moveItem(true, ui->lw_pwad);
 
     VbaseConfig->setLastPwad("");
     VbaseConfig->setLastPwad(vutil->getPwadChecked());
@@ -188,7 +187,7 @@ void Launcher::MainWindow::on_btn_pwad_up_clicked()
 
 void Launcher::MainWindow::on_btn_pwad_down_clicked()
 {
-    vutil->moveItem(false);
+    vutil->moveItem(false, ui->lw_pwad);
 
     VbaseConfig->setLastPwad("");
     VbaseConfig->setLastPwad(vutil->getPwadChecked());
@@ -196,7 +195,7 @@ void Launcher::MainWindow::on_btn_pwad_down_clicked()
 
 void Launcher::MainWindow::on_btn_pwad_top_clicked()
 {
-    vutil->moveItemTo(true);
+    vutil->moveItemTo(true, ui->lw_pwad);
 
     VbaseConfig->setLastPwad("");
     VbaseConfig->setLastPwad(vutil->getPwadChecked());
@@ -204,7 +203,7 @@ void Launcher::MainWindow::on_btn_pwad_top_clicked()
 
 void Launcher::MainWindow::on_btn_pwad_bottom_clicked()
 {
-    vutil->moveItemTo(false);
+    vutil->moveItemTo(false, ui->lw_pwad);
 
     VbaseConfig->setLastPwad("");
     VbaseConfig->setLastPwad(vutil->getPwadChecked());
@@ -601,21 +600,29 @@ void Launcher::MainWindow::on_actionAbout_QT_triggered()
 
 void Launcher::MainWindow::on_actionPreferences_triggered()
 {
-    connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
+    configDialog *VconfigDialog = new configDialog();
+    //connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
     VconfigDialog->show();
 }
 
 void Launcher::MainWindow::on_actionAbout_Chicken_Launcher_triggered()
 {
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText(tr("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.3.1</font></b></font>"));
-    msgBox->setInformativeText(tr("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
- Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
-Licensed under the Apache License, Version 2.0 (the \"License\"). \
-You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 or see LICENSE file."));
+    msgBox->setText(
+            "<font size=\"5\" color=\"#FDBC5F\" align=\"center\">"
+            "<b>Chicken <font color=\"#C959A2\">Launcher</font>"
+            "<font color=\"#000\">v1.4.0</font></b></font>"
+        );
+
+    msgBox->setInformativeText(
+                    "SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher (trying to be) written to be simple, "
+                    "powerfull and cross-platform.\n\nLicensed under WTFPL v2.0 (see LICENSE file)"
+                );
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->setIconPixmap(QPixmap(":/chicken.png"));
     msgBox->exec();
+
+    delete msgBox;
 }
 
 void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
@@ -665,6 +672,16 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
     }
 }
 
+void Launcher::MainWindow::on_actionGZDoom_triggered()
+{
+    setGameGzdoom();
+}
+
+void Launcher::MainWindow::on_actionDarkPlaces_triggered()
+{
+    setGameDarkplaces();
+}
+
 /*
  ___             _   _
 | __|  _ _ _  __| |_(_)___ _ _  ___
@@ -673,11 +690,44 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
 
 */
 
-void Launcher::MainWindow::updateColors()
+void Launcher::MainWindow::setGameGzdoom()
 {
-    for (int i = 0; i < ui->lw_iwad->count(); i++)
-        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad())
-            ui->lw_iwad->item(i)->setForeground(Qt::black);
+    ui->gb_game_darkplaces->hide();
+    ui->pt_description->show();
+    ui->lw_port_configs_files->show();
+    ui->label_10->show();
+    ui->gb_game->show();
+    ui->gb_demos->show();
+    ui->le_pwad->show();
+    ui->label_4->show();
+    ui->btn_pwad_path->show();
+    ui->btn_new_config->show();
+    ui->btn_load_config->show();
+    ui->btn_delete_config->show();
+    ui->label->show();
+    ui->lw_iwad->show();
+    ui->label_2->setText("IWAD:");
+    ui->label_3->setText("Path to IWADs dir:");
+}
+
+void Launcher::MainWindow::setGameDarkplaces()
+{
+    ui->gb_game_darkplaces->show();
+    ui->pt_description->hide();
+    ui->lw_port_configs_files->hide();
+    ui->label_10->hide();
+    ui->gb_game->hide();
+    ui->gb_demos->hide();
+    ui->le_pwad->hide();
+    ui->label_4->hide();
+    ui->btn_pwad_path->hide();
+    ui->btn_new_config->hide();
+    ui->btn_load_config->hide();
+    ui->btn_delete_config->hide();
+    ui->label->hide();
+    ui->lw_iwad->hide();
+    ui->label_2->setText("Game:");
+    ui->label_3->setText("Path to basedir:");
 }
 
 void Launcher::MainWindow::windowInit()
@@ -712,6 +762,11 @@ void Launcher::MainWindow::windowInit()
     ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
     ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
     ui->actionSearch_PWAD->setShortcut(tr("CTRL+F"));
+
+    //qDebug() << vutil->getMauntsFromFile("Project brutality");
+
+    QFileInfo title(VbaseConfig->getCurrentProfile());
+    setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
 }
 
 void Launcher::MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
