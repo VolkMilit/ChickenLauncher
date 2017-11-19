@@ -1,32 +1,29 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
-#include <QVector>
 
 Launcher::MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    util(new utils::util(ui))
+    vutil(new utils::util(ui)),
+    vgzdoom(new gzdoom(ui)),
+    vdarkplaces(new darkplaces(ui)),
+    VbaseConfig(new baseConfig(ui)),
+    VlistFill(new utils::listFill(ui)),
+    Vcolors(new utils::colors()),
+    VdescriptionsHandler(new descriptionsHandler(ui))
 {
     ui->setupUi(this);
-    VbaseConfig = new config::baseConfig(ui);
-    VconfigDialog = new config::configDialog();
-    VlistFill = new utils::listFill(ui);
-    Vcolors = new utils::colors();
-    Vgzdoom = new Launcher::gzdoom(ui);
-    VdescriptionsHandler = new descriptionsHandler(ui);
-
     windowInit();
 }
 
 Launcher::MainWindow::~MainWindow()
 {
     delete Vcolors;
-    //delete Vgzdoom;
     delete VlistFill;
-    delete VconfigDialog;
     delete VdescriptionsHandler;
     delete VbaseConfig;
+    delete vgzdoom;
+    delete vutil;
     delete ui;
 }
 
@@ -61,7 +58,7 @@ void Launcher::MainWindow::on_btn_new_clicked()
 }
 
 void Launcher::MainWindow::on_btn_load_clicked()
-{
+{    
     QListWidgetItem *item = ui->lw_profile->currentItem();
 
     if (!item)
@@ -76,6 +73,19 @@ void Launcher::MainWindow::on_btn_load_clicked()
     VlistFill->getIWadList();
     VlistFill->getPWadList();
     VlistFill->getPortConfigFile();
+
+    const QString label = vutil->getLabel();
+    ui->btn_start->setText(label);
+
+    QFileInfo title(VbaseConfig->getCurrentProfile());
+    setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
+
+    if (VbaseConfig->getGamePort() == "gzdoom")
+        setGameGzdoom();
+    else if (VbaseConfig->getGamePort() == "darkplaces")
+        setGameDarkplaces();
+    else
+        setGameGzdoom();
 }
 
 void Launcher::MainWindow::on_btn_rename_clicked()
@@ -175,34 +185,34 @@ __      ____ _  __| |___
 
 void Launcher::MainWindow::on_btn_pwad_up_clicked()
 {
-    util->moveItem(true);
+    vutil->moveItem(true, ui->lw_pwad);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_down_clicked()
 {
-    util->moveItem(false);
+    vutil->moveItem(false, ui->lw_pwad);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_top_clicked()
 {
-    util->moveItemTo(true);
+    vutil->moveItemTo(true, ui->lw_pwad);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_pwad_bottom_clicked()
 {
-    util->moveItemTo(false);
+    vutil->moveItemTo(false, ui->lw_pwad);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_btn_refresh_clicked()
@@ -212,10 +222,13 @@ void Launcher::MainWindow::on_btn_refresh_clicked()
 
 void Launcher::MainWindow::on_lw_iwad_itemClicked(QListWidgetItem *item)
 {
-    VbaseConfig->setLastIwad(VbaseConfig->getCurrentProfile(), item->text());
+    VbaseConfig->setLastIwad(item->text().remove(ui->le_iwad->text()));
     Vcolors->clearColor(ui->lw_iwad);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
+
+    const QString label = vutil->getLabel();
+    ui->btn_start->setText(label);
 }
 
 void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
@@ -225,13 +238,17 @@ void Launcher::MainWindow::on_lw_pwad_itemChanged(QListWidgetItem *item)
     else
         item->setForeground(Qt::black);
 
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), "");
-    VbaseConfig->setLastPwad(VbaseConfig->getCurrentProfile(), util->getPwadChecked());
+    VbaseConfig->setLastPwad("");
+    VbaseConfig->setLastPwad(vutil->getPwadChecked());
 }
 
 void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
 {
     QListWidgetItem *item = ui->lw_pwad->currentItem();
+
+    if (!item)
+        return;
+
     VdescriptionsHandler->getFullDescriptionFromFile(ui->le_pwad->text() + "/" + item->text());
 }
 
@@ -247,7 +264,7 @@ void Launcher::MainWindow::on_lw_pwad_itemSelectionChanged()
 
 void Launcher::MainWindow::on_btn_iwad_path_clicked()
 {
-    QString last = VbaseConfig->getLastIwadDir(VbaseConfig->getLauncherSettingsFile());
+    QString last = VbaseConfig->getLastIwadDir();
 
     if (last.isEmpty())
         last = QDir::currentPath();
@@ -257,13 +274,13 @@ void Launcher::MainWindow::on_btn_iwad_path_clicked()
     if (!fileName.isEmpty())
     {
         ui->le_iwad->setText(fileName);
-        VbaseConfig->setLastIwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+        VbaseConfig->setLastIwadDir(fileName);
     }
 }
 
 void Launcher::MainWindow::on_btn_pwad_path_clicked()
 {
-    QString last = VbaseConfig->getLastPwadDir(VbaseConfig->getLauncherSettingsFile());
+    QString last = VbaseConfig->getLastPwadDir();
 
     if (last.isEmpty())
         last = QDir::currentPath();
@@ -273,19 +290,19 @@ void Launcher::MainWindow::on_btn_pwad_path_clicked()
     if (!fileName.isEmpty())
     {
         ui->le_pwad->setText(fileName);
-        VbaseConfig->setLastPwadDir(VbaseConfig->getLauncherSettingsFile(), fileName);
+        VbaseConfig->setLastPwadDir(fileName);
     }
 }
 
 void Launcher::MainWindow::on_le_iwad_textChanged()
 {
-    VbaseConfig->setIwadDir(VbaseConfig->getCurrentProfile(), ui->le_iwad->text());
+    VbaseConfig->setIwadDir(ui->le_iwad->text());
     VlistFill->getIWadList();
 }
 
 void Launcher::MainWindow::on_le_pwad_textChanged()
 {
-    VbaseConfig->setPwadDir(VbaseConfig->getCurrentProfile(), ui->le_pwad->text());
+    VbaseConfig->setPwadDir(ui->le_pwad->text());
     VlistFill->getPWadList();
 }
 
@@ -300,18 +317,17 @@ void Launcher::MainWindow::on_btn_exe_clicked()
 
 void Launcher::MainWindow::on_le_exe_textChanged()
 {
-    VbaseConfig->setExePath(VbaseConfig->getCurrentProfile(),\
-                              ui->le_exe->text());
+    VbaseConfig->setExePath(ui->le_exe->text());
 }
 
 void Launcher::MainWindow::on_le_adv_cmd_param_textChanged()
 {
-    VbaseConfig->setAdvCmdParam(VbaseConfig->getCurrentProfile(), ui->le_adv_cmd_param->text());
+    VbaseConfig->setAdvCmdParam(ui->le_adv_cmd_param->text());
 }
 
 void Launcher::MainWindow::on_le_adv_port_param_textChanged()
 {
-    VbaseConfig->setAdvExeParam(VbaseConfig->getCurrentProfile(), ui->le_adv_port_param->text());
+    VbaseConfig->setAdvExeParam(ui->le_adv_port_param->text());
 }
 
 void Launcher::MainWindow::on_btn_clear_advancedparam_clicked()
@@ -329,7 +345,7 @@ void Launcher::MainWindow::on_btn_new_config_clicked()
 
     if (ok && !text.isEmpty())
     {
-        QFile f(Vgzdoom->getGzdoomHomeDir() + text + ".ini");
+        QFile f(vgzdoom->getGzdoomHomeDir() + text + ".ini");
         f.open(QIODevice::WriteOnly);
         ui->lw_port_configs_files->addItem(text + ".ini");
     }
@@ -342,7 +358,7 @@ void Launcher::MainWindow::on_btn_load_config_clicked()
     if (!item)
         return;
 
-    VbaseConfig->setConfigFile(VbaseConfig->getCurrentProfile(), item->text());
+    VbaseConfig->setConfigFile(item->text());
     Vcolors->clearColor(ui->lw_port_configs_files);
     item->setForeground(Vcolors->getColor());
     item->setSelected(false);
@@ -361,7 +377,7 @@ void Launcher::MainWindow::on_btn_delete_config_clicked()
 
     if (reply == QMessageBox::Yes && ui->lw_port_configs_files->count() != 1)
     {
-        QString file = Vgzdoom->getGzdoomHomeDir() + item->text();
+        QString file = vgzdoom->getGzdoomHomeDir() + item->text();
 
         QFile f(file);
         f.remove();
@@ -396,20 +412,18 @@ void Launcher::MainWindow::on_lw_port_configs_files_itemSelectionChanged()
 
 void Launcher::MainWindow::on_gb_join_toggled()
 {
-    QVector<int> vec;
-    vec << 1 << 2 << 4;
-
     bool off = true;
-    ui->btn_start->setText(tr("PLAY DOOM!"));
-
     if (ui->gb_join->isChecked())
-    {
         off = false;
-        ui->btn_start->setText(tr("Join game"));
-    }
 
-    for (int i = 0; i < vec.size(); i++)
-        ui->tabWidget->setTabEnabled(vec.at(i), off);
+    ui->btn_start->setText(vutil->getLabel());
+
+    ui->gb_game->setDisabled(!off);
+
+    if (off)
+        VbaseConfig->setNetworkEnabled(0);
+    else
+        VbaseConfig->setNetworkEnabled(1);
 }
 
 void Launcher::MainWindow::on_btn_clear_ip_clicked()
@@ -423,6 +437,18 @@ void Launcher::MainWindow::on_btn_clear_port_clicked()
     ui->le_port->clear();
     ui->le_port->setFocus();
 }
+
+
+void Launcher::MainWindow::on_le_ip_textChanged(const QString &arg1)
+{
+    VbaseConfig->setIpAdress(arg1);
+}
+
+void Launcher::MainWindow::on_le_port_textChanged(const QString &arg1)
+{
+    VbaseConfig->setIpPort(arg1);
+}
+
 
 /*
            _                               _
@@ -530,26 +556,26 @@ void Launcher::MainWindow::on_le_loadgame_textChanged()
 
 void Launcher::MainWindow::on_btn_pick_demo_file_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo->setText(fileName);
 }
 
 void Launcher::MainWindow::on_btn_pick_demo_file_2_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open recording demo"), vgzdoom->getGzdoomHomeDir());
     ui->le_playdemo_2->setText(fileName);
 }
 
 void Launcher::MainWindow::on_btn_loadgame_clicked()
 {
-    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), Vgzdoom->getGzdoomHomeDir());
+    QString fileName = fileDialog->getOpenFileName(this, tr("Open save file"), vgzdoom->getGzdoomHomeDir());
     ui->le_loadgame->setText(fileName);
 }
 
 void Launcher::MainWindow::on_le_map_textChanged(const QString &arg1)
 {
-    const QString last_iwad = VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile());
-    if (last_iwad.contains("DOOM.WAD", Qt::CaseSensitive) \
+    const QString last_iwad = VbaseConfig->getLastIwad();
+    if (last_iwad.contains("DOOM.WAD", Qt::CaseInsensitive) \
             || last_iwad.contains("heretic", Qt::CaseInsensitive) \
             || last_iwad.contains("wolf", Qt::CaseInsensitive))
     {
@@ -580,21 +606,29 @@ void Launcher::MainWindow::on_actionAbout_QT_triggered()
 
 void Launcher::MainWindow::on_actionPreferences_triggered()
 {
-    connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
+    configDialog *VconfigDialog = new configDialog();
+    //connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
     VconfigDialog->show();
 }
 
 void Launcher::MainWindow::on_actionAbout_Chicken_Launcher_triggered()
 {
     QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText(tr("<font size=\"5\" color=\"#FDBC5F\" align=\"center\"><b>Chicken <font color=\"#C959A2\">Launcher</font> <font color=\"#000\">v1.3.1</font></b></font>"));
-    msgBox->setInformativeText(tr("SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher writen to be simple and powerfull.\
- Cross-platform and funny. Meme belong to Apple Bloom.\n\n\
-Licensed under the Apache License, Version 2.0 (the \"License\"). \
-You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 or see LICENSE file."));
+    msgBox->setText(
+            "<font size=\"5\" color=\"#FDBC5F\" align=\"center\">"
+            "<b>Chicken <font color=\"#C959A2\">Launcher</font>"
+            "<font color=\"#000\">v1.4.0</font></b></font>"
+        );
+
+    msgBox->setInformativeText(
+                    "SCOOTALOO! SCOOT-SCOOTALOO!\n\nChicken Launcher (trying to be) written to be simple, "
+                    "powerfull and cross-platform.\n\nLicensed under WTFPL v2.0 (see LICENSE file)"
+                );
     msgBox->setStandardButtons(QMessageBox::Ok);
     msgBox->setIconPixmap(QPixmap(":/chicken.png"));
     msgBox->exec();
+
+    delete msgBox;
 }
 
 void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
@@ -644,6 +678,20 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
     }
 }
 
+void Launcher::MainWindow::on_actionGZDoom_triggered()
+{
+    setGameGzdoom();
+    if (ui->actionDarkPlaces->isChecked())
+        ui->actionDarkPlaces->setChecked(false);
+}
+
+void Launcher::MainWindow::on_actionDarkPlaces_triggered()
+{
+    setGameDarkplaces();
+    if (ui->actionGZDoom->isChecked())
+        ui->actionGZDoom->setChecked(false);
+}
+
 /*
  ___             _   _
 | __|  _ _ _  __| |_(_)___ _ _  ___
@@ -652,11 +700,51 @@ void Launcher::MainWindow::on_actionSearch_PWAD_triggered()
 
 */
 
-void Launcher::MainWindow::updateColors()
+void Launcher::MainWindow::setGameGzdoom()
 {
-    for (int i = 0; i < ui->lw_iwad->count(); i++)
-        if (ui->lw_iwad->item(i)->text() == VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()))
-            ui->lw_iwad->item(i)->setForeground(Qt::black);
+    // yes, I know, this is pretty bad, need to rewrite
+    ui->gb_game_darkplaces->hide();
+    ui->pt_description->show();
+    ui->lw_port_configs_files->show();
+    ui->label_10->show();
+    ui->gb_game->show();
+    ui->gb_demos->show();
+    ui->le_pwad->show();
+    ui->label_4->show();
+    ui->btn_pwad_path->show();
+    ui->btn_new_config->show();
+    ui->btn_load_config->show();
+    ui->btn_delete_config->show();
+    ui->label->show();
+    ui->lw_iwad->show();
+    ui->label_2->setText("IWAD:");
+    ui->label_3->setText("Path to IWADs dir:");
+
+    if (ui->actionDarkPlaces->isChecked())
+        VbaseConfig->setGamePort("gzdoom");
+}
+
+void Launcher::MainWindow::setGameDarkplaces()
+{
+    ui->gb_game_darkplaces->show();
+    ui->pt_description->hide();
+    ui->lw_port_configs_files->hide();
+    ui->label_10->hide();
+    ui->gb_game->hide();
+    ui->gb_demos->hide();
+    ui->le_pwad->hide();
+    ui->label_4->hide();
+    ui->btn_pwad_path->hide();
+    ui->btn_new_config->hide();
+    ui->btn_load_config->hide();
+    ui->btn_delete_config->hide();
+    ui->label->hide();
+    ui->lw_iwad->hide();
+    ui->label_2->setText("Game:");
+    ui->label_3->setText("Path to basedir:");
+
+    if (ui->actionDarkPlaces->isChecked())
+        VbaseConfig->setGamePort("darkplaces");
 }
 
 void Launcher::MainWindow::windowInit()
@@ -671,14 +759,18 @@ void Launcher::MainWindow::windowInit()
             VlistFill->getProfiles();
             VlistFill->getPortConfigFile();
 
-            int default_tab = VbaseConfig->getDefaultTab(VbaseConfig->getLauncherSettingsFile());
-            ui->tabWidget->setCurrentIndex(default_tab);
+            int default_tab = VbaseConfig->getDefaultTab();
+
+            if (VbaseConfig->getNetworkEnabled())
+                ui->tabWidget->setCurrentIndex(3);
+            else
+                ui->tabWidget->setCurrentIndex(default_tab);
     }
 
-    if (VbaseConfig->getHideGame(VbaseConfig->getLauncherSettingsFile()) == 1)
+    if (VbaseConfig->getHideGame() == 1)
     {
-        connect(Vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
-        connect(Vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
+        connect(vgzdoom->process, SIGNAL(started()), this, SLOT(mainWindowShowHide()));
+        connect(vgzdoom->process, SIGNAL(finished(int)), this, SLOT(mainWindowShowHide()));
     }
 
     trayIcon();
@@ -687,6 +779,25 @@ void Launcher::MainWindow::windowInit()
     ui->actionExit_Ctrl_Q->setShortcut(tr("CTRL+Q"));
     ui->actionMinimize_to_tray_Ctrl_T->setShortcut(tr("CTRL+T"));
     ui->actionSearch_PWAD->setShortcut(tr("CTRL+F"));
+
+    //qDebug() << vutil->getMauntsFromFile("Project brutality");
+
+    QFileInfo title(VbaseConfig->getCurrentProfile());
+    setWindowTitle(title.baseName() + ".ini - Chicken Launcher");
+
+
+    if (VbaseConfig->getGamePort() == "gzdoom")
+    {
+        setGameGzdoom();
+        ui->actionGZDoom->setChecked(true);
+    }
+    else if (VbaseConfig->getGamePort() == "darkplaces")
+    {
+        setGameDarkplaces();
+        ui->actionDarkPlaces->setChecked(true);
+    }
+    else // fallback to default
+        setGameGzdoom();
 }
 
 void Launcher::MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -740,20 +851,23 @@ void Launcher::MainWindow::mainWindowShowHide()
 
 void Launcher::MainWindow::startApp()
 {
-    /*
-    _____        _     _       _   _                            _
-   |_   _|__  __| |___(_)  ___| |_| |_  ___ _ _   _ __  ___ _ _| |_ ___
-     | |/ _ \/ _` / _ \_  / _ \  _| ' \/ -_) '_| | '_ \/ _ \ '_|  _(_-<
-     |_|\___/\__,_\___(_) \___/\__|_||_\___|_|   | .__/\___/_|  \__/__/
-                                                 |_|
-    */
-
-    if (!ui->le_playdemo->text().isEmpty())
-        Vgzdoom->startDemo();
-    else if (ui->gb_join->isChecked())
-        Vgzdoom->networkGame();
+    if (ui->actionGZDoom->isChecked())
+    {
+        if (!ui->le_playdemo->text().isEmpty())
+            vgzdoom->startDemo();
+        else if (ui->gb_join->isChecked())
+            vgzdoom->networkGame();
+        else
+            vgzdoom->startGzdoom();
+    }
+    else if (ui->actionDarkPlaces->isChecked())
+    {
+        vdarkplaces->startDarkplaces();
+    }
     else
-        Vgzdoom->startGzdoom();
+    {
+        QMessageBox::information(this, "ChickenLauncher", "Set game first.", QMessageBox::Ok);
+    }
 }
 
 void Launcher::MainWindow::on_btn_start_clicked()
@@ -763,7 +877,7 @@ void Launcher::MainWindow::on_btn_start_clicked()
 
 void Launcher::MainWindow::on_actionExit_Ctrl_Q_triggered()
 {
-    int hide = VbaseConfig->getHide(VbaseConfig->getLauncherSettingsFile());
+    int hide = VbaseConfig->getHide();
 
     if (hide == 1)
         mainWindowShowHide();

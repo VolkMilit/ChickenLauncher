@@ -12,7 +12,7 @@ TARGET = ChickenLauncher
 TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++11
-#QMAKE_LFLAGS += -llibquazip
+QMAKE_LFLAGS += -lquazip
 
 SOURCES += ./scr/main.cpp\
         ./scr/mainwindow.cpp \
@@ -25,7 +25,9 @@ SOURCES += ./scr/main.cpp\
     scr/archives.cpp \
     scr/descriptionshandler.cpp \
     scr/outputreader.cpp \
-    scr/util.cpp
+    scr/util.cpp \
+    scr/process.cpp \
+    scr/darkplaces.cpp
 
 HEADERS  += ./scr/mainwindow.h \
     scr/baseconfig.h \
@@ -37,7 +39,9 @@ HEADERS  += ./scr/mainwindow.h \
     scr/archives.h \
     scr/descriptionshandler.h \
     scr/outputreader.h \
-    scr/util.h
+    scr/util.h \
+    scr/process.h \
+    scr/darkplaces.h
 
 FORMS    += ./scr/mainwindow.ui \
     scr/configdialog.ui

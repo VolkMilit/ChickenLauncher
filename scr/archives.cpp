@@ -1,22 +1,23 @@
 #include "archives.h"
 
-archives::archives(){}
-archives::~archives(){}
+utils::archives::archives(){}
+utils::archives::~archives(){}
 
-int archives::open(QString archivePath, QString file)
+QString utils::archives::findTxt(QString file)
 {
-    QFile infile(archivePath);
-    QFile outfile(file);
-    infile.open(QIODevice::ReadOnly);
-    outfile.open(QIODevice::WriteOnly);
-    QByteArray uncompressed_data = infile.readAll();
-    QByteArray compressed_data = qUncompress(uncompressed_data);
-    outfile.write(compressed_data);
-    infile.close();
-    outfile.close();
-}
+    QString found = "";
 
-QString archives::returnText()
-{
-    return str;
+    QStringList lfiles;
+    QuaZip archive(file);
+    archive.open(QuaZip::mdUnzip);
+
+    if (archive.isOpen())
+    {
+        lfiles = archive.getFileNameList();
+        found = lfiles.filter("txt").at(0);
+    }
+
+    archive.close();
+
+    return found;
 }

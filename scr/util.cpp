@@ -1,15 +1,20 @@
 #include "util.h"
 #include <QDebug>
 
-utils::util::util(Ui::MainWindow *ui)
+utils::util::util(Ui::MainWindow *ui) :
+    vbaseconfig(new baseConfig(myUi))
 {
     this->myUi = ui;
 }
 
-utils::util::~util(){}
+utils::util::~util()
+{
+    delete vbaseconfig;
+}
 
 QString utils::util::getPwadChecked()
 {
+    const bool offWadPath = vbaseconfig->getOffWadPath();
     QVector<QString> files;
     QString str;
 
@@ -18,7 +23,16 @@ QString utils::util::getPwadChecked()
         QListWidgetItem *item = myUi->lw_pwad->item(i);
 
         if (item->checkState())
-            files.push_back(item->text());
+        {
+            if (offWadPath)
+                files.push_back(item->text().remove(myUi->le_pwad->text())); //instead of using basename function
+                                                                         //better to remove path, cuz if file
+                                                                         //name will be somethin like wad_name.v1.2.wad
+                                                                         //basename will be something like:
+                                                                         //2.wad
+            else
+                files.push_back(item->text());
+        }
     }
 
     for (auto i = 0; i < files.count(); i++)
@@ -28,57 +42,107 @@ QString utils::util::getPwadChecked()
 }
 
 //moving item up and down, http://www.qtcentre.org/threads/17996-Move-items-up-and-down-in-QListWidget
-void utils::util::moveItem(bool backward)
+void utils::util::moveItem(bool backward, QListWidget *widget)
 {
     int in = 0;
 
-    QListWidgetItem *current = myUi->lw_pwad->currentItem();
-    int currIndex = myUi->lw_pwad->row(current);
+    QListWidgetItem *current = widget->currentItem();
+    int currIndex = widget->row(current);
 
     if (backward)
         in = currIndex - 1;
     else
         in = currIndex + 1;
 
-    QListWidgetItem *item = myUi->lw_pwad->item(in);
-    int index = myUi->lw_pwad->row(item);
+    QListWidgetItem *item = widget->item(in);
+    int index = widget->row(item);
 
-    QListWidgetItem *temp = myUi->lw_pwad->takeItem(index);
+    QListWidgetItem *temp = widget->takeItem(index);
 
     if (backward)
     {
-        myUi->lw_pwad->insertItem(index, current);
-        myUi->lw_pwad->insertItem(currIndex, temp);
+        widget->insertItem(index, current);
+        widget->insertItem(currIndex, temp);
     }
     else
     {
-        myUi->lw_pwad->insertItem(currIndex, temp);
-        myUi->lw_pwad->insertItem(index, current);
-    }
+        widget->insertItem(currIndex, temp);
+        widget->insertItem(index, current);
+    }    
 }
 
-void utils::util::moveItemTo(bool top)
+void utils::util::moveItemTo(bool top, QListWidget *widget)
 {
-    QListWidgetItem *current = myUi->lw_pwad->currentItem();
+    QListWidgetItem *current = widget->currentItem();
 
     if (current->checkState() == Qt::Unchecked)
         return;
 
-    config::baseConfig *conf = new config::baseConfig(myUi);
-    QString str = conf->getLastPwad(conf->getCurrentProfile());
+    QString str = vbaseconfig->getLastPwad();
     QStringList pwad_list = str.split("#");
 
-    int index = myUi->lw_pwad->row(current);
+    int index = widget->row(current);
 
     if (pwad_list.length() - 1 == index) // item in bottom
         return;
 
-    myUi->lw_pwad->takeItem(index);
+    widget->takeItem(index);
 
     if (top)
-        myUi->lw_pwad->insertItem(0, current);
+        widget->insertItem(0, current);
     else
-        myUi->lw_pwad->insertItem(pwad_list.length() - 2, current); // i dunno why this is working, srsly
+        widget->insertItem(pwad_list.length() - 2, current); // i dunno why this is working, srsly
+}
 
-    delete conf;
+QString utils::util::getLabel()
+{
+    QVector<QString> label_vec;
+    label_vec << "RIP AND TEAR!" << "JOIN GAME AND RIP 'EM ALL!" << "RIP UND TEAR!" <<\
+             "GIVE ME YOUR SOUL!" << "THE TREND IS DEAD!";
+
+    QString label = "";
+
+    if (myUi->gb_join->isChecked())
+    {
+        label = label_vec.at(1);
+        return label;
+    }
+
+    QString item_text = vbaseconfig->getLastIwad().remove(myUi->le_iwad->text());
+
+    if (item_text.contains("doom", Qt::CaseInsensitive))
+        label = label_vec.at(0);
+    else if (item_text.contains("wolf", Qt::CaseInsensitive))
+        label = label_vec.at(2);
+    else if (item_text.contains("heretic", Qt::CaseInsensitive))
+        label = label_vec.at(3);
+    else if (item_text.contains("hexen", Qt::CaseInsensitive))
+        label = label_vec.at(3);
+    else
+        label = label_vec.at(4);
+
+    return label;
+}
+
+QString utils::util::getMauntsFromFile(QString f)
+{
+    QFile file("/home/volk/.config/ChickenLauncher/mounts");
+    QString ret = "";
+
+    if (file.open(QIODevice::ReadOnly |QIODevice::Text))
+    {
+        while (!file.atEnd())
+        {
+            QString str = file.readLine();
+            QStringList tmp = str.split(":");
+
+            if (tmp.at(0).contains(f, Qt::CaseInsensitive))
+            {
+                ret = tmp.at(1);
+                break;
+            }
+        }
+    }
+
+    return ret;
 }

@@ -1,8 +1,9 @@
-# Chicken Launcher. A crossplatrom doom launcher.
+# Chicken Launcher. A crossplatrom various game port launcher.
 
 Damn small and powerful!																																																											
 ![Oh, I know how to call chicken](/scr/images/chicken.png)     	
 
+I was thinking and decide to add other game ports, rather then g(z)doom and other doom ports.
 
 #### NEW IN 1.4
 - Now priority pwad working as expected
@@ -16,13 +17,11 @@ See ./screenshots/
 #### KNOW ISSUES
 See bug tracker
 
-#### TODO:
-
-### v 1.5
-- Add PrBoom+ and Chocolate Doom																					
-- Translations																		
+#### TODO:																																					
 
 ### v 1.x
+- Add chocolate doom, prboom, eduke32, uhexen2 (aka Hammer of Thyrion)
+- Translations
 - Migrate to Qt5 (have problems with png on version 5.3.x in Debian)									
 
 #### REQUIREMENTS

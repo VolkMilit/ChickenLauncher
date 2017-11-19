@@ -3,27 +3,24 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QListWidgetItem>
 #include <QSystemTrayIcon>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QDir>
 #include <QFile>
-#include <QTextStream>
-#include <QtAlgorithms>
 #include <QShortcut>
-
-// std headers
-#include <algorithm>
+#include <QVector>
 
 // libraries
 #include "baseconfig.h"
 #include "listsfill.h"
 #include "gzdoom.h"
+#include "darkplaces.h"
 #include "configdialog.h"
 #include "colors.h"
 #include "descriptionshandler.h"
 #include "util.h"
+
 
 //namespace Ui {class MainWindow;}
 
@@ -53,8 +50,10 @@ namespace Launcher
         void startApp();
         void iconActivated(QSystemTrayIcon::ActivationReason reason);
         void windowInit();
-        void updateColors();
         void mainWindowShowHide();
+
+        void setGameGzdoom();
+        void setGameDarkplaces();
 
 /*
     ___ _                _
@@ -88,6 +87,8 @@ namespace Launcher
         void on_gb_join_toggled();
         void on_btn_clear_ip_clicked();
         void on_btn_clear_port_clicked();
+        void on_le_ip_textChanged(const QString &arg1);
+        void on_le_port_textChanged(const QString &arg1);
 
         //ADVANCED TAB
         void on_le_playdemo_textChanged();
@@ -122,6 +123,8 @@ namespace Launcher
         void on_actionAbout_Chicken_Launcher_triggered();
         void on_actionPreferences_triggered();
         void on_actionSearch_PWAD_triggered();
+        void on_actionGZDoom_triggered();
+        void on_actionDarkPlaces_triggered();
 
         //SHORTCURTS
         void on_actionExit_Ctrl_Q_triggered();
@@ -129,24 +132,18 @@ namespace Launcher
 
     private:
 
-/*
-    ___ _
-   / __| |__ _ ______ ___ ___
-  | (__| / _` (_-<_-</ -_|_-<
-   \___|_\__,_/__/__/\___/__/
-*/
-
         Ui::MainWindow *ui;
-        utils::util *util;
+        utils::util *vutil;
+        gzdoom *vgzdoom;
+        darkplaces *vdarkplaces;
 
-        config::baseConfig *VbaseConfig;
-        config::configDialog *VconfigDialog;
-        Launcher::gzdoom *Vgzdoom;
+        baseConfig *VbaseConfig;
+
         utils::listFill *VlistFill;
         utils::colors *Vcolors;
+
         descriptionsHandler *VdescriptionsHandler;
 
-        QListWidgetItem *item;
         QFileDialog *fileDialog;
     };
 }

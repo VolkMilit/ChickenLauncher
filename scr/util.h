@@ -13,12 +13,18 @@ namespace utils
         virtual ~util();
 
         QString getPwadChecked();
-        void moveItem(bool backward);
-        void moveItemTo(bool top);
+        void moveItem(bool backward, QListWidget *widget);
+        void moveItemTo(bool top, QListWidget *widget);
+        QString getLabel();
+        QString getMauntsFromFile(QString file);
 
-    private:
+        protected:
+
+
+        private:
+
         Ui::MainWindow *myUi;
-        config::baseConfig *baseconfig;
+        baseConfig *vbaseconfig;
     };
 }
 

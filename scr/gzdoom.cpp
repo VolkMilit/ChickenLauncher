@@ -1,12 +1,10 @@
 #include "gzdoom.h"
 #include <QDebug>
 
-Launcher::gzdoom::gzdoom(Ui::MainWindow *ui)
+Launcher::gzdoom::gzdoom(Ui::MainWindow *ui) :
+    VbaseConfig(new baseConfig(myUi))
 {
     this->myUi = ui;
-
-    VbaseConfig = new config::baseConfig(ui);
-
     process = new QProcess(this);
 }
 
@@ -17,6 +15,8 @@ Launcher::gzdoom::~gzdoom()
 
 QString Launcher::gzdoom::getGzdoomHomeDir()
 {
+    QString home = "";
+
     #ifdef _WIN32
         home = QDir::homePath() + "\\ApplicationData\\gzdoom\\";
     #else
@@ -28,9 +28,7 @@ QString Launcher::gzdoom::getGzdoomHomeDir()
 
 void Launcher::gzdoom::parametrParser()
 {
-    QString profile = VbaseConfig->getCurrentProfile();
-
-    iwad = VbaseConfig->getLastIwad(profile);
+    iwad = VbaseConfig->getLastIwad();
     if (iwad.isEmpty())
     {
         QMessageBox::critical(this, "Chicken Launcher", "IWad is not set!", QMessageBox::Ok);
@@ -49,14 +47,16 @@ void Launcher::gzdoom::parametrParser()
     noautoload = "";
     nostartup = "";
     config = "";
+    advport = "";
+    advcmd = "";
 
     //FILE
-    if (!VbaseConfig->getLastPwad(profile).isEmpty())
+    if (!VbaseConfig->getLastPwad().isEmpty())
     {
-        const QStringList pfile = VbaseConfig->getLastPwad(profile).split("#");
+        const QStringList pfile = VbaseConfig->getLastPwad().split("#");
 
         for(int i = 0; i < pfile.length()-1; i++)
-            pwad = pwad + " -file " + VbaseConfig->getPwadDir(profile) + "/" + pfile.at(i);
+            pwad = pwad + " -file " + VbaseConfig->getPwadDir() + "/" + pfile.at(i);
     }
 
     //SKILL
@@ -107,10 +107,14 @@ void Launcher::gzdoom::parametrParser()
         nostartup = " -nostartup ";
 
     //CONFIG
-    if (VbaseConfig->getConfigFile(profile) == "default")
+    if (VbaseConfig->getConfigFile() == "default")
         config = "";
     else
-        config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile(profile);
+        config = " -config " + getGzdoomHomeDir() + VbaseConfig->getConfigFile();
+
+    //
+    advcmd = myUi->le_adv_cmd_param->text() + " ";
+    advport = myUi->le_adv_port_param->text();
 }
 
 void Launcher::gzdoom::startDemo()
@@ -128,14 +132,16 @@ void Launcher::gzdoom::networkGame()
 
 void Launcher::gzdoom::startGzdoom()
 {
+    QString app = "";
+
     parametrParser();
 
     if (myUi->lw_iwad->currentItem() == nullptr && \
-            VbaseConfig->getLastIwad(VbaseConfig->getCurrentProfile()).isEmpty()
+            VbaseConfig->getLastIwad().isEmpty()
        )
     {
         myUi->tabWidget->setCurrentIndex(1);
-        QMessageBox::information(this, "", tr("Choose at least one IWAD."));
+        QMessageBox::information(this, "", "Choose at least one IWAD.");
     }
     else
     {
@@ -150,24 +156,11 @@ void Launcher::gzdoom::startGzdoom()
         if (!myUi->le_loadgame->text().isEmpty())
             loadgame = " -loadgame " + myUi->le_loadgame->text();
 
-        process->start(
-                       term +\
-                       myUi->le_adv_cmd_param->text() + " " +\
-                       exe +\
-                       " -iwad " + iwad +\
-                       pwad +\
-                       skill +\
-                       map + " " +\
-                       nomusic +\
-                       nosound +\
-                       nosfx +\
-                       demo +\
-                       oldsprites +\
-                       noautoload +\
-                       nostartup +\
-                       loadgame +\
-                       config +\
-                       myUi->le_adv_port_param->text()
-                    );
+        app = term + advcmd + exe + " -iwad " + iwad + " "\
+                + pwad + skill + map + nomusic + nosfx\
+                + demo + oldsprites + noautoload + nostartup\
+                + loadgame + config + advport;
+
+        process->start(app);
     }
 }

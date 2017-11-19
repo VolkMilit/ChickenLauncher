@@ -2,6 +2,7 @@
 #define LISTSFILL_H
 
 #include <QStandardItemModel>
+#include <QDir>
 
 #include "ui_mainwindow.h"
 #include "baseconfig.h"
@@ -22,16 +23,13 @@ namespace utils
         void getPortConfigFile();
         void updateColors();
 
-        void setOffPathWad(bool set);
-        int getOffPathWad();
-
         private:
         Ui::MainWindow *myUi;
-        config::baseConfig *VbaseConfig;
+        baseConfig *VbaseConfig;
         colors *Vcolors;
         Launcher::gzdoom *Vgzdoom;
 
-        int offPathWad; //QVariant not work, hmm...
+        int offPathWad;
     };
 }
 

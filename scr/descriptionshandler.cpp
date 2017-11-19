@@ -1,18 +1,29 @@
 #include "descriptionshandler.h"
 
-descriptionsHandler::descriptionsHandler(Ui::MainWindow *ui)
+descriptionsHandler::descriptionsHandler(Ui::MainWindow *ui) :
+    utils::archives()
 {
     this->myUi = ui;
-    Varchives = new archives();
 }
 
 descriptionsHandler::~descriptionsHandler()
 {
-    delete Varchives;
+    //delete Varchives;
 }
 
 void descriptionsHandler::readFromArchive(QString filePath)
 {
+    myUi->pt_description->clear();
+
+    QStringList f = filePath.split(".");
+    QString ff = f.at(f.length()-1); //stupid way to get file extention
+
+    if (ff.toLower() == "wad" || ff.toLower() == "pk3" || ff.toLower() == "pk7")
+        return;
+
+    QString file = utils::archives::findTxt(filePath);
+
+
 }
 
 void descriptionsHandler::getFullDescriptionFromFile(QString filePath)

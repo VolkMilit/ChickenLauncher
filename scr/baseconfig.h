@@ -9,10 +9,8 @@
 
 #include "ui_mainwindow.h"
 
-namespace config
+class baseConfig : public QWidget
 {
-    class baseConfig : public QWidget
-    {
     public:
         baseConfig(Ui::MainWindow *ui);
         virtual ~baseConfig();
@@ -34,69 +32,86 @@ namespace config
         QString getDefaultProfileName();
 
         //off_wad_path
-        void setOffWadPath(QString file, int value);
-        int getOffWadPath(QString file);
+        void setOffWadPath(int value);
+        int getOffWadPath();
 
         //foreground_color
-        void setForegroundColor(QString file, QString value);
-        QString getForegroundColor(QString file);
+        void setForegroundColor(QString value);
+        QString getForegroundColor();
 
         //hide program instead of close
-        void setHide(QString file, int value);
-        int getHide(QString file);
+        void setHide(int value);
+        int getHide();
 
         //hide program when game start
-        void setHideGame(QString file, int value);
-        int getHideGame(QString file);
+        void setHideGame(int value);
+        int getHideGame();
 
         //default_tab
-        void setDefaultTab(QString file, int value);
-        int getDefaultTab(QString file);
+        void setDefaultTab(int value);
+        int getDefaultTab();
 
         //last_iwas_dir
-        void setLastIwadDir(QString file, QString value);
-        QString getLastIwadDir(QString file);
+        void setLastIwadDir(QString value);
+        QString getLastIwadDir();
 
         //last_pwad_dir
-        void setLastPwadDir(QString file, QString value);
-        QString getLastPwadDir(QString file);
+        void setLastPwadDir(QString value);
+        QString getLastPwadDir();
 
 
         /***${profile_name}.ini***/
         /*[WAD]*/
 
         //last_iwad
-        void setLastIwad(QString file, QString value);
-        QString getLastIwad(QString file);
+        void setLastIwad(QString value);
+        QString getLastIwad();
 
         //last_pwad
-        void setLastPwad(QString file, QString value);
-        QString getLastPwad(QString file);
+        void setLastPwad(QString value);
+        QString getLastPwad();
 
         //iwad_dir
-        void setIwadDir(QString file, QString value);
-        QString getIwadDir(QString file);
+        void setIwadDir(QString value);
+        QString getIwadDir();
 
         //pwad_dir
-        void setPwadDir(QString file, QString value);
-        QString getPwadDir(QString file);
+        void setPwadDir(QString value);
+        QString getPwadDir();
 
         /*[Port]*/
+        //game_port
+        void setGamePort(QString value);
+        QString getGamePort();
+
         //port_exe
-        void setExePath(QString file, QString value);
-        QString getExePath(QString file);
+        void setExePath(QString value);
+        QString getExePath();
 
         //adv_exe_param
-        void setAdvExeParam(QString file, QString value);
-        QString getAdvExeParam(QString file);
+        void setAdvExeParam(QString value);
+        QString getAdvExeParam();
 
         //adv_cmd_param
-        void setAdvCmdParam(QString file, QString value);
-        QString getAdvCmdParam(QString file);
+        void setAdvCmdParam(QString value);
+        QString getAdvCmdParam();
 
         //config
-        void setConfigFile(QString file, QString value);
-        QString getConfigFile(QString file);
+        void setConfigFile(QString value);
+        QString getConfigFile();
+
+        /*[Network]*/
+        //enabled
+        void setNetworkEnabled(int value);
+        int getNetworkEnabled();
+
+        //ip
+        void setIpAdress(QString value);
+        QString getIpAdress();
+
+        //port
+        void setIpPort(QString value);
+        QString getIpPort();
 
     private:
         Ui::MainWindow *myUi;
@@ -111,7 +126,6 @@ namespace config
         void writeSettings(QString file, QString group, QString value, int var);
         QString readSettings(QString file, QString group, QString value);
         int readIntSettings(QString file, QString group, QString value);
-    };
-}
+};
 
 #endif // BASECONFIG_H

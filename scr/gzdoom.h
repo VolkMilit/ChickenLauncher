@@ -25,8 +25,6 @@
 #include <QMessageBox>
 #include <QThread>
 
-#include <cstdio>
-
 #include "ui_mainwindow.h"
 #include "baseconfig.h"
 #include "outputreader.h"
@@ -47,10 +45,7 @@ namespace Launcher
 
     private:
         Ui::MainWindow *myUi;
-
-        config::baseConfig *VbaseConfig;
-
-        QListWidgetItem *item;
+        baseConfig *VbaseConfig;
 
         void parametrParser();
 
@@ -73,6 +68,9 @@ namespace Launcher
         QString nostartup;      //Disables the startup screens used by Heretic, Hexen and Strife, and use the Doom text-mode startup instead.
         QString loadgame;       //load games files, but need -iwad and -file =/
 
+        QString advcmd;
+        QString advport;
+
         QString iwad;
         QString pwad;
 
@@ -80,8 +78,6 @@ namespace Launcher
         QString term;           //(Linux specific) run in terminal to see output, like in Windows version
         QString log;  //todo          //(Linux specific) recording log from terminal
         QString config;         //launch with specific settings\profile\config port file
-
-        QString home;           //gzdoom home dir
     };
 }
 

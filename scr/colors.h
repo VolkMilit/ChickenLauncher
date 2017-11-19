@@ -15,11 +15,11 @@ namespace utils
 
         QColor getColor();
         void clearColor(QListWidget *widget);
+        void updateColors();
 
         private:
-        config::baseConfig *VbaseConfig;
+        baseConfig *VbaseConfig;
         Ui::MainWindow *ui;
-        QString color;
     };
 }
 
