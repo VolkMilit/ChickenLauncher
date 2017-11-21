@@ -28,7 +28,11 @@ QString Launcher::gzdoom::getGzdoomHomeDir()
 
 void Launcher::gzdoom::parametrParser()
 {
-    iwad = VbaseConfig->getLastIwad();
+    if (VbaseConfig->getOffWadPath() == 1)
+        iwad = VbaseConfig->getIwadDir() + "/" + VbaseConfig->getLastIwad();
+    else
+        iwad = VbaseConfig->getLastIwad();
+
     if (iwad.isEmpty())
     {
         QMessageBox::critical(this, "Chicken Launcher", "IWad is not set!", QMessageBox::Ok);
@@ -160,6 +164,8 @@ void Launcher::gzdoom::startGzdoom()
                 + pwad + skill + map + nomusic + nosfx\
                 + demo + oldsprites + noautoload + nostartup\
                 + loadgame + config + advport;
+
+        qDebug() << app;
 
         process->start(app);
     }
