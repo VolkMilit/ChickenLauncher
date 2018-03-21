@@ -67,12 +67,13 @@ void Utils::listFill::getIWadList()
         iwad_dir = QDir::currentPath();
 
     const QStringList IWAD_files = iwad_dir.entryList(filter, QDir::Files);
-    for (int i = 0; i < IWAD_files.length(); i++)
+    for (auto ifiles : IWAD_files)
     {
-        myUi->lw_iwad->addItem(path + IWAD_files.at(i));
+        QListWidgetItem *item = new QListWidgetItem(myUi->lw_iwad);
+        item->setText(path + ifiles);
 
-        if (myUi->lw_iwad->item(i)->text() == path + lastIwad)
-            myUi->lw_iwad->item(i)->setForeground(color);
+        if (item->text() == path + lastIwad)
+            item->setForeground(color);
     }
 }
 
@@ -96,17 +97,18 @@ void Utils::listFill::getPWadList()
     else // gzdoom, zdoom, qzdoom, and forks
         PWAD_files = pwad_dir.entryList(filter, QDir::Files);
 
-    for (auto i = 0; i < PWAD_files.length(); i++)
+    for (auto pfiles : PWAD_files)
     {
-        myUi->lw_pwad->addItem(path + PWAD_files.at(i));
-        myUi->lw_pwad->item(i)->setCheckState(Qt::Unchecked);
+        QListWidgetItem *item = new QListWidgetItem(myUi->lw_pwad);
+        item->setText(path + pfiles);
+        item->setCheckState(Qt::Unchecked);
 
         for (auto lastpwad : pwad_list)
         {
-            if (myUi->lw_pwad->item(i)->text() == path + lastpwad)
+            if (item->text() == path + lastpwad)
             {
-                myUi->lw_pwad->item(i)->setCheckState(Qt::Checked);
-                myUi->lw_pwad->item(i)->setForeground(color);
+                item->setCheckState(Qt::Checked);
+                item->setForeground(color);
             }
         }
     }
