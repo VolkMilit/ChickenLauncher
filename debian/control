@@ -1,0 +1,11 @@
+Source: chickenlauncher
+Maintainer: Volk_Milit (aka Ja'Virr-Dar) <javirrdar@gmail.com>
+Section: games
+Priority: extra
+Build-Depends: debhelper (>= 8), libqt4-dev, libquazip-dev
+Homepage: https://github.com/VolkMilit/ChickenLauncher
+
+Package: chickenlauncher
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description:  Simple yet powerfull launcher for id Tech games.
