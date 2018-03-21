@@ -21,7 +21,7 @@ See bug tracker
 
 ### v 1.x
 - Add chocolate doom, prboom, eduke32, uhexen2 (aka Hammer of Thyrion)
-- Translations	
+- Translations
 - Migrate to Qt5 (have problems with png on version 5.3.x in Debian)									
 
 #### REQUIREMENTS
