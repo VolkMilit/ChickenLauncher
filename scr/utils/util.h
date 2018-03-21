@@ -2,9 +2,9 @@
 #define UTIL_H
 
 #include "ui_mainwindow.h"
-#include "baseconfig.h"
+#include "utils/baseconfig.h"
 
-namespace utils
+namespace Utils
 {
     class util
     {
@@ -17,6 +17,7 @@ namespace utils
         void moveItemTo(bool top, QListWidget *widget);
         QString getLabel();
         QString getMauntsFromFile(QString file);
+        bool checkGame();
 
         protected:
 

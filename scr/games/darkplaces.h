@@ -5,10 +5,9 @@
 #include <QMessageBox>
 
 #include "ui_mainwindow.h"
-#include "baseconfig.h"
-#include "outputreader.h"
+#include "utils/baseconfig.h"
 
-namespace Launcher
+namespace Games
 {
     class darkplaces : public QWidget
     {
@@ -21,7 +20,7 @@ namespace Launcher
 
         private:
             Ui::MainWindow *myUi;
-            baseConfig *VbaseConfig;
+            Utils::baseConfig *VbaseConfig;
 
             void parametrParser();
 
@@ -29,6 +28,7 @@ namespace Launcher
             QString games;
             QString term;
             QString exe;
+            QString consolecomm;
     };
 }
 

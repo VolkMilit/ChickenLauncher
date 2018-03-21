@@ -1,21 +1,9 @@
 #include "baseconfig.h"
 
-baseConfig::baseConfig(Ui::MainWindow *ui)
+Utils::baseConfig::baseConfig(Ui::MainWindow *ui)
 {
     this->myUi = ui;
-    getValues();
-}
 
-baseConfig::~baseConfig(){}
-
-/* ___     _                            _
-  | _ \___| |_ _  _ _ _ _ _   __ ____ _| |_  _ ___
-  |   / -_)  _| || | '_| ' \  \ V / _` | | || / -_)
-  |_|_\___|\__|\_,_|_| |_||_|  \_/\__,_|_|\_,_\___|
-*/
-
-void baseConfig::getValues()
-{
     #ifdef _WIN32
         home = QDir::homePath() + "\\ApplicationData\\ChickenLauncher\\";
     #else
@@ -26,12 +14,25 @@ void baseConfig::getValues()
     profilesDir = home + "profiles/";
 }
 
-QString baseConfig::getProfilesDir()
+Utils::baseConfig::~baseConfig(){}
+
+/* ___     _                            _
+  | _ \___| |_ _  _ _ _ _ _   __ ____ _| |_  _ ___
+  |   / -_)  _| || | '_| ' \  \ V / _` | | || / -_)
+  |_|_\___|\__|\_,_|_| |_||_|  \_/\__,_|_|\_,_\___|
+*/
+
+QString Utils::baseConfig::getLauncherHomeDir()
+{
+    return home;
+}
+
+QString Utils::baseConfig::getProfilesDir()
 {
     return profilesDir;
 }
 
-QString baseConfig::getLauncherSettingsFile()
+QString Utils::baseConfig::getLauncherSettingsFile()
 {
     return defaultSettings;
 }
@@ -40,106 +41,103 @@ QString baseConfig::getLauncherSettingsFile()
 /*[settings]*/
 
 //profile
-QString baseConfig::getCurrentProfile()
+QString Utils::baseConfig::getCurrentProfile()
 {
-    getValues();
     defaultProfile = readSettings(defaultSettings, "settings", "profile");
     return profilesDir + defaultProfile;
 }
 
-void baseConfig::setCurrentProfile(QString profile)
+void Utils::baseConfig::setCurrentProfile(const QString &profile)
 {
-    getValues();
     writeSettings(defaultSettings, "settings", "profile", profile);
 }
 
-QString baseConfig::getDefaultProfileName()
+QString Utils::baseConfig::getDefaultProfileName()
 {
-    getValues();
     defaultProfile = readSettings(defaultSettings, "settings", "profile");
     return defaultProfile;
 }
 
 //off_wad_path
-void baseConfig::setOffWadPath(int value)
+void Utils::baseConfig::setOffWadPath(const short value)
 {
     writeSettings(defaultSettings, "settings", "off_wad_path", value);
 }
 
-int baseConfig::getOffWadPath()
+short Utils::baseConfig::getOffWadPath()
 {
-    int ret = readIntSettings(defaultSettings, "settings", "off_wad_path");
+    short ret = readIntSettings(defaultSettings, "settings", "off_wad_path");
     return ret;
 }
 
 //foreground_color
-void baseConfig::setForegroundColor(QString value)
+void Utils::baseConfig::setForegroundColor(const QString &value)
 {
     writeSettings(defaultSettings, "settings", "foreground_color", value);
 }
 
-QString baseConfig::getForegroundColor()
+QString Utils::baseConfig::getForegroundColor()
 {
     QString ret = readSettings(defaultSettings, "settings", "foreground_color");
     return ret;
 }
 
 //hide program instead of close
-void baseConfig::setHide(int value)
+void Utils::baseConfig::setHide(const short value)
 {
     writeSettings(defaultSettings, "settings", "hide", value);
 }
 
-int baseConfig::getHide()
+short Utils::baseConfig::getHide()
 {
-    int ret = readIntSettings(defaultSettings, "settings", "hide");
+    short ret = readIntSettings(defaultSettings, "settings", "hide");
     return ret;
 }
 
 //hide program when game start
-void baseConfig::setHideGame(int value)
+void Utils::baseConfig::setHideGame(const short value)
 {
     writeSettings(defaultSettings, "settings", "hide_game", value);
 }
 
-int baseConfig::getHideGame()
+short Utils::baseConfig::getHideGame()
 {
-    int ret = readIntSettings(defaultSettings, "settings", "hide_game");
+    short ret = readIntSettings(defaultSettings, "settings", "hide_game");
     return ret;
 }
 
 //default tab
 // 0 - profiles, 1 - wads
-void baseConfig::setDefaultTab(int value)
+void Utils::baseConfig::setDefaultTab(const short value)
 {
     writeSettings(defaultSettings, "settings", "default_tab", value);
 }
 
-int baseConfig::getDefaultTab()
+short Utils::baseConfig::getDefaultTab()
 {
-    int ret = readIntSettings(defaultSettings, "settings", "default_tab");
+    short ret = readIntSettings(defaultSettings, "settings", "default_tab");
     return ret;
 }
 
 //last iwad dir
-void baseConfig::setLastIwadDir(QString value)
+void Utils::baseConfig::setLastIwadDir(const QString &value)
 {
     writeSettings(defaultSettings, "settings", "last_iwad_dir", value);
 }
 
-QString baseConfig::getLastIwadDir()
+QString Utils::baseConfig::getLastIwadDir()
 {
     QString ret = readSettings(defaultSettings, "settings", "last_iwad_dir");
     return ret;
 }
 
 //last pwad dir
-void baseConfig::setLastPwadDir(QString value)
+void Utils::baseConfig::setLastPwadDir(const QString &value)
 {
     writeSettings(defaultSettings, "settings", "last_pwad_dir", value);
 }
 
-QString baseConfig::getLastPwadDir()
+QString Utils::baseConfig::getLastPwadDir()
 {
     QString ret = readSettings(defaultSettings, "settings", "last_pwad_dir");
     return ret;
@@ -149,145 +147,157 @@ QString baseConfig::getLastPwadDir()
 /*[WAD]*/
 
 //last_iwad
-void baseConfig::setLastIwad(QString value)
+void Utils::baseConfig::setLastIwad(const QString &value)
 {
     writeSettings(getCurrentProfile(), "WAD", "last_iwad", value);
 }
 
-QString baseConfig::getLastIwad()
+QString Utils::baseConfig::getLastIwad()
 {
     QString ret = readSettings(getCurrentProfile(), "WAD", "last_iwad");
     return ret;
 }
 
 //last_pwad
-void baseConfig::setLastPwad(QString value)
+void Utils::baseConfig::setLastPwad(const QString &value)
 {
     writeSettings(getCurrentProfile(), "WAD", "last_pwads", value);
 }
 
-QString baseConfig::getLastPwad()
+QString Utils::baseConfig::getLastPwad()
 {
     QString ret = readSettings(getCurrentProfile(), "WAD", "last_pwads");
     return ret;
 }
 
 //iwad_dir
-void baseConfig::setIwadDir(QString value)
+void Utils::baseConfig::setIwadDir(const QString &value)
 {
     writeSettings(getCurrentProfile(), "WAD", "iwad_dir", value);
 }
 
-QString baseConfig::getIwadDir()
+QString Utils::baseConfig::getIwadDir()
 {
     QString ret = readSettings(getCurrentProfile(), "WAD", "iwad_dir");
     return ret;
 }
 
 //pwad_dir
-void baseConfig::setPwadDir(QString value)
+void Utils::baseConfig::setPwadDir(const QString &value)
 {
     writeSettings(getCurrentProfile(), "WAD", "pwad_dir", value);
 }
 
-QString baseConfig::getPwadDir()
+QString Utils::baseConfig::getPwadDir()
 {
     QString ret = readSettings(getCurrentProfile(), "WAD", "pwad_dir");
     return ret;
 }
 
 //exe_path
-void baseConfig::setExePath(QString value)
+void Utils::baseConfig::setExePath(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Port", "port_exe", value);
 }
 
-QString baseConfig::getExePath()
+QString Utils::baseConfig::getExePath()
 {
     QString ret = readSettings(getCurrentProfile(), "Port", "port_exe");
     return ret;
 }
 
 //adv_exe_param
-void baseConfig::setAdvExeParam(QString value)
+void Utils::baseConfig::setAdvExeParam(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Port", "additional_port_param", value);
 }
 
-QString baseConfig::getAdvExeParam()
+QString Utils::baseConfig::getAdvExeParam()
 {
     QString ret = readSettings(getCurrentProfile(), "Port", "additional_port_param");
     return ret;
 }
 
 //adv_cmd_param
-void baseConfig::setAdvCmdParam(QString value)
+void Utils::baseConfig::setAdvCmdParam(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Port", "additional_cmd_param", value);
 }
 
-QString baseConfig::getAdvCmdParam()
+QString Utils::baseConfig::getAdvCmdParam()
 {
     QString ret = readSettings(getCurrentProfile(), "Port", "additional_cmd_param");
     return ret;
 }
 
 //config
-void baseConfig::setConfigFile(QString value)
+void Utils::baseConfig::setConfigFile(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Port", "config", value);
 }
 
-QString baseConfig::getConfigFile()
+QString Utils::baseConfig::getConfigFile()
 {
     QString ret = readSettings(getCurrentProfile(), "Port", "config");
     return ret;
 }
 
 //game_port
-void baseConfig::setGamePort(QString value)
+void Utils::baseConfig::setGamePort(const short value)
 {
     writeSettings(getCurrentProfile(), "Port", "game_port", value);
 }
 
-QString baseConfig::getGamePort()
+short Utils::baseConfig::getGamePort()
 {
-    QString ret = readSettings(getCurrentProfile(), "Port", "game_port");
+    short ret = readIntSettings(getCurrentProfile(), "Port", "game_port");
+    return ret;
+}
+
+//water (dakrplaces specific)
+void Utils::baseConfig::setDarkplacesWater(const short value)
+{
+    writeSettings(getCurrentProfile(), "Port", "water", value);
+}
+
+short Utils::baseConfig::getDarkplacesWater()
+{
+    short ret = readIntSettings(getCurrentProfile(), "Port", "water");
     return ret;
 }
 
 /*[Network]*/
 //enabled
-void baseConfig::setNetworkEnabled(int value)
+void Utils::baseConfig::setNetworkEnabled(const short value)
 {
     writeSettings(getCurrentProfile(), "Network", "enabled", value);
 }
 
-int baseConfig::getNetworkEnabled()
+short Utils::baseConfig::getNetworkEnabled()
 {
-    int ret = readIntSettings(getCurrentProfile(), "Network", "enabled");
+    short ret = readIntSettings(getCurrentProfile(), "Network", "enabled");
     return ret;
 }
 
 //ip
-void baseConfig::setIpAdress(QString value)
+void Utils::baseConfig::setIpAdress(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Network", "ip", value);
 }
 
-QString baseConfig::getIpAdress()
+QString Utils::baseConfig::getIpAdress()
 {
     QString ret = readSettings(getCurrentProfile(), "Network", "ip");
     return ret;
 }
 
 //ip_port
-void baseConfig::setIpPort(QString value)
+void Utils::baseConfig::setIpPort(const QString &value)
 {
     writeSettings(getCurrentProfile(), "Network", "ip_port", value);
 }
 
-QString baseConfig::getIpPort()
+QString Utils::baseConfig::getIpPort()
 {
     QString ret = readSettings(getCurrentProfile(), "Network", "ip_port");
     return ret;
@@ -299,7 +309,7 @@ QString baseConfig::getIpPort()
   |_| \_,_|_||_\__|\__|_\___/_||_/__/
 */
 
-bool baseConfig::fileExist(QString file)
+bool Utils::baseConfig::fileExist(const QString &file)
 {
     QFile f(file);
 
@@ -338,7 +348,7 @@ bool baseConfig::fileExist(QString file)
     return true;
 }
 
-void baseConfig::writeAllSettings(QString file)
+void Utils::baseConfig::writeAllSettings(const QString &file)
 {
     //[WAD]
     writeSettings(file, "WAD", "iwad_dir", myUi->le_iwad->text());
@@ -350,7 +360,7 @@ void baseConfig::writeAllSettings(QString file)
     writeSettings(file, "Port", "additional_cmd_param", myUi->le_adv_cmd_param->text());
 }
 
-void baseConfig::readAllSettings(QString file)
+void Utils::baseConfig::readAllSettings(const QString &file)
 {
     //[WAD]
     myUi->le_iwad->setText(readSettings(file, "WAD", "iwad_dir"));
@@ -361,6 +371,9 @@ void baseConfig::readAllSettings(QString file)
     myUi->le_adv_port_param->setText(readSettings(file, "Port", "additional_port_param"));
     myUi->le_adv_cmd_param->setText(readSettings(file, "Port", "additional_cmd_param"));
 
+    if (readIntSettings(file, "Port", "water") == 1)
+        myUi->cb_darkplaces_water->setChecked(true);
+
     //[Network]
     if (readIntSettings(file, "Network", "enabled") == 1)
         myUi->gb_join->setChecked(true);
@@ -369,7 +382,7 @@ void baseConfig::readAllSettings(QString file)
     myUi->le_port->setText(readSettings(file, "Network", "ip_port"));
 }
 
-void baseConfig::writeSettings(QString file, QString group, QString value, QString var)
+void Utils::baseConfig::writeSettings(const QString &file, const QString &group, const QString &value, const QString &var)
 {
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
@@ -377,7 +390,7 @@ void baseConfig::writeSettings(QString file, QString group, QString value, QStri
     settings.endGroup();
 }
 
-QString baseConfig::readSettings(QString file, QString group, QString value)
+QString Utils::baseConfig::readSettings(const QString &file, const QString &group, const QString &value)
 {
     QString rv;
 
@@ -389,7 +402,7 @@ QString baseConfig::readSettings(QString file, QString group, QString value)
     return rv;
 }
 
-void baseConfig::writeSettings(QString file, QString group, QString value, int var)
+void Utils::baseConfig::writeSettings(const QString &file, const QString &group, const QString &value, const short var)
 {
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
@@ -397,7 +410,7 @@ void baseConfig::writeSettings(QString file, QString group, QString value, int v
     settings.endGroup();
 }
 
-int baseConfig::readIntSettings(QString file, QString group, QString value)
+int Utils::baseConfig::readIntSettings(const QString &file, const QString &group, const QString &value)
 {
     int rv;
 

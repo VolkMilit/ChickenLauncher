@@ -1,18 +1,18 @@
 #include "util.h"
 #include <QDebug>
 
-utils::util::util(Ui::MainWindow *ui) :
+Utils::util::util(Ui::MainWindow *ui) :
     vbaseconfig(new baseConfig(myUi))
 {
     this->myUi = ui;
 }
 
-utils::util::~util()
+Utils::util::~util()
 {
     delete vbaseconfig;
 }
 
-QString utils::util::getPwadChecked()
+QString Utils::util::getPwadChecked()
 {
     const bool offWadPath = vbaseconfig->getOffWadPath();
     QVector<QString> files;
@@ -42,7 +42,7 @@ QString utils::util::getPwadChecked()
 }
 
 //moving item up and down, http://www.qtcentre.org/threads/17996-Move-items-up-and-down-in-QListWidget
-void utils::util::moveItem(bool backward, QListWidget *widget)
+void Utils::util::moveItem(bool backward, QListWidget *widget)
 {
     int in = 0;
 
@@ -71,7 +71,7 @@ void utils::util::moveItem(bool backward, QListWidget *widget)
     }    
 }
 
-void utils::util::moveItemTo(bool top, QListWidget *widget)
+void Utils::util::moveItemTo(bool top, QListWidget *widget)
 {
     QListWidgetItem *current = widget->currentItem();
 
@@ -94,7 +94,7 @@ void utils::util::moveItemTo(bool top, QListWidget *widget)
         widget->insertItem(pwad_list.length() - 2, current); // i dunno why this is working, srsly
 }
 
-QString utils::util::getLabel()
+QString Utils::util::getLabel()
 {
     QVector<QString> label_vec;
     label_vec << "RIP AND TEAR!" << "JOIN GAME AND RIP 'EM ALL!" << "RIP UND TEAR!" <<\
@@ -124,9 +124,9 @@ QString utils::util::getLabel()
     return label;
 }
 
-QString utils::util::getMauntsFromFile(QString f)
+QString Utils::util::getMauntsFromFile(QString f)
 {
-    QFile file("/home/volk/.config/ChickenLauncher/mounts");
+    QFile file(vbaseconfig->getLauncherHomeDir() + "/mounts");
     QString ret = "";
 
     if (file.open(QIODevice::ReadOnly |QIODevice::Text))
@@ -145,4 +145,16 @@ QString utils::util::getMauntsFromFile(QString f)
     }
 
     return ret;
+}
+
+bool Utils::util::checkGame()
+{
+    const QString last_iwad = vbaseconfig->getLastIwad();
+
+    if (last_iwad.contains("DOOM.WAD", Qt::CaseInsensitive) \
+            || last_iwad.contains("heretic", Qt::CaseInsensitive) \
+            || last_iwad.contains("wolf", Qt::CaseInsensitive))
+        return true;
+
+    return false;
 }

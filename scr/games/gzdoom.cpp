@@ -1,19 +1,20 @@
 #include "gzdoom.h"
 #include <QDebug>
 
-Launcher::gzdoom::gzdoom(Ui::MainWindow *ui) :
-    VbaseConfig(new baseConfig(myUi))
+gzdoom::gzdoom(Ui::MainWindow *ui) :
+    VbaseConfig(new Utils::baseConfig(myUi))
 {
     this->myUi = ui;
     process = new QProcess(this);
 }
 
-Launcher::gzdoom::~gzdoom()
+gzdoom::~gzdoom()
 {
     delete process;
+    delete VbaseConfig;
 }
 
-QString Launcher::gzdoom::getGzdoomHomeDir()
+QString gzdoom::getGzdoomHomeDir()
 {
     QString home = "";
 
@@ -26,7 +27,7 @@ QString Launcher::gzdoom::getGzdoomHomeDir()
     return home;
 }
 
-void Launcher::gzdoom::parametrParser()
+void gzdoom::parametrParser()
 {
     if (VbaseConfig->getOffWadPath() == 1)
         iwad = VbaseConfig->getIwadDir() + "/" + VbaseConfig->getLastIwad();
@@ -121,7 +122,7 @@ void Launcher::gzdoom::parametrParser()
     advport = myUi->le_adv_port_param->text();
 }
 
-void Launcher::gzdoom::startDemo()
+void gzdoom::startDemo()
 {
     if (!myUi->le_playdemo->text().isEmpty())
         process->start(exe + " -playdemo " + myUi->le_playdemo->text());
@@ -129,12 +130,12 @@ void Launcher::gzdoom::startDemo()
         process->start(exe + " -timedemo " + myUi->le_playdemo_2->text());
 }
 
-void Launcher::gzdoom::networkGame()
+void gzdoom::networkGame()
 {
     process->start(exe + " -join " + myUi->le_ip->text() + ":" + myUi->le_port->text());
 }
 
-void Launcher::gzdoom::startGzdoom()
+void gzdoom::startGzdoom()
 {
     QString app = "";
 

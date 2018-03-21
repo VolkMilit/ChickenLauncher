@@ -1,23 +1,23 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
-Launcher::configDialog::configDialog(QWidget *parent) :
+configDialog::configDialog(QWidget *parent) :
     QDialog(parent),
     cdUi(new Ui::configDialog),
-    VbaseConfig(new baseConfig(ui)),
-    VlistFill(new utils::listFill(ui))
+    VbaseConfig(new Utils::baseConfig(ui)),
+    VlistFill(new Utils::listFill(ui))
 {
     cdUi->setupUi(this);
 
     settingsInit();
 }
 
-Launcher::configDialog::~configDialog()
+configDialog::~configDialog()
 {
     delete cdUi;
 }
 
-void Launcher::configDialog::settingsInit()
+void configDialog::settingsInit()
 {
     cdUi->comb_foreground_color->setItemData(0, QBrush(Qt::red), Qt::TextColorRole);
     cdUi->comb_foreground_color->setItemData(1, QBrush(QColor(255, 160, 0)), Qt::TextColorRole);
@@ -72,7 +72,7 @@ void Launcher::configDialog::settingsInit()
         cdUi->comb_foreground_color->setCurrentIndex(7);
 }
 
-void Launcher::configDialog::on_buttonBox_accepted()
+void configDialog::on_buttonBox_accepted()
 {
     if (cdUi->cb_hide->isChecked())
         VbaseConfig->setHide(1);
@@ -100,17 +100,17 @@ void Launcher::configDialog::on_buttonBox_accepted()
     //VlistFill->getPWadList();
 }
 
-void Launcher::configDialog::on_buttonBox_rejected()
+void configDialog::on_buttonBox_rejected()
 {
     return;
 }
 
-void Launcher::configDialog::on_rb_default_tab_profiles_clicked()
+void configDialog::on_rb_default_tab_profiles_clicked()
 {
     cdUi->rb_default_tab_wads->setChecked(false);
 }
 
-void Launcher::configDialog::on_rb_default_tab_wads_clicked()
+void configDialog::on_rb_default_tab_wads_clicked()
 {
     cdUi->rb_default_tab_profiles->setChecked(false);
 }

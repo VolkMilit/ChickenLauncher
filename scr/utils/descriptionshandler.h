@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QDir>
 
-#include "archives.h"
+#include "utils/archives.h"
 #include "ui_mainwindow.h"
 
 class descriptionsHandler : protected utils::archives

@@ -1,19 +1,20 @@
 #include "darkplaces.h"
 #include <QDebug>
 
-Launcher::darkplaces::darkplaces(Ui::MainWindow *ui) :
-    VbaseConfig(new baseConfig(myUi))
+Games::darkplaces::darkplaces(Ui::MainWindow *ui) :
+    VbaseConfig(new Utils::baseConfig(myUi))
 {
     this->myUi = ui;
     process = new QProcess(this);
 }
 
-Launcher::darkplaces::~darkplaces()
+Games::darkplaces::~darkplaces()
 {
     delete process;
+    delete VbaseConfig;
 }
 
-void Launcher::darkplaces::parametrParser()
+void Games::darkplaces::parametrParser()
 {
     basedir = myUi->le_pwad->text();
 
@@ -22,16 +23,21 @@ void Launcher::darkplaces::parametrParser()
         const QStringList pfile = VbaseConfig->getLastPwad().split("#");
 
         for(int i = 0; i < pfile.length()-1; i++)
-            games = games + " -game " + pfile.at(i);
+            games += " -game " + pfile.at(i);
     }
 
     if (myUi->le_exe->text().isEmpty())
         exe = "darkplaces";
     else
         exe = myUi->le_exe->text();
+
+    if (myUi->cb_darkplaces_water->isChecked())
+        consolecomm += " +r_water \"1\" ";
+    else
+        consolecomm += " +r_water \"0\" ";
 }
 
-void Launcher::darkplaces::startDarkplaces()
+void Games::darkplaces::startDarkplaces()
 {
     QString app = "";
 
@@ -44,6 +50,6 @@ void Launcher::darkplaces::startDarkplaces()
         term = "x-terminal-emulator -e ";
     #endif
 
-    app = term + exe + " -basedir " + basedir + games;
+    app = term + exe + " -basedir " + basedir + games + consolecomm;
     process->start(app);
 }

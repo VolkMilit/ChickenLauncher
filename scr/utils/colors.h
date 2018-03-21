@@ -3,9 +3,9 @@
 
 #include <QListWidgetItem>
 
-#include "baseconfig.h"
+#include "utils/baseconfig.h"
 
-namespace utils
+namespace Utils
 {
     class colors
     {

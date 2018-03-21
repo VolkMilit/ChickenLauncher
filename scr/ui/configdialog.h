@@ -1,18 +1,16 @@
 #ifndef CONFIGDIALOG_H
 #define CONFIGDIALOG_H
 
-#include "baseconfig.h"
-#include "listsfill.h"
-#include "colors.h"
+#include "utils/baseconfig.h"
+#include "utils/listsfill.h"
+#include "utils/colors.h"
 #include "ui_mainwindow.h"
 
 namespace Ui {class configDialog;}
 
-namespace Launcher
+class configDialog : public QDialog
 {
-    class configDialog : public QDialog
-    {
-        Q_OBJECT
+    Q_OBJECT
 
     public:
         explicit configDialog(QWidget *parent = 0);
@@ -31,16 +29,15 @@ namespace Launcher
         Ui::configDialog *cdUi;
         Ui::MainWindow *ui;
 
-        baseConfig *VbaseConfig;
-        utils::listFill *VlistFill;
-        utils::colors *Vcolor;
+        Utils::baseConfig *VbaseConfig;
+        Utils::listFill *VlistFill;
+        Utils::colors *Vcolor;
 
         QString color;
         int offPathWad;
         int hide;
         int default_tab;
         int hide_game;
-    };
-}
+};
 
 #endif // CONFIGDIALOG_H

@@ -1,12 +1,15 @@
 #include "colors.h"
 
-utils::colors::colors() :
+Utils::colors::colors() :
     VbaseConfig(new baseConfig(ui))
 {}
 
-utils::colors::~colors(){}
+Utils::colors::~colors()
+{
+    delete VbaseConfig;
+}
 
-QColor utils::colors::getColor()
+QColor Utils::colors::getColor()
 {
     QColor ret;
 
@@ -32,13 +35,13 @@ QColor utils::colors::getColor()
     return ret;
 }
 
-void utils::colors::clearColor(QListWidget *widget)
+void Utils::colors::clearColor(QListWidget *widget)
 {
     for (int i = 0; i < widget->count(); i++)
         widget->item(i)->setForeground(Qt::black);
 }
 
-void utils::colors::updateColors()
+void Utils::colors::updateColors()
 {
 
 }

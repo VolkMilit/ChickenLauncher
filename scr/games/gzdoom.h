@@ -26,13 +26,10 @@
 #include <QThread>
 
 #include "ui_mainwindow.h"
-#include "baseconfig.h"
-#include "outputreader.h"
+#include "utils/baseconfig.h"
 
-namespace Launcher
+class gzdoom : public QWidget
 {
-    class gzdoom : public QWidget
-    {
     public:
         explicit gzdoom(Ui::MainWindow *ui);
         virtual ~gzdoom();
@@ -41,11 +38,11 @@ namespace Launcher
         void startDemo();
         void networkGame();
         QString getGzdoomHomeDir();
-        QProcess *process;
+        QProcess *process;    
 
     private:
         Ui::MainWindow *myUi;
-        baseConfig *VbaseConfig;
+        Utils::baseConfig *VbaseConfig;
 
         void parametrParser();
 
@@ -78,7 +75,6 @@ namespace Launcher
         QString term;           //(Linux specific) run in terminal to see output, like in Windows version
         QString log;  //todo          //(Linux specific) recording log from terminal
         QString config;         //launch with specific settings\profile\config port file
-    };
-}
+};
 
 #endif // GZDOOM_H
