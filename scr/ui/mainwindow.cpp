@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     VbaseConfig(new Utils::baseConfig(ui)),
     VlistFill(new Utils::listFill(ui)),
     Vcolors(new Utils::colors()),
-    VdescriptionsHandler(new descriptionsHandler(ui))
+    VdescriptionsHandler(new descriptionsHandler(ui)),
+    VconfigDialog(new configDialog())
 {
     ui->setupUi(this);
     windowInit();
@@ -44,7 +45,6 @@ void MainWindow::on_actionAbout_QT_triggered()
 
 void MainWindow::on_actionPreferences_triggered()
 {
-    configDialog *VconfigDialog = new configDialog();
     //connect(VconfigDialog, SIGNAL(accepted()), this, SLOT(updateColors()));
     VconfigDialog->show();
 }

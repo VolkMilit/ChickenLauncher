@@ -148,6 +148,8 @@ class MainWindow : public QMainWindow
         descriptionsHandler *VdescriptionsHandler;
 
         QFileDialog *fileDialog;
+
+        configDialog *VconfigDialog;
 };
 
 #endif // MAINWINDOW_H
