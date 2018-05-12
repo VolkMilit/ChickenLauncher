@@ -1,4 +1,7 @@
-# Chicken Launcher. A crossplatrom various game port launcher.
+# This project was discontinued.
+I figure that I don't want to fix all that shit that I make with this launcher. Code is shit and launcher is buggy, so I decide [rewrite it from scratch](https://github.com/VolkMilit/ChickenLauncherReborn) since I also used it for playing doom and quake with mods.
+
+## Chicken Launcher. A crossplatrom various game port launcher.
 
 Damn small and powerful!																																																											
 ![Oh, I know how to call chicken](/scr/images/chicken.png)     	
